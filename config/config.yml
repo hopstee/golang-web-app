@@ -1,0 +1,17 @@
+server:
+  addr: ":8080"
+
+database:
+  driver: "sqlite"
+  dsn: "./data/app.db"
+
+authentication:
+  jwt:
+    secret: "${JWT_SECRET}"
+
+telegram:
+  token: "${TELEGRAM_TOKEN}"
+  chat_id: "${TELEGRAM_CHAT_ID}"
+
+static:
+  dir: "./static"

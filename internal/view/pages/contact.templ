@@ -1,0 +1,238 @@
+package pages
+
+import "mobile-backend-boilerplate/internal/view/layouts"
+
+import "mobile-backend-boilerplate/internal/view/icons"
+import "mobile-backend-boilerplate/internal/repository"
+import "strconv"
+import "mobile-backend-boilerplate/internal/view/partials"
+import "strings"
+
+type ContactMethods struct {
+	Value       string
+	Label       string
+	Placeholder string
+}
+
+var contactMethods = []ContactMethods{
+	{Value: "telegram", Label: "Telegram", Placeholder: "@username"},
+	{
+		Value:       "whatsapp",
+		Label:       "WhatsApp",
+		Placeholder: "Номер телефона",
+	},
+	{Value: "email", Label: "Email", Placeholder: "email"},
+	{Value: "phone", Label: "Телефон", Placeholder: "Номер телефона"},
+}
+
+type FormState struct {
+	Values  map[string]string
+	Errors  map[string]string
+	Success bool
+}
+
+func NewFormState() FormState {
+	values := make(map[string]string)
+	values["contact_type"] = contactMethods[0].Value
+
+	return FormState{
+		Values:  values,
+		Errors:  make(map[string]string),
+		Success: false,
+	}
+}
+
+func NewFormStateFromRequest(req repository.Request) FormState {
+	values := map[string]string{
+		"name":         req.Name,
+		"message":      req.Message,
+		"phone":        req.Phone,
+		"email":        req.Email,
+		"contact_type": req.ContactType,
+		"amount":       "",
+	}
+	if req.Amount != 0 {
+		values["amount"] = strconv.Itoa(req.Amount)
+	}
+
+	return FormState{
+		Values: values,
+		Errors: make(map[string]string),
+	}
+}
+
+func NewFormStateWithErrors(req repository.Request, errors map[string]string) FormState {
+	fs := NewFormStateFromRequest(req)
+	fs.Errors = errors
+
+	return fs
+}
+
+templ ContactPage(props layouts.BaseLayoutProps, state FormState) {
+	@layouts.BaseLayout(props) {
+		@ContactPagePartial() {
+			@ContactPagePartialForm(state)
+		}
+	}
+}
+
+templ ContactPageContent(props layouts.BaseLayoutProps, state FormState) {
+	@layouts.BaseLayoutPartial(props) {
+		@ContactPagePartial() {
+			@ContactPagePartialForm(state)
+		}
+	}
+}
+
+templ ContactPagePartial() {
+	<style>
+        input:invalid,
+        textarea:invalid {
+            border-color: var(--error);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: var(--text-xs);
+            margin-top: var(--space-xxs);
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: var(--space-sm);
+            width: 100%;
+        }
+
+        .send,
+        .loader,
+        .success {
+            display: none;
+        }
+
+        .send.show,
+        .loader.show,
+        .success.show {
+            display: inline-block;
+        }
+    </style>
+	@partials.Card(500) {
+		{ children... }
+	}
+}
+
+templ ContactPagePartialForm(state FormState) {
+	<form
+		class="form"
+		hx-post="/contact"
+		hx-trigger="submit"
+		hx-target="this"
+		hx-swap="outerHTML"
+		hx-on:htmx:afterSwap="handleSuccessTimeout(this)"
+	>
+		<div class="field-group">
+			<label>Как Вас зовут? *</label>
+			<input name="name" class="input-field" value={ state.Values["name"] }/>
+			if state.Errors["name"] != "" {
+				<span class="error-message show">{ state.Errors["name"] }</span>
+			}
+		</div>
+		<div class="field-group">
+			<label>Поделитесь своей идеей *</label>
+			<textarea name="message" class="textarea-field">{ state.Values["message"] }</textarea>
+			if state.Errors["message"] != "" {
+				<span class="error-message show">{ state.Errors["message"] }</span>
+			}
+		</div>
+		<div class="field-group">
+			<label>Ваш телефон *</label>
+			<input name="phone" class="input-field" type="tel" value={ state.Values["phone"] }/>
+			if state.Errors["phone"] != "" {
+				<span class="error-message show">{ state.Errors["phone"] }</span>
+			}
+		</div>
+		<div class="field-group">
+			<label>Ваша почта *</label>
+			<input name="email" class="input-field" type="email" value={ state.Values["email"] }/>
+			if state.Errors["email"] != "" {
+				<span class="error-message show">{ state.Errors["email"] }</span>
+			}
+		</div>
+		<div class="field-group">
+			<label>Ваш бюджет *</label>
+			<input name="amount" class="input-field" type="number" value={ state.Values["amount"] }/>
+			if state.Errors["amount"] != "" {
+				<span class="error-message show">{ state.Errors["amount"] }</span>
+			}
+		</div>
+		<div
+			class="field-group"
+			role="tablist"
+			aria-label="Где с Вами связаться"
+		>
+			<label>Где с Вами связаться? *</label>
+			<div class="radio-group">
+				for _, method := range contactMethods {
+					<div>
+						<input
+							id={ "contact-" + method.Value }
+							class="radio-input"
+							type="radio"
+							name="contact_type"
+							value={ method.Value }
+							if state.Values["contact_type"] == method.Value || (state.Values["contact_type"] == "" && method.Value == "telegram") {
+								checked
+							}
+						/>
+						<label
+							for={ "contact-" + method.Value }
+							class="radio-label"
+						>
+							{ method.Label }
+						</label>
+					</div>
+				}
+			</div>
+		</div>
+		<button type="submit" class="btn">
+			<span class="btn-text">
+				if state.Success {
+					Отправлено
+				} else {
+					Отправить
+				}
+			</span>
+			<span class={ setShowClass("w-4 h-4 send", !state.Success) }>
+				@icons.ArrowRight("w-4 h-4 -rotate-45")
+			</span>
+			<span class={ setShowClass("w-4 h-4 success", state.Success) }>
+				@icons.ThumbsUp("w-4 h-4")
+			</span>
+		</button>
+	</form>
+
+	<script>
+		function handleSuccessTimeout(formEl) {
+			const btn = formEl.querySelector(".btn");
+			console.log(btn)
+			if (!btn) return;
+			const sendIcon = btn.querySelector(".send");
+			const successIcon = btn.querySelector(".success");
+
+			if (successIcon.classList.contains("show")) {
+				setTimeout(() => {
+					sendIcon.classList.add("show");
+					successIcon.classList.remove("show");
+					btn.querySelector(".btn-text").textContent = "Отправить";
+				}, 2000);
+			}
+		}
+	</script>
+}
+
+func setShowClass(class string, show bool) string {
+	if show {
+		return strings.Join([]string{class, "show"}, " ")
+	}
+	return class
+}

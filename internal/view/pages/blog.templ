@@ -1,0 +1,102 @@
+package pages
+
+import (
+    "mobile-backend-boilerplate/internal/view/layouts"
+	"mobile-backend-boilerplate/pkg/helper/utils"
+)
+
+type PostData struct {
+	ID         int64
+	Title      string
+	HeroImgURL string
+	Content    string
+	Likes      int
+	IsPublic   bool
+	CreatedAt  string
+	UpdatedAt  string
+}
+
+type PostsList struct {
+	posts []PostData
+}
+
+var posts = PostsList{
+	posts: []PostData{
+		{
+			ID:         0,
+			Title:      "First Post",
+			HeroImgURL: "",
+			Content:    "Content of the first post",
+			Likes:      0,
+			IsPublic:   true,
+			CreatedAt:  "12.10.2025",
+			UpdatedAt:  "12.10.2025",
+		},
+		{
+			ID:         1,
+			Title:      "Second Post",
+			HeroImgURL: "",
+			Content:    "Content of the second post",
+			Likes:      0,
+			IsPublic:   true,
+			CreatedAt:  "12.10.2025",
+			UpdatedAt:  "12.10.2025",
+		},
+		{
+			ID:         3,
+			Title:      "Third Post",
+			HeroImgURL: "",
+			Content:    "Content of the third post",
+			Likes:      0,
+			IsPublic:   true,
+			CreatedAt:  "12.10.2025",
+			UpdatedAt:  "12.10.2025",
+		},
+	},
+}
+
+templ BlogPage(props layouts.BaseLayoutProps) {
+	@layouts.BaseLayout(props) {
+		@BlogPagePartial(posts.posts)
+	}
+}
+
+templ BlogPageContent(props layouts.BaseLayoutProps) {
+	@layouts.BaseLayoutPartial(props) {
+		@BlogPagePartial(posts.posts)
+	}
+}
+
+templ BlogPagePartial(posts []PostData) {
+	<div class="dashboard-header">
+		<h1>Статьи</h1>
+	</div>
+	<div class="posts-grid">
+		for _, post := range posts {
+			<div class="post-card">
+				<div class="post-date">
+                    { utils.FormatTimeString(post.CreatedAt, "") }
+				</div>
+				<div class="post-card-img-container">
+					if post.HeroImgURL != "" {
+						<img
+							src={ post.HeroImgURL }
+							alt={ post.Title }
+							class="post-card-img"
+						/>
+					} else {
+						<div class="post-card-img-placeholder">
+                            <img
+                                src="/static/assets/images/picture.png"
+                                alt="without image"
+                            />
+                        </div>
+					}
+				</div>
+				<div class="post-card-content">
+					<h3 class="post-card-title">{ post.Title }</h3>
+				</div>
+			</div>
+		}
+	</div>
+}

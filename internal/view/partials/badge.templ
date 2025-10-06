@@ -1,0 +1,30 @@
+package partials
+
+templ Badge(label string) {
+    <style>
+        .badge {
+            display: inline-block;
+            padding: calc(var(--space-xs)) calc(var(--space-sm));
+            font-size: var(--text-xs);
+            font-weight: 400;
+            line-height: 1;
+            color: var(--muted-foreground);
+            background-color: var(--muted);
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+            vertical-align: middle;
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease;
+        }
+
+        .badge:hover {
+            filter: brightness(.98);
+            cursor: default;
+        }
+    </style>
+
+    <div class="badge">
+        { label }
+    </div>
+}

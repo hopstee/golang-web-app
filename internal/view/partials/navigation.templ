@@ -1,0 +1,120 @@
+package partials
+
+import "fmt"
+import "mobile-backend-boilerplate/pkg/helper/utils"
+
+templ Navigation(currentPath string) {
+	<style>
+        .navbar {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+			overflow: hidden;
+
+            width: 95svw;
+            max-width: 720px;
+			background: color-mix(in oklch, var(--muted) 80%, transparent);
+            border-radius: var(--radius-full);
+			backdrop-filter: blur(4px);
+
+			box-shadow: var(--shadow-md);
+        }
+
+        .nav-links {
+            overflow: auto;
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            transition: max-height 0.3s ease;
+            padding: var(--space-xs) var(--space-xs);
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: inherit;
+            font-size: 1rem;
+            flex-shrink: 0;
+
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-full);
+			color: var(--foreground);
+
+			flex: 1;
+  			text-align: center;
+			min-width: fit-content;
+        }
+
+		.nav-links a.active {
+			background: color-mix(in oklch, var(--background) 80%, transparent);
+			backdrop-filter: blur(4px);
+		}
+    </style>
+	<div class="navbar" id="navbar">
+		<div class="nav-links" id="nav-links">
+			<a
+				href="/"
+				hx-get="/"
+				hx-target="#content"
+				hx-swap="innerHTML"
+				hx-push-url="true"
+				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/" == currentPath, "active", "")) }
+			>
+				Главная
+			</a>
+			<a
+				href="/about"
+				hx-get="/about"
+				hx-target="#content"
+				hx-swap="innerHTML"
+				hx-push-url="true"
+				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/about" == currentPath, "active", "")) }
+			>
+				Обо мне
+			</a>
+			<a
+				href="/projects"
+				hx-get="/projects"
+				hx-target="#content"
+				hx-swap="innerHTML"
+				hx-push-url="true"
+				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/projects" == currentPath, "active", "")) }
+			>
+				Проекты
+			</a>
+			<a
+				href="/blog"
+				hx-get="/blog"
+				hx-target="#content"
+				hx-swap="innerHTML"
+				hx-push-url="true"
+				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/blog" == currentPath, "active", "")) }
+			>
+				Блог
+			</a>
+			<a
+				href="/contact"
+				hx-get="/contact"
+				hx-target="#content"
+				hx-swap="innerHTML"
+				hx-push-url="true"
+				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/contact" == currentPath, "active", "")) }
+			>
+				Связаться
+			</a>
+		</div>
+	</div>
+	<script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbar = document.getElementById("navbar");
+            const toggle = document.getElementById("navbar-toggle");
+
+            if (!navbar || !toggle) return;
+
+            toggle.addEventListener("click", () => {
+                navbar.classList.toggle("open");
+            });
+        });
+    </script>
+}

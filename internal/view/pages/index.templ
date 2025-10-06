@@ -1,0 +1,46 @@
+package pages
+
+import "mobile-backend-boilerplate/internal/view/layouts"
+import "mobile-backend-boilerplate/internal/view/icons"
+
+templ IndexPage(props layouts.BaseLayoutProps) {
+	@layouts.BaseLayout(props) {
+		@IndexPagePartial()
+	}
+}
+
+templ IndexPageContent(props layouts.BaseLayoutProps) {
+	@layouts.BaseLayoutPartial(props) {
+		@IndexPagePartial()
+	}
+}
+
+templ IndexPagePartial() {
+	<style>
+        .personal-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+    </style>
+	<img src="/static/assets/images/personal-image-dark.png" alt="Фото" class="personal-image"/>
+	<h1>Привет! Я Эдик.</h1>
+	<p>
+		Соло-разработчик, создаю современные веб- и мобильные решения.
+		Работаю напрямую с заказчиком, без посредников. Создаю
+		стабильный, понятный код, который решает реальные бизнес-задачи.
+		Реализую полный цикл разработки: от прототипа и дизайна до
+		стабильного релиза и поддержки.
+	</p>
+	<p>
+		Разрабатываю: корпоративные сайты, лендинги, личные кабинеты,
+		CRM/ERP-системы, мобильные приложения, API-сервисы, ботов и
+		системы автоматизации.
+	</p>
+	<a href="/contact" hx-get="/contact" hx-target="#content" hx-swap="innerHTML">
+		<button class="btn">
+			Оставить заявку
+			@icons.ArrowRight("h-4 triling-icon -rotate-45")
+		</button>
+	</a>
+}

@@ -1,0 +1,108 @@
+package layouts
+
+import (
+	"strings"
+
+	"mobile-backend-boilerplate/internal/view/meta"
+	"mobile-backend-boilerplate/internal/view/partials"
+	"net/http"
+)
+
+type BaseLayoutProps struct {
+	HeadData    meta.HeadData
+	CurrentPath string
+
+	WithTopPadding bool
+	WideWrapper    bool
+	Centered       bool
+}
+
+var defaultHead = meta.HeadData{
+	Title:       "Korobka",
+	Description: "Best agency",
+	URL:         "test-url",
+	Image:       "no-image",
+}
+
+func NewBaseLayoutProps(r *http.Request) BaseLayoutProps {
+	return BaseLayoutProps{
+		HeadData:       defaultHead,
+		CurrentPath:    r.URL.Path,
+		WithTopPadding: true,
+		WideWrapper:    false,
+		Centered:       false,
+	}
+}
+
+templ BaseLayout(props BaseLayoutProps) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			@meta.Head(props.HeadData)
+			<style>
+            :root {
+                --top-padding: calc(var(--spacing, 1rem) * 14);
+            }
+
+            main {
+                display: flex;
+                align-items: start;
+                justify-content: center;
+            }
+        </style>
+			<script src="/static/js/htmx.min.js"></script>
+		</head>
+		<body>
+			<div class="top-soft-edge"></div>
+			<main id="content">
+				@BaseLayoutPartial(props) {
+					{ children... }
+				}
+			</main>
+			<div class="bottom-soft-edge"></div>
+		</body>
+	</html>
+}
+
+templ BaseLayoutPartial(props BaseLayoutProps) {
+	@partials.Navigation(props.CurrentPath)
+	<div class={ topPaddingClass(props.WithTopPadding) }>
+		<div class={ wideWrapperClass(props.WideWrapper) }>
+			<div class="container">
+				@CenteredContent(props.Centered) {
+					{ children... }
+				}
+			</div>
+		</div>
+	</div>
+}
+
+templ CenteredContent(centered bool) {
+	if centered {
+		<div class="centered-container-wrapper">
+			<div class="centered-container">
+				{ children... }
+			</div>
+		</div>
+	} else {
+		{ children... }
+	}
+}
+
+func topPaddingClass(withTopPadding bool) string {
+	if withTopPadding {
+		return "main-top-padding"
+	}
+
+	return ""
+}
+
+func wideWrapperClass(wideWrapper bool) string {
+	baseClass := "wrapper"
+
+	if wideWrapper {
+		return strings.Join([]string{baseClass, "wide-wrapper"}, " ")
+	}
+
+	return baseClass
+}

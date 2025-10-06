@@ -1,0 +1,214 @@
+package pages
+
+import (
+	"mobile-backend-boilerplate/internal/view/layouts"
+	"mobile-backend-boilerplate/internal/view/partials"
+	"mobile-backend-boilerplate/internal/view/icons"
+)
+
+type ProjectItemData struct {
+	Name          string
+	Description   string
+	URL           string
+	Technologies  []string
+	InDevelopment bool
+}
+
+type ProjectsSectionData struct {
+	Name     string
+	Projects []ProjectItemData
+}
+
+type ProjectsData struct {
+	ProjectsSections []ProjectsSectionData
+}
+
+var projects = ProjectsData{
+	ProjectsSections: []ProjectsSectionData{
+		{
+			Name: "Реализованные",
+			Projects: []ProjectItemData{
+				{
+					Name:        "Система продажи билетов",
+					Description: "Полностью разработал фронтенд: личный кабинет, страницы мероприятий, корзину и оформление заказов.",
+					URL:         "https://cultural.md",
+					Technologies: []string{
+						"Next.js",
+					},
+				},
+				{
+					Name:        "Сайт-портфолио",
+					Description: "Современный адаптивный мультиязычный сайт, демонстрирующий навыки и проекты.",
+					URL:         "https://edkr.vercel.app",
+					Technologies: []string{
+						"Next.js",
+					},
+				},
+				{
+					Name:        "Личный сайт / сайт личного бренда",
+					Description: "Блог с админкой, интеграция с Telegram для заявок, универсальное применение для личного бренда.",
+					URL:         "/",
+					Technologies: []string{
+						"Go", "Astro", "SQLite",
+					},
+				},
+			},
+		},
+		{
+			Name: "Open Source / репозитории",
+			Projects: []ProjectItemData{
+				{
+					Name:        "Доработанный клиент Mattermost",
+					Description: "Массовые действия и пересылка сообщений для удобной командной работы.",
+					URL:         "https://cultural.md",
+					Technologies: []string{
+						"Go", "React",
+					},
+				},
+				{
+					Name:        "Плагин прочтения для Mattermost",
+					Description: "Добавляет функционал отображения количества просмотров сообщений и кто их просмотрел.",
+					URL:         "#",
+					Technologies: []string{
+						"Go", "React",
+					},
+				},
+				{
+					Name:          "Сервис транскрибирования",
+					Description:   "Автоматическая расшифровка аудио в текст с удобным API и нейросетью Whisper от OpenAI.",
+					URL:           "/",
+					Technologies:  []string{"Python", "Redis", "Docker"},
+					InDevelopment: true,
+				},
+				{
+					Name:        "Бот для сохранения ссылок",
+					Description: "Сохраняет и предоставляет ссылки другим пользователям по сгенерированному коду.",
+					URL:         "/",
+					Technologies: []string{
+						"NestJS", "SQLite",
+					},
+				},
+				{
+					Name:        "Система управления переменными окружения",
+					Description: "Инструмент для удобного менеджмента env-переменных.",
+					URL:         "/",
+					Technologies: []string{
+						"Laravel", "React", "PostgreSQL",
+					},
+				},
+			},
+		},
+		{
+			Name: "Опыт в командах",
+			Projects: []ProjectItemData{
+				{
+					Name:        "Crossnetics",
+					Description: "Разработка web3 маркетплейса: рефакторинг и реализация модуля заявок.",
+					URL:         "https://crossnetics.io/",
+					Technologies: []string{
+						"NestJS", "Next.js", "MySQL", "Redis", "Elasticsearch", "Docker",
+					},
+				},
+				{
+					Name:        "Oculeus",
+					Description: "Разработка CRM системы: реализация модулей и внутреннего чата.",
+					URL:         "https://www.oculeus.com/",
+					Technologies: []string{
+						"NestJS", "React", "PostgreSQL", "Redis", "Elasticsearch", "Docker",
+					},
+				},
+				{
+					Name:        "Ilab",
+					Description: "Разработка системы контроля зарядных станций: личный кабинет, процесс зарядки и другие функции.",
+					URL:         "https://ilab.md",
+					Technologies: []string{
+						"Codeigniter", "MySQL", "Nginx",
+					},
+				},
+				{
+					Name:        "Unifun",
+					Description: "Разработка доски объявлений: личный кабинет, поиск, аутентификация и другие функции.",
+					URL:         "https://unifun.com/",
+					Technologies: []string{
+						"Laravel", "MySQL", "Nginx",
+					},
+				},
+			},
+		},
+	},
+}
+
+templ ProjectsPage(props layouts.BaseLayoutProps) {
+	@layouts.BaseLayout(props) {
+		@ProjectsPagePartial(projects)
+	}
+}
+
+templ ProjectsPageContent(props layouts.BaseLayoutProps) {
+	@layouts.BaseLayoutPartial(props) {
+		@ProjectsPagePartial(projects)
+	}
+}
+
+templ ProjectsPagePartial(projects ProjectsData) {
+	<style>
+        .content {
+            padding-bottom: calc(var(--space-xl));
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section {
+            color: var(--foreground);
+            font-weight: 600;
+        }
+    </style>
+	<div class="content">
+		<h1>Проекты</h1>
+
+        for _, section := range projects.ProjectsSections {
+		    @ProjectsSection(section)
+		}
+	</div>
+}
+
+templ ProjectsSection(projectsSection ProjectsSectionData) {
+	<h2>{ projectsSection.Name }</h2>
+	<ul>
+		for _, project := range projectsSection.Projects {
+			@ProjectItem(project)
+		}
+	</ul>
+}
+
+templ ProjectItem(project ProjectItemData) {
+	<style>
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+    </style>
+	<li>
+		<a class="link-container" href={ project.URL } target="_blank">
+			if project.InDevelopment {
+				@partials.Tooltip(partials.Top, "Проект находится в разработке", 150) {
+					<div class="warning-container h-7">
+						@icons.BageAlert("h-4")
+						// <BadgeAlert class="h-4" />
+					</div>
+				}
+			}
+			<span class="accent-text">{ project.Name }</span>
+			@icons.ArrowRight("h-4 triling-icon -rotate-45")
+		</a>
+		<div class="badge-group mt-2">
+			for _, item := range project.Technologies {
+				@partials.Badge(item)
+			}
+		</div>
+		<p class="mt-3">
+			{ project.Description }
+		</p>
+	</li>
+}

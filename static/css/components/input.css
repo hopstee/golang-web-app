@@ -1,0 +1,19 @@
+.input-field {
+    padding: var(--space-sm) var(--space-md);
+    height: var(--space-2xl);
+    font-size: var(--text-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--background);
+    color: var(--muted-foreground);
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--background);
+    box-shadow: var(--shadow-success);
+}

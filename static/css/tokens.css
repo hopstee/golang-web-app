@@ -1,0 +1,160 @@
+:root {
+    /* ================= Цвета (светлая тема) ================= */
+    --primary: oklch(29.6% 0.005 106.7);
+    --primary-foreground: oklch(98% 0.006 286.3);
+    --primary-muted: oklch(32.6% 0.005 106.7);
+
+    --secondary: oklch(85% 0.15 95);
+    /* мягкий жёлтый */
+    --secondary-foreground: oklch(25% 0.03 95);
+
+    --accent: oklch(73% 0.14 79);
+    --accent-foreground: oklch(31% 0.02 87);
+    --accent-light: oklch(81% 0.17 75 / 11%);
+
+    --background: oklch(98% 0.006 286.3);
+    --foreground: oklch(29.6% 0.005 106.7);
+
+    --muted: oklch(95% 0.005 286);
+    --muted-foreground: oklch(55.6% 0 0);
+
+    --surface: oklch(100% 0 95);
+    --surface-foreground: oklch(20% 0.02 95);
+
+    --text-primary: oklch(20% 0.02 95);
+    --text-secondary: oklch(45% 0.01 95);
+    --text-disabled: oklch(70% 0 95);
+    --text-muted: oklch(53.5% 0.006 228.9);
+
+    --error: oklch(55% 0.22 25);
+    --error-foreground: oklch(98% 0.02 25);
+
+    --success: oklch(62% 0.22 258);
+    --success-light: oklch(59.7% 0.22 258 / 20%);
+    --success-foreground: oklch(98% 0.02 140);
+
+    --warning: oklch(93% 0.06 79.7);
+    --warning-foreground: oklch(57% 0.11 63);
+
+    --info: oklch(65% 0.20 220);
+    --info-foreground: oklch(98% 0.02 220);
+
+    --border: oklch(85% 0.01 95);
+    --border-foreground: oklch(20% 0.02 95);
+
+    --overlay: oklch(0% 0 0 / 50%);
+    --overlay-foreground: oklch(98% 0.02 95);
+
+    /* ================= Типографика ================= */
+    --font-base: 'RecamaU', sans-serif;
+    /* --font-heading: 'UrbanSlavic', serif; */
+    --font-heading: 'DelaGothicOne', sans-serif;
+    --font-monospace: 'Fira Code', monospace;
+
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
+
+    --line-height-xs: calc(1 / 0.75);
+    --line-height-sm: calc(1.25 / 0.875);
+    --line-height-base: calc(1.5 / 1);
+    --line-height-lg: calc(1.75 / 1.125);
+    --line-height-xl: calc(1.75 / 1.25);
+    --line-height-2xl: calc(2 / 1.5);
+    --line-height-3xl: calc(2.25 / 1.875);
+    --line-height-4xl: calc(2.5 / 2.25);
+    --line-height-5xl: 1;
+
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.02em;
+
+    /* ================= Базовый шаг spacing ================= */
+    --spacing: 0.25rem;
+
+    --space-xxs: calc(var(--spacing) * 0.5);
+    /* 2px */
+    --space-xs: calc(var(--spacing) * 1);
+    /* 4px */
+    --space-sm: calc(var(--spacing) * 2);
+    /* 8px */
+    --space-md: calc(var(--spacing) * 4);
+    /* 16px */
+    --space-lg: calc(var(--spacing) * 6);
+    /* 24px */
+    --space-xl: calc(var(--spacing) * 8);
+    /* 32px */
+    --space-2xl: calc(var(--spacing) * 10);
+    /* 40px */
+    --space-3xl: calc(var(--spacing) * 12);
+    /* 48px */
+
+    /* ================= Радиусы ================= */
+    --radius-sm: calc(var(--spacing) * 0.5);
+    --radius-md: calc(var(--spacing) * 1);
+    --radius-lg: calc(var(--spacing) * 2);
+    --radius-xl: calc(var(--spacing) * 3);
+    --radius-2xl: calc(var(--spacing) * 4);
+    --radius-full: 9999px;
+
+    /* ================= Тени ================= */
+    --shadow-xs: 0 1px 2px oklch(0% 0 0 / 0.05);
+    --shadow-sm: 0 2px 4px oklch(0% 0 0 / 0.05);
+    --shadow-md: 0 4px 6px oklch(0% 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px oklch(0% 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px oklch(0% 0 0 / 0.15);
+
+    --shadow-success: 0 0 0 2px var(--accent-light);
+
+    /* ================= Анимации ================= */
+    --transition-fast: 0.15s ease-in-out;
+    --transition-medium: 0.3s ease-in-out;
+    --transition-slow: 0.5s ease-in-out;
+}
+
+/* ================= Тёмная тема ================= */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: oklch(98% 0.006 286.3);
+        --primary-foreground: oklch(29% 0.005 106.7);
+        --primary-muted: oklch(88% 0.006 286.3);
+
+        --secondary: oklch(75% 0.15 95);
+        --secondary-foreground: oklch(15% 0.03 95);
+
+        --accent: oklch(86% 0.14 83);
+        --accent-foreground: oklch(31% 0.02 87);
+        --accent-light: oklch(81% 0.17 75 / 11%);
+
+        --background: oklch(29% 0.005 106.7);
+        --foreground: oklch(98% 0.006 286.3);
+
+        --muted: oklch(36% 0 68);
+        --muted-foreground: oklch(68% 0 106);
+
+        --surface: oklch(33% 0 106);
+        --surface-foreground: oklch(95% 0.01 95);
+
+        --text-primary: oklch(95% 0.01 95);
+        --text-secondary: oklch(75% 0.01 95);
+        --text-disabled: oklch(55% 0 95);
+        --text-muted: oklch(70% 0 0);
+
+        --error: oklch(62% 0.2 18);
+
+        --warning: oklch(83% 0.14 75);
+        --warning-foreground: oklch(46% 0.08 64);
+
+        --border: oklch(35% 0.01 95);
+        --border-foreground: oklch(90% 0.01 95);
+
+        --overlay: oklch(0% 0 0 / 70%);
+        --overlay-foreground: oklch(95% 0.01 95);
+    }
+}

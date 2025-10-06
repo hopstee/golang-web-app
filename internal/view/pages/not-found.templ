@@ -1,0 +1,38 @@
+package pages
+
+import "mobile-backend-boilerplate/internal/view/layouts"
+
+templ NotFoundPage(props layouts.BaseLayoutProps) {
+	@layouts.BaseLayout(props) {
+		@NotFoundPagePartial()
+	}
+}
+
+templ NotFoundPageContent(props layouts.BaseLayoutProps) {
+    @layouts.BaseLayoutPartial(props) {
+        @NotFoundPagePartial()
+    }
+}
+
+templ NotFoundPagePartial() {
+    <style>
+        .not-found-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+            .not-found-image {
+                max-width: 200px;
+                margin: 0 auto;
+            }
+
+            .not-found-text {
+                text-align: center;
+            }
+        }
+    </style>
+    <div class="not-found-container">
+	    <img src="/static/assets/images/mole.png" alt="Страница не найдена" class="not-found-image"/>
+        <p class="not-found-text">Крот Борис ничего не нашел по этому адресу</p>
+    </div>
+}

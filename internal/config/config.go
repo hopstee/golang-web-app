@@ -1,0 +1,73 @@
+package config
+
+import (
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
+)
+
+type Server struct {
+	Addr string `mapstructure:"addr"`
+}
+
+type Database struct {
+	Driver     string `mapstructure:"driver"`
+	DataSource string `mapstructure:"dsn"`
+}
+
+type JWTAuth struct {
+	Secret string `mapstructure:"secret"`
+}
+
+type Authentication struct {
+	JWT JWTAuth `mapstructure:"jwt"`
+}
+
+type Telegram struct {
+	Token  string `mapstructure:"token"`
+	ChatID string `mapstructure:"chat_id"`
+}
+
+type Static struct {
+	Dir string `mapstructure:"dir"`
+}
+
+type Config struct {
+	Server         Server         `mapstructure:"server"`
+	Database       Database       `mapstructure:"database"`
+	Authentication Authentication `mapstructure:"authentication"`
+	Telegram       Telegram       `mapstructure:"telegram"`
+	Static         Static         `mapstructure:"static"`
+}
+
+func LoadConfig(path string) (*Config, error) {
+	_ = godotenv.Load()
+
+	v := viper.New()
+	v.SetConfigFile(path)
+	v.SetConfigType("yml")
+
+	v.AutomaticEnv()
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	if err := v.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("failed to read config: %w", err)
+	}
+
+	for _, key := range v.AllKeys() {
+		val := v.GetString(key)
+		if strings.Contains(val, "${") {
+			v.Set(key, os.ExpandEnv(val))
+		}
+	}
+
+	var cfg Config
+	if err := v.Unmarshal(&cfg); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+
+	return &cfg, nil
+}

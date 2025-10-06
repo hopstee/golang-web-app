@@ -1,0 +1,9 @@
+.card {
+    background: var(--muted);
+    color: var(--muted-foreground);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-md);
+    margin: var(--space-md) 0;
+    margin: 0 auto;
+}

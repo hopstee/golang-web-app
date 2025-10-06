@@ -1,0 +1,72 @@
+package partials
+
+import "fmt"
+
+type Position int
+
+const (
+	Top Position = iota
+	Bottom
+	Left
+	Right
+)
+
+func (p Position) String() string {
+	return [...]string{"top", "bottom", "left", "right"}[p]
+}
+
+templ Tooltip(position Position, label string, width int) {
+    <style>
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip-content {
+            position: absolute;
+            max-width: 220px;
+            background: var(--muted);
+            color: var(--foreground);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-xl);
+            font-size: var(--text-xs);
+            white-space: normal;
+            text-align: center;
+            opacity: 0;
+            box-shadow: var(--shadow-md);
+            pointer-events: none;
+            transform: scale(0.95);
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+            z-index: 100;
+        }
+
+        .tooltip-container[data-position="top"] .tooltip-content {
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        .tooltip-container[data-position="bottom"] .tooltip-content {
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        .tooltip-container:hover .tooltip-content {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+            pointer-events: auto;
+        }
+    </style>
+
+    <div class="tooltip-container" data-position={ position }>
+        { children... }
+        <div class="tooltip-content" style={ tooltipContentWidth(width) }>{ label }</div>
+    </div>
+}
+
+func tooltipContentWidth(width int) string {
+    return fmt.Sprintf("width: %dpx", width)
+}
