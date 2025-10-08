@@ -15,6 +15,7 @@ type BaseLayoutProps struct {
 	WithTopPadding bool
 	WideWrapper    bool
 	Centered       bool
+	WithNavigation bool
 }
 
 var defaultHead = meta.HeadData{
@@ -31,6 +32,7 @@ func NewBaseLayoutProps(r *http.Request) BaseLayoutProps {
 		WithTopPadding: true,
 		WideWrapper:    false,
 		Centered:       false,
+		WithNavigation: true,
 	}
 }
 
@@ -65,7 +67,9 @@ templ BaseLayout(props BaseLayoutProps) {
 }
 
 templ BaseLayoutPartial(props BaseLayoutProps) {
-	@partials.Navigation(props.CurrentPath)
+	if props.WithNavigation {
+		@partials.Navigation(props.CurrentPath)
+	}
 	<div class={ topPaddingClass(props.WithTopPadding) }>
 		<div class={ wideWrapperClass(props.WideWrapper) }>
 			<div class="container">

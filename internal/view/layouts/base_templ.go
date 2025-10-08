@@ -23,6 +23,7 @@ type BaseLayoutProps struct {
 	WithTopPadding bool
 	WideWrapper    bool
 	Centered       bool
+	WithNavigation bool
 }
 
 var defaultHead = meta.HeadData{
@@ -39,6 +40,7 @@ func NewBaseLayoutProps(r *http.Request) BaseLayoutProps {
 		WithTopPadding: true,
 		WideWrapper:    false,
 		Centered:       false,
+		WithNavigation: true,
 	}
 }
 
@@ -126,9 +128,11 @@ func BaseLayoutPartial(props BaseLayoutProps) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = partials.Navigation(props.CurrentPath).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		if props.WithNavigation {
+			templ_7745c5c3_Err = partials.Navigation(props.CurrentPath).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
 		var templ_7745c5c3_Var4 = []any{topPaddingClass(props.WithTopPadding)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)

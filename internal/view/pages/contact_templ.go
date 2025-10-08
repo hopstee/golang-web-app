@@ -33,24 +33,24 @@ var contactMethods = []ContactMethods{
 	{Value: "phone", Label: "Телефон", Placeholder: "Номер телефона"},
 }
 
-type FormState struct {
+type ContactFormState struct {
 	Values  map[string]string
 	Errors  map[string]string
 	Success bool
 }
 
-func NewFormState() FormState {
+func NewContactFormState() ContactFormState {
 	values := make(map[string]string)
 	values["contact_type"] = contactMethods[0].Value
 
-	return FormState{
+	return ContactFormState{
 		Values:  values,
 		Errors:  make(map[string]string),
 		Success: false,
 	}
 }
 
-func NewFormStateFromRequest(req repository.Request) FormState {
+func NewContactFormStateFromRequest(req repository.Request) ContactFormState {
 	values := map[string]string{
 		"name":         req.Name,
 		"message":      req.Message,
@@ -63,20 +63,20 @@ func NewFormStateFromRequest(req repository.Request) FormState {
 		values["amount"] = strconv.Itoa(req.Amount)
 	}
 
-	return FormState{
+	return ContactFormState{
 		Values: values,
 		Errors: make(map[string]string),
 	}
 }
 
-func NewFormStateWithErrors(req repository.Request, errors map[string]string) FormState {
-	fs := NewFormStateFromRequest(req)
+func NewContactFormStateWithErrors(req repository.Request, errors map[string]string) ContactFormState {
+	fs := NewContactFormStateFromRequest(req)
 	fs.Errors = errors
 
 	return fs
 }
 
-func ContactPage(props layouts.BaseLayoutProps, state FormState) templ.Component {
+func ContactPage(props layouts.BaseLayoutProps, state ContactFormState) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -141,7 +141,7 @@ func ContactPage(props layouts.BaseLayoutProps, state FormState) templ.Component
 	})
 }
 
-func ContactPageContent(props layouts.BaseLayoutProps, state FormState) templ.Component {
+func ContactPageContent(props layouts.BaseLayoutProps, state ContactFormState) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -257,7 +257,7 @@ func ContactPagePartial() templ.Component {
 	})
 }
 
-func ContactPagePartialForm(state FormState) templ.Component {
+func ContactPagePartialForm(state ContactFormState) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {

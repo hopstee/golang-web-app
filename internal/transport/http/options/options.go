@@ -8,14 +8,18 @@ import (
 )
 
 type Options struct {
-	StaticDir         string
+	StaticDir string
+
 	MobileAuthHandler *apiHandlers.MobileAuthHandler
-	WebAuthHandler    *webHandlers.WebAuthHandler
 	RequestHandler    *apiHandlers.RequestHandler
-	PostHandler       *webHandlers.PostHandler
-	ContactHandler    *webHandlers.ContactHandler
+
+	WebAuthHandler *webHandlers.WebAuthHandler
+	PostHandler    *webHandlers.PostHandler
+	ContactHandler *webHandlers.ContactHandler
+
 	MobileAuthService *service.MobileAuthService
 	WebAuthService    *service.WebAuthService
 	PostService       *service.PostService
-	Logger            *slog.Logger
+
+	Logger *slog.Logger
 }

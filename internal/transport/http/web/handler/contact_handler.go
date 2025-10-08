@@ -29,7 +29,7 @@ func (h *ContactHandler) Show(w http.ResponseWriter, r *http.Request) {
 	data := layouts.NewBaseLayoutProps(r)
 	data.Centered = true
 
-	formState := pages.NewFormState()
+	formState := pages.NewContactFormState()
 
 	HandleStaticPage(w, r, pages.ContactPage(data, formState), pages.ContactPageContent(data, formState))
 }
@@ -59,7 +59,7 @@ func (h *ContactHandler) Submit(w http.ResponseWriter, r *http.Request) {
 	if len(errors) > 0 {
 		data := layouts.NewBaseLayoutProps(r)
 		data.Centered = true
-		formState := pages.NewFormStateWithErrors(state, errors)
+		formState := pages.NewContactFormStateWithErrors(state, errors)
 
 		HandleStaticPage(w, r, pages.ContactPage(data, formState), pages.ContactPagePartialForm(formState))
 		return
@@ -78,7 +78,7 @@ func (h *ContactHandler) Submit(w http.ResponseWriter, r *http.Request) {
 
 	data := layouts.NewBaseLayoutProps(r)
 	data.Centered = true
-	formState := pages.NewFormState()
+	formState := pages.NewContactFormState()
 	formState.Success = true
 
 	HandleStaticPage(w, r, pages.ContactPage(data, formState), pages.ContactPagePartialForm(formState))
