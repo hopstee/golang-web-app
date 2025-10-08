@@ -3,7 +3,7 @@ package web
 import (
 	"mobile-backend-boilerplate/internal/transport/http/options"
 	"mobile-backend-boilerplate/internal/transport/http/web/handler"
-	middleware "mobile-backend-boilerplate/internal/transport/http/web/middleware"
+	"mobile-backend-boilerplate/internal/transport/http/web/middleware"
 	"mobile-backend-boilerplate/internal/view/layouts"
 	"mobile-backend-boilerplate/internal/view/pages"
 	"net/http"
@@ -58,31 +58,19 @@ func NewRouter(opts options.Options) *chi.Mux {
 		handler.HandleStaticPage(w, r, pages.BlogPage(data), pages.BlogPageContent(data))
 	})
 
-	r.With(middleware.CorsMiddleware).Group(func(r chi.Router) {
-		r.Route("/auth", func(r chi.Router) {
-			r.Post("/login", opts.WebAuthHandler.Login)
-			r.Post("/login", opts.WebAuthHandler.Login)
-			r.Post("/logout", opts.WebAuthHandler.Logout)
-
-			r.With(middleware.AuthMiddleware(opts.WebAuthService)).Group(func(r chi.Router) {
-				r.Get("/me", opts.WebAuthHandler.MeWeb)
-			})
+	r.Route("/auth", func(r chi.Router) {
+		r.Route("/login", func(r chi.Router) {
+			r.Get("/", opts.WebAuthHandler.Show)
+			r.Post("/", opts.WebAuthHandler.Submit)
 		})
 
-		r.Route("/post", func(r chi.Router) {
-			r.Get("/all/public", opts.PostHandler.GetAllPublic)
-			r.Get("/public/:id", opts.PostHandler.GetPublic)
+		r.Get("/logout", opts.WebAuthHandler.Logout)
+	})
 
-			r.With(middleware.AuthMiddleware(opts.WebAuthService)).Group(func(r chi.Router) {
-				r.Get("/all", opts.PostHandler.GetAllPosts)
-				r.Get("/{id}", opts.PostHandler.GetPost)
-				r.Post("/", opts.PostHandler.CreatePost)
-				r.Put("/{id}", opts.PostHandler.UpdatePost)
-				r.Delete("/{id}", opts.PostHandler.DeletePost)
-			})
+	r.With(middleware.AuthMiddleware(opts.WebAuthService)).Group(func(r chi.Router) {
+		r.Get("/dashboard", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte{'t', 'e', 's', 't'})
 		})
-
-		r.Post("/submit", opts.RequestHandler.Submit)
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {

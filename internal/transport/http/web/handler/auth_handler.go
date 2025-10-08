@@ -2,13 +2,14 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"mobile-backend-boilerplate/internal/service"
 	"mobile-backend-boilerplate/internal/transport/http/web/middleware"
+	"mobile-backend-boilerplate/internal/view/layouts"
+	"mobile-backend-boilerplate/internal/view/pages"
 	"net/http"
 	"time"
 )
-
-// TODO: переписать хэндлер для работы с templ + htmx
 
 type WebAuthHandler struct {
 	webAuthService *service.WebAuthService
@@ -22,23 +23,61 @@ func NewWebAuthHandler(webAuthService *service.WebAuthService, adminService *ser
 	}
 }
 
-type adminAuthRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email,omitempty"`
-	DeviceID string `json:"device_id"`
+func (h *WebAuthHandler) Show(w http.ResponseWriter, r *http.Request) {
+	data := layouts.NewBaseLayoutProps(r)
+	data.Centered = true
+	data.WithNavigation = false
+	data.WithTopPadding = false
+
+	cookie, err := r.Cookie("admin_token")
+	if err == nil && cookie.Value != "" {
+		_, err := h.webAuthService.Me(cookie.Value)
+		if err == nil {
+			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+			return
+		}
+	}
+
+	formState := pages.NewLoginFormState()
+	HandleStaticPage(w, r, pages.LoginPage(data, formState), pages.LoginPageContent(data, formState))
 }
 
-func (h *WebAuthHandler) Login(w http.ResponseWriter, r *http.Request) {
-	var req adminAuthRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+func (h *WebAuthHandler) Submit(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Incorrect data", http.StatusBadRequest)
 		return
 	}
 
-	token, err := h.webAuthService.Login(req.Username, req.Password)
+	adminData := pages.LoginFormData{
+		Username: r.FormValue("username"),
+		Password: r.FormValue("password"),
+	}
+
+	data := layouts.NewBaseLayoutProps(r)
+	data.Centered = true
+
+	formErrors := h.validateForm(&adminData)
+	if len(formErrors) > 0 {
+		formState := pages.NewLoginFormStateWithErrors(adminData, formErrors)
+
+		HandleStaticPage(w, r, pages.LoginPage(data, formState), pages.LoginPagePartialForm(formState))
+		return
+	}
+
+	token, err := h.webAuthService.Login(adminData.Username, adminData.Password)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		switch {
+		case errors.Is(err, service.ErrUserNotFound):
+			formErrors["username"] = "Пользователь не найден"
+		case errors.Is(err, service.ErrInvalidPassword):
+			formErrors["password"] = "Неверный пароль"
+		default:
+			formErrors["form"] = "Ошибка авторизации, попробуйте позже"
+		}
+
+		formState := pages.NewLoginFormStateWithErrors(adminData, formErrors)
+		HandleStaticPage(w, r, pages.LoginPage(data, formState), pages.LoginPagePartialForm(formState))
 		return
 	}
 
@@ -52,7 +91,22 @@ func (h *WebAuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		Expires:  time.Now().Add(30 * 24 * time.Hour),
 	})
 
+	w.Header().Set("HX-Redirect", "/dashboard")
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *WebAuthHandler) validateForm(data *pages.LoginFormData) map[string]string {
+	errors := make(map[string]string)
+
+	if data.Username == "" {
+		errors["username"] = "Обязательное поле"
+	}
+
+	if data.Password == "" {
+		errors["password"] = "Обязательное поле"
+	}
+
+	return errors
 }
 
 func (h *WebAuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +119,8 @@ func (h *WebAuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 		Secure:   true,
 		SameSite: http.SameSiteStrictMode,
 	})
-	w.WriteHeader(http.StatusOK)
+
+	http.Redirect(w, r, "/auth/login", http.StatusPermanentRedirect)
 }
 
 func (h *WebAuthHandler) MeWeb(w http.ResponseWriter, r *http.Request) {

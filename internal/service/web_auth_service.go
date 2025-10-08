@@ -2,11 +2,15 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"log/slog"
 	"mobile-backend-boilerplate/internal/repository"
 	"mobile-backend-boilerplate/pkg/helper/jwt"
 	"mobile-backend-boilerplate/pkg/helper/password"
+)
+
+var (
+	ErrUserNotFound    = errors.New("user not found")
+	ErrInvalidPassword = errors.New("invalid password")
 )
 
 type WebAuthService struct {
@@ -32,13 +36,12 @@ func (s *WebAuthService) Login(username, passwordStr string) (string, error) {
 	authData, err := s.adminRepo.GetAuthData(username)
 	if err != nil {
 		s.logger.Warn("admin login failed: admin not found", slog.String("username", username), slog.Any("err", err))
-		return "", err
+		return "", ErrUserNotFound
 	}
 
-	fmt.Printf("is pass correct: %v", password.CheckPasswordHash(passwordStr, authData.Password))
 	if !password.CheckPasswordHash(passwordStr, authData.Password) {
 		s.logger.Warn("admin login failed: invalid password", slog.String("username", username))
-		return "", errors.New("invalid password")
+		return "", ErrInvalidPassword
 	}
 
 	accessToken, _, err := s.jwtUtil.CreateAccessToken(authData.ID, authData.TokenVersion, true)
