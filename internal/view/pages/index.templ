@@ -37,7 +37,13 @@ templ IndexPagePartial() {
 		CRM/ERP-системы, мобильные приложения, API-сервисы, ботов и
 		системы автоматизации.
 	</p>
-	<a href="/contact" hx-get="/contact" hx-target="#content" hx-swap="innerHTML">
+	<a
+		href="/contact"
+		hx-get="/contact"
+		hx-target="#content"
+		hx-swap="innerHTML"
+		hx-push-url="true"
+	>
 		<button class="btn">
 			Оставить заявку
 			@icons.ArrowRight("h-4 triling-icon -rotate-45")
