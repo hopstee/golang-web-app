@@ -1,6 +1,5 @@
 .PHONY: build
-build:
-	templ generate internal/view
+build: templ-gen
 	go build -o ./bin/app ./cmd/app/main.go
 
 .PHONY: run
@@ -12,9 +11,13 @@ build-scripts:
 	go build -o ./bin/scripts ./cmd/scripts/main.go
 
 .PHONY: add-admin
-run-scripts: build-scripts
+add-admin: build-scripts
 	./bin/scripts create
 
 .PHONY: upsert-admin
-run-scripts: build-scripts
+upsert-admin: build-scripts
 	./bin/scripts create --force
+
+.PHONY: templ-gen
+templ-gen:
+	templ generate internal/view
