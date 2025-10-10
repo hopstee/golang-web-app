@@ -3,14 +3,14 @@ package pages
 import "mobile-backend-boilerplate/internal/view/layouts"
 import "mobile-backend-boilerplate/internal/view/icons"
 
-templ IndexPage(props layouts.BaseLayoutProps) {
-	@layouts.BaseLayout(props) {
+templ IndexPage(props layouts.PublicLayoutProps) {
+	@layouts.PublicLayout(props) {
 		@IndexPagePartial()
 	}
 }
 
-templ IndexPageContent(props layouts.BaseLayoutProps) {
-	@layouts.BaseLayoutPartial(props) {
+templ IndexPageContent(props layouts.PublicLayoutProps) {
+	@layouts.PublicLayoutPartial(props) {
 		@IndexPagePartial()
 	}
 }

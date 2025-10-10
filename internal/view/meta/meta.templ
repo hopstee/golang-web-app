@@ -1,0 +1,25 @@
+package meta
+
+type MetaTagsData struct {
+    Title string
+    Description string
+    URL string
+    Image string
+}
+
+templ MetaTags(meta MetaTagsData) {
+    <meta name="title" content={ meta.Title } />
+    <meta name="description" content={ meta.Description } />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={ meta.URL } />
+    <meta property="og:title" content={ meta.Title } />
+    <meta property="og:description" content={ meta.Description } />
+    <meta property="og:image" content={ meta.Image } />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={ meta.URL } />
+    <meta property="twitter:title" content={ meta.Title } />
+    <meta property="twitter:description" content={ meta.Description } />
+    <meta property="twitter:image" content={ meta.Image } />
+}

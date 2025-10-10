@@ -2,14 +2,14 @@ package pages
 
 import "mobile-backend-boilerplate/internal/view/layouts"
 
-templ AboutPage(props layouts.BaseLayoutProps) {
-	@layouts.BaseLayout(props) {
+templ AboutPage(props layouts.PublicLayoutProps) {
+	@layouts.PublicLayout(props) {
         @AboutPagePartial()
 	}
 }
 
-templ AboutPageContent(props layouts.BaseLayoutProps) {
-    @layouts.BaseLayoutPartial(props) {
+templ AboutPageContent(props layouts.PublicLayoutProps) {
+    @layouts.PublicLayoutPartial(props) {
         @AboutPagePartial()
     }
 }

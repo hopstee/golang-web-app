@@ -1,0 +1,95 @@
+package layouts
+
+import (
+	"strings"
+
+	"mobile-backend-boilerplate/internal/view/meta"
+	"mobile-backend-boilerplate/internal/view/partials"
+	"net/http"
+)
+
+type PublicLayoutProps struct {
+	HeadData    meta.HeadData
+	CurrentPath string
+
+	WithTopPadding bool
+	WideWrapper    bool
+	Centered       bool
+	WithNavigation bool
+}
+
+var publicHead = meta.HeadData{
+	Title:        "Korobka",
+	WithMetaTags: true,
+
+	Meta: meta.MetaTagsData{
+		Title:       "Korobka",
+		Description: "Best agency",
+		URL:         "test-url",
+		Image:       "no-image",
+	},
+}
+
+func NewPublicLayoutProps(r *http.Request) PublicLayoutProps {
+	return PublicLayoutProps{
+		HeadData:       publicHead,
+		CurrentPath:    r.URL.Path,
+		WithTopPadding: true,
+		WideWrapper:    false,
+		Centered:       false,
+		WithNavigation: true,
+	}
+}
+
+templ PublicLayout(props PublicLayoutProps) {
+    @BaseLayout(props.HeadData) {
+        @PublicLayoutPartial(props) {
+            { children... }
+        }
+    }
+}
+
+templ PublicLayoutPartial(props PublicLayoutProps) {
+	if props.WithNavigation {
+		@partials.Navigation(props.CurrentPath)
+	}
+	<div class={ topPaddingClass(props.WithTopPadding) }>
+		<div class={ wideWrapperClass(props.WideWrapper) }>
+			<div class="container">
+				@CenteredContent(props.Centered) {
+					{ children... }
+				}
+			</div>
+		</div>
+	</div>
+}
+
+templ CenteredContent(centered bool) {
+	if centered {
+		<div class="centered-container-wrapper">
+			<div class="centered-container">
+				{ children... }
+			</div>
+		</div>
+	} else {
+		{ children... }
+	}
+}
+
+func topPaddingClass(withTopPadding bool) string {
+	if withTopPadding {
+		return "main-top-padding"
+	}
+
+	return ""
+}
+
+func wideWrapperClass(wideWrapper bool) string {
+	publicClass := "wrapper"
+
+	if wideWrapper {
+		return strings.Join([]string{publicClass, "wide-wrapper"}, " ")
+	}
+
+	return publicClass
+}

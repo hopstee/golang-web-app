@@ -30,19 +30,19 @@ func NewRouter(opts options.Options) *chi.Mux {
 	})
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		data := layouts.NewBaseLayoutProps(r)
+		data := layouts.NewPublicLayoutProps(r)
 		data.Centered = true
 
 		handler.HandleStaticPage(w, r, public_pages.IndexPage(data), public_pages.IndexPageContent(data))
 	})
 
 	r.Get("/about", func(w http.ResponseWriter, r *http.Request) {
-		data := layouts.NewBaseLayoutProps(r)
+		data := layouts.NewPublicLayoutProps(r)
 		handler.HandleStaticPage(w, r, public_pages.AboutPage(data), public_pages.AboutPageContent(data))
 	})
 
 	r.Get("/projects", func(w http.ResponseWriter, r *http.Request) {
-		data := layouts.NewBaseLayoutProps(r)
+		data := layouts.NewPublicLayoutProps(r)
 		handler.HandleStaticPage(w, r, public_pages.ProjectsPage(data), public_pages.ProjectsPageContent(data))
 	})
 
@@ -52,7 +52,7 @@ func NewRouter(opts options.Options) *chi.Mux {
 	})
 
 	r.Get("/blog", func(w http.ResponseWriter, r *http.Request) {
-		data := layouts.NewBaseLayoutProps(r)
+		data := layouts.NewPublicLayoutProps(r)
 		data.WideWrapper = true
 
 		handler.HandleStaticPage(w, r, public_pages.BlogPage(data), public_pages.BlogPageContent(data))
@@ -85,7 +85,7 @@ func NewRouter(opts options.Options) *chi.Mux {
 			return
 		}
 
-		data := layouts.NewBaseLayoutProps(r)
+		data := layouts.NewPublicLayoutProps(r)
 		data.Centered = true
 
 		handler.HandleStaticPage(w, r, public_pages.NotFoundPage(data), public_pages.NotFoundPageContent(data))

@@ -11,7 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import "mobile-backend-boilerplate/internal/view/layouts"
 import "mobile-backend-boilerplate/internal/view/icons"
 
-func IndexPage(props layouts.BaseLayoutProps) templ.Component {
+func IndexPage(props layouts.PublicLayoutProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -50,7 +50,7 @@ func IndexPage(props layouts.BaseLayoutProps) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layouts.BaseLayout(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layouts.PublicLayout(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -58,7 +58,7 @@ func IndexPage(props layouts.BaseLayoutProps) templ.Component {
 	})
 }
 
-func IndexPageContent(props layouts.BaseLayoutProps) templ.Component {
+func IndexPageContent(props layouts.PublicLayoutProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -97,7 +97,7 @@ func IndexPageContent(props layouts.BaseLayoutProps) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layouts.BaseLayoutPartial(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layouts.PublicLayoutPartial(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

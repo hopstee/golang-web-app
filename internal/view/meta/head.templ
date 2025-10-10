@@ -2,9 +2,9 @@ package meta
 
 type HeadData struct {
     Title string
-    Description string
-    URL string
-    Image string
+    WithMetaTags bool
+
+    Meta MetaTagsData
 }
 
 templ Head(headData HeadData) {
@@ -19,20 +19,9 @@ templ Head(headData HeadData) {
     <link rel="preload" href="/static/fonts/dela-gothic-one-regular.woff" as="font" type="font/woff" crossorigin />
 
     <title>{ headData.Title }</title>
-    <meta name="title" content="{ headData.Title }" />
-    <meta name="description" content="{ headData.Description }" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="{ headData.URL }" />
-    <meta property="og:title" content="{ headData.Title }" />
-    <meta property="og:description" content="{ headData.Description }" />
-    <meta property="og:image" content="{ headData.Image }" />
-
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="{ headData.URL }" />
-    <meta property="twitter:title" content="{ headData.Title }" />
-    <meta property="twitter:description" content="{ headData.Description }" />
-    <meta property="twitter:image" content="{ headData.Image }" />
+    if headData.WithMetaTags {
+        @MetaTags(headData.Meta)
+    }
 
     <link rel="stylesheet" href="/static/css/main.css">
     <script src="/static/js/htmx.min.js"></script>

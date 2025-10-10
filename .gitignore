@@ -4,4 +4,6 @@
 /data/*
 /static/uploads/*
 
+/tmp
+
 !.gitkeep

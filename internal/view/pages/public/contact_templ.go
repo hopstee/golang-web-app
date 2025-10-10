@@ -76,7 +76,7 @@ func NewContactFormStateWithErrors(req repository.Request, errors map[string]str
 	return fs
 }
 
-func ContactPage(props layouts.BaseLayoutProps, state ContactFormState) templ.Component {
+func ContactPage(props layouts.PublicLayoutProps, state ContactFormState) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -133,7 +133,7 @@ func ContactPage(props layouts.BaseLayoutProps, state ContactFormState) templ.Co
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layouts.BaseLayout(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layouts.PublicLayout(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -141,7 +141,7 @@ func ContactPage(props layouts.BaseLayoutProps, state ContactFormState) templ.Co
 	})
 }
 
-func ContactPageContent(props layouts.BaseLayoutProps, state ContactFormState) templ.Component {
+func ContactPageContent(props layouts.PublicLayoutProps, state ContactFormState) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -198,7 +198,7 @@ func ContactPageContent(props layouts.BaseLayoutProps, state ContactFormState) t
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layouts.BaseLayoutPartial(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layouts.PublicLayoutPartial(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

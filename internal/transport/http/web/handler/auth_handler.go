@@ -6,7 +6,7 @@ import (
 	"mobile-backend-boilerplate/internal/service"
 	"mobile-backend-boilerplate/internal/transport/http/web/middleware"
 	"mobile-backend-boilerplate/internal/view/layouts"
-	pages "mobile-backend-boilerplate/internal/view/pages/public"
+	pages "mobile-backend-boilerplate/internal/view/pages/private"
 	"net/http"
 	"time"
 )
@@ -24,7 +24,7 @@ func NewWebAuthHandler(webAuthService *service.WebAuthService, adminService *ser
 }
 
 func (h *WebAuthHandler) Show(w http.ResponseWriter, r *http.Request) {
-	data := layouts.NewBaseLayoutProps(r)
+	data := layouts.NewPublicLayoutProps(r)
 	data.Centered = true
 	data.WithNavigation = false
 	data.WithTopPadding = false
@@ -54,7 +54,7 @@ func (h *WebAuthHandler) Submit(w http.ResponseWriter, r *http.Request) {
 		Password: r.FormValue("password"),
 	}
 
-	data := layouts.NewBaseLayoutProps(r)
+	data := layouts.NewPublicLayoutProps(r)
 	data.Centered = true
 
 	formErrors := h.validateForm(&adminData)

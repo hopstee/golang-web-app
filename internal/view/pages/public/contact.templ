@@ -68,16 +68,16 @@ func NewContactFormStateWithErrors(req repository.Request, errors map[string]str
 	return fs
 }
 
-templ ContactPage(props layouts.BaseLayoutProps, state ContactFormState) {
-	@layouts.BaseLayout(props) {
+templ ContactPage(props layouts.PublicLayoutProps, state ContactFormState) {
+	@layouts.PublicLayout(props) {
 		@ContactPagePartial() {
 			@ContactPagePartialForm(state)
 		}
 	}
 }
 
-templ ContactPageContent(props layouts.BaseLayoutProps, state ContactFormState) {
-	@layouts.BaseLayoutPartial(props) {
+templ ContactPageContent(props layouts.PublicLayoutProps, state ContactFormState) {
+	@layouts.PublicLayoutPartial(props) {
 		@ContactPagePartial() {
 			@ContactPagePartialForm(state)
 		}

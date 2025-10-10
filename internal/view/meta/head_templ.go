@@ -9,10 +9,10 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 type HeadData struct {
-	Title       string
-	Description string
-	URL         string
-	Image       string
+	Title        string
+	WithMetaTags bool
+
+	Meta MetaTagsData
 }
 
 func Head(headData HeadData) templ.Component {
@@ -49,7 +49,17 @@ func Head(headData HeadData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><meta name=\"title\" content=\"{ headData.Title }\"><meta name=\"description\" content=\"{ headData.Description }\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:url\" content=\"{ headData.URL }\"><meta property=\"og:title\" content=\"{ headData.Title }\"><meta property=\"og:description\" content=\"{ headData.Description }\"><meta property=\"og:image\" content=\"{ headData.Image }\"><meta property=\"twitter:card\" content=\"summary_large_image\"><meta property=\"twitter:url\" content=\"{ headData.URL }\"><meta property=\"twitter:title\" content=\"{ headData.Title }\"><meta property=\"twitter:description\" content=\"{ headData.Description }\"><meta property=\"twitter:image\" content=\"{ headData.Image }\"><link rel=\"stylesheet\" href=\"/static/css/main.css\"><script src=\"/static/js/htmx.min.js\"></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if headData.WithMetaTags {
+			templ_7745c5c3_Err = MetaTags(headData.Meta).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<link rel=\"stylesheet\" href=\"/static/css/main.css\"><script src=\"/static/js/htmx.min.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

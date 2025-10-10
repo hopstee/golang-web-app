@@ -2,14 +2,14 @@ package pages
 
 import "mobile-backend-boilerplate/internal/view/layouts"
 
-templ NotFoundPage(props layouts.BaseLayoutProps) {
-	@layouts.BaseLayout(props) {
+templ NotFoundPage(props layouts.PublicLayoutProps) {
+	@layouts.PublicLayout(props) {
 		@NotFoundPagePartial()
 	}
 }
 
-templ NotFoundPageContent(props layouts.BaseLayoutProps) {
-    @layouts.BaseLayoutPartial(props) {
+templ NotFoundPageContent(props layouts.PublicLayoutProps) {
+    @layouts.PublicLayoutPartial(props) {
         @NotFoundPagePartial()
     }
 }

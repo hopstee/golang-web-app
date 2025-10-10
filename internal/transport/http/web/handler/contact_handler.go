@@ -26,7 +26,7 @@ func NewContactHandler(requestService *service.RequestService, notifier notifier
 }
 
 func (h *ContactHandler) Show(w http.ResponseWriter, r *http.Request) {
-	data := layouts.NewBaseLayoutProps(r)
+	data := layouts.NewPublicLayoutProps(r)
 	data.Centered = true
 
 	formState := pages.NewContactFormState()
@@ -57,7 +57,7 @@ func (h *ContactHandler) Submit(w http.ResponseWriter, r *http.Request) {
 
 	errors := h.validateForm(&state)
 	if len(errors) > 0 {
-		data := layouts.NewBaseLayoutProps(r)
+		data := layouts.NewPublicLayoutProps(r)
 		data.Centered = true
 		formState := pages.NewContactFormStateWithErrors(state, errors)
 
@@ -76,7 +76,7 @@ func (h *ContactHandler) Submit(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	data := layouts.NewBaseLayoutProps(r)
+	data := layouts.NewPublicLayoutProps(r)
 	data.Centered = true
 	formState := pages.NewContactFormState()
 	formState.Success = true

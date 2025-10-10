@@ -138,14 +138,14 @@ var projects = ProjectsData{
 	},
 }
 
-templ ProjectsPage(props layouts.BaseLayoutProps) {
-	@layouts.BaseLayout(props) {
+templ ProjectsPage(props layouts.PublicLayoutProps) {
+	@layouts.PublicLayout(props) {
 		@ProjectsPagePartial(projects)
 	}
 }
 
-templ ProjectsPageContent(props layouts.BaseLayoutProps) {
-	@layouts.BaseLayoutPartial(props) {
+templ ProjectsPageContent(props layouts.PublicLayoutProps) {
+	@layouts.PublicLayoutPartial(props) {
 		@ProjectsPagePartial(projects)
 	}
 }

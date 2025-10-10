@@ -55,14 +55,14 @@ var posts = PostsList{
 	},
 }
 
-templ BlogPage(props layouts.BaseLayoutProps) {
-	@layouts.BaseLayout(props) {
+templ BlogPage(props layouts.PublicLayoutProps) {
+	@layouts.PublicLayout(props) {
 		@BlogPagePartial(posts.posts)
 	}
 }
 
-templ BlogPageContent(props layouts.BaseLayoutProps) {
-	@layouts.BaseLayoutPartial(props) {
+templ BlogPageContent(props layouts.PublicLayoutProps) {
+	@layouts.PublicLayoutPartial(props) {
 		@BlogPagePartial(posts.posts)
 	}
 }
