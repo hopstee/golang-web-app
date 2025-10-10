@@ -1,7 +1,49 @@
 package partials
 
-import "fmt"
-import "mobile-backend-boilerplate/pkg/helper/utils"
+import (
+	"fmt"
+	"mobile-backend-boilerplate/pkg/helper/utils"
+)
+
+type NavLink struct {
+	Href string
+	HxGet string
+	HxTarget string
+	Name string
+}
+
+var navLinks = []NavLink{
+	NavLink{
+		Href: "/",
+		HxGet: "/",
+		HxTarget: "#content",
+		Name: "Главная",
+	},
+	NavLink{
+		Href: "/about",
+		HxGet: "/about",
+		HxTarget: "#content",
+		Name: "Обо мне",
+	},
+	NavLink{
+		Href: "/projects",
+		HxGet: "/projects",
+		HxTarget: "#content",
+		Name: "Проекты",
+	},
+	NavLink{
+		Href: "/blog",
+		HxGet: "/blog",
+		HxTarget: "#content",
+		Name: "Блог",
+	},
+	NavLink{
+		Href: "/contact",
+		HxGet: "/contact",
+		HxTarget: "#content",
+		Name: "Связаться",
+	},
+}
 
 templ Navigation(currentPath string) {
 	<style>
@@ -53,56 +95,18 @@ templ Navigation(currentPath string) {
     </style>
 	<div class="navbar" id="navbar">
 		<div class="nav-links" id="nav-links">
-			<a
-				href="/"
-				hx-get="/"
-				hx-target="#content"
-				hx-swap="innerHTML"
-				hx-push-url="true"
-				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/" == currentPath, "active", "")) }
-			>
-				Главная
-			</a>
-			<a
-				href="/about"
-				hx-get="/about"
-				hx-target="#content"
-				hx-swap="innerHTML"
-				hx-push-url="true"
-				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/about" == currentPath, "active", "")) }
-			>
-				Обо мне
-			</a>
-			<a
-				href="/projects"
-				hx-get="/projects"
-				hx-target="#content"
-				hx-swap="innerHTML"
-				hx-push-url="true"
-				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/projects" == currentPath, "active", "")) }
-			>
-				Проекты
-			</a>
-			<a
-				href="/blog"
-				hx-get="/blog"
-				hx-target="#content"
-				hx-swap="innerHTML"
-				hx-push-url="true"
-				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/blog" == currentPath, "active", "")) }
-			>
-				Блог
-			</a>
-			<a
-				href="/contact"
-				hx-get="/contact"
-				hx-target="#content"
-				hx-swap="innerHTML"
-				hx-push-url="true"
-				class={ fmt.Sprintf("nav-link %s", utils.IfElse("/contact" == currentPath, "active", "")) }
-			>
-				Связаться
-			</a>
+			for _, navLink := range navLinks {
+				<a
+					href={ navLink.Href }
+					hx-get={ navLink.HxGet }
+					hx-target={ navLink.HxTarget }
+					hx-swap="innerHTML"
+					hx-push-url="true"
+					class={ fmt.Sprintf("nav-link %s", utils.IfElse(navLink.Href == currentPath, "active", "")) }
+				>
+					{ navLink.Name }
+				</a>
+			}
 		</div>
 	</div>
 	<script>
