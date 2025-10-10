@@ -5,7 +5,7 @@ import (
 	"mobile-backend-boilerplate/internal/transport/http/web/handler"
 	"mobile-backend-boilerplate/internal/transport/http/web/middleware"
 	"mobile-backend-boilerplate/internal/view/layouts"
-	"mobile-backend-boilerplate/internal/view/pages"
+	public_pages "mobile-backend-boilerplate/internal/view/pages/public"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -33,17 +33,17 @@ func NewRouter(opts options.Options) *chi.Mux {
 		data := layouts.NewBaseLayoutProps(r)
 		data.Centered = true
 
-		handler.HandleStaticPage(w, r, pages.IndexPage(data), pages.IndexPageContent(data))
+		handler.HandleStaticPage(w, r, public_pages.IndexPage(data), public_pages.IndexPageContent(data))
 	})
 
 	r.Get("/about", func(w http.ResponseWriter, r *http.Request) {
 		data := layouts.NewBaseLayoutProps(r)
-		handler.HandleStaticPage(w, r, pages.AboutPage(data), pages.AboutPageContent(data))
+		handler.HandleStaticPage(w, r, public_pages.AboutPage(data), public_pages.AboutPageContent(data))
 	})
 
 	r.Get("/projects", func(w http.ResponseWriter, r *http.Request) {
 		data := layouts.NewBaseLayoutProps(r)
-		handler.HandleStaticPage(w, r, pages.ProjectsPage(data), pages.ProjectsPageContent(data))
+		handler.HandleStaticPage(w, r, public_pages.ProjectsPage(data), public_pages.ProjectsPageContent(data))
 	})
 
 	r.Route("/contact", func(r chi.Router) {
@@ -55,7 +55,7 @@ func NewRouter(opts options.Options) *chi.Mux {
 		data := layouts.NewBaseLayoutProps(r)
 		data.WideWrapper = true
 
-		handler.HandleStaticPage(w, r, pages.BlogPage(data), pages.BlogPageContent(data))
+		handler.HandleStaticPage(w, r, public_pages.BlogPage(data), public_pages.BlogPageContent(data))
 	})
 
 	r.Route("/auth", func(r chi.Router) {
@@ -88,7 +88,7 @@ func NewRouter(opts options.Options) *chi.Mux {
 		data := layouts.NewBaseLayoutProps(r)
 		data.Centered = true
 
-		handler.HandleStaticPage(w, r, pages.NotFoundPage(data), pages.NotFoundPageContent(data))
+		handler.HandleStaticPage(w, r, public_pages.NotFoundPage(data), public_pages.NotFoundPageContent(data))
 	})
 
 	return r

@@ -6,7 +6,7 @@ import (
 	"mobile-backend-boilerplate/internal/service"
 	"mobile-backend-boilerplate/internal/transport/http/web/middleware"
 	"mobile-backend-boilerplate/internal/view/layouts"
-	"mobile-backend-boilerplate/internal/view/pages"
+	pages "mobile-backend-boilerplate/internal/view/pages/public"
 	"net/http"
 	"time"
 )
