@@ -13,25 +13,25 @@ var (
 	ErrInvalidPassword = errors.New("invalid password")
 )
 
-type WebAuthService struct {
+type AdminAuthService struct {
 	adminRepo repository.AdminRepository
 	jwtUtil   *jwt.JWTUtil
 	logger    *slog.Logger
 }
 
-func NewWebAuthService(
+func NewAdminAuthService(
 	adminRepo repository.AdminRepository,
 	jwtSecret []byte,
 	logger *slog.Logger,
-) *WebAuthService {
-	return &WebAuthService{
+) *AdminAuthService {
+	return &AdminAuthService{
 		adminRepo: adminRepo,
 		jwtUtil:   jwt.NewJWTUtil(jwtSecret),
 		logger:    logger,
 	}
 }
 
-func (s *WebAuthService) Login(username, passwordStr string) (string, error) {
+func (s *AdminAuthService) Login(username, passwordStr string) (string, error) {
 	s.logger.Info("admin loging attempt", slog.String("username", username))
 	authData, err := s.adminRepo.GetAuthData(username)
 	if err != nil {
@@ -54,7 +54,7 @@ func (s *WebAuthService) Login(username, passwordStr string) (string, error) {
 	return accessToken, nil
 }
 
-func (s *WebAuthService) Me(accessToken string) (repository.Admin, error) {
+func (s *AdminAuthService) Me(accessToken string) (repository.Admin, error) {
 	s.logger.Debug("admin me request")
 
 	claims, err := s.jwtUtil.ParseToken(accessToken)

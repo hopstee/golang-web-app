@@ -2,28 +2,24 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"mobile-backend-boilerplate/internal/service"
 	"net/http"
 )
 
-type contextKey string
-
 const adminIDKey = contextKey("adminID")
 
-func AuthMiddleware(adminAuthService *service.WebAuthService) func(http.Handler) http.Handler {
+func AdminAuthMiddleware(authService *service.AdminAuthService) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			c, err := r.Cookie("admin_token")
-			fmt.Print(c)
 			if err != nil {
-				http.Redirect(w, r, "/auth/login", http.StatusFound)
+				http.Error(w, "missing or invalid authorization header", http.StatusUnauthorized)
 				return
 			}
 
-			user, err := adminAuthService.Me(c.Value)
+			user, err := authService.Me(c.Value)
 			if err != nil {
-				http.Redirect(w, r, "/auth/login", http.StatusFound)
+				http.Error(w, "invalid access token", http.StatusUnauthorized)
 				return
 			}
 

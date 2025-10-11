@@ -55,16 +55,25 @@ func Init() (*App, error) {
 	deps.InitHandlers()
 
 	opts := options.Options{
-		StaticDir:         cfg.Static.Dir,
-		MobileAuthHandler: deps.MobileAuthHandler,
-		WebAuthHandler:    deps.WebAuthHandler,
-		RequestHandler:    deps.RequestHandler,
-		PostHandler:       deps.PostHandler,
-		ContactHandler:    deps.ContactHandler,
+		// constants
+		StaticDir: cfg.Static.Dir,
+
+		// services
 		MobileAuthService: deps.MobileAuthService,
-		WebAuthService:    deps.WebAuthService,
+		AdminAuthService:  deps.AdminAuthService,
 		PostService:       deps.PostService,
-		Logger:            log,
+
+		// api handlers
+		MobileAuthHandler: deps.MobileAuthHandler,
+		AdminAuthHandler:  deps.AdminAuthHandler,
+		RequestHandler:    deps.RequestHandler,
+
+		// web handlers
+		PostHandler:    deps.PostHandler,
+		ContactHandler: deps.ContactHandler,
+
+		// other options
+		Logger: log,
 	}
 
 	router := httpTransport.NewRouter(opts)

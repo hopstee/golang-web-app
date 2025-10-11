@@ -18,7 +18,7 @@ func NewRouter(opts options.Options) *chi.Mux {
 			r.Post("/refresh", opts.MobileAuthHandler.Refresh)
 			r.Post("/logout", opts.MobileAuthHandler.Logout)
 
-			r.With(customMiddleware.JWTAuthMiddleware(opts.MobileAuthService)).Group(func(r chi.Router) {
+			r.With(customMiddleware.AdminAuthMiddleware(opts.AdminAuthService)).Group(func(r chi.Router) {
 				r.Get("/me", opts.MobileAuthHandler.MeMobile)
 			})
 		})

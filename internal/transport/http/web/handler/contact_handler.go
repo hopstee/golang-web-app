@@ -5,7 +5,7 @@ import (
 	"mobile-backend-boilerplate/internal/repository"
 	"mobile-backend-boilerplate/internal/service"
 	"mobile-backend-boilerplate/internal/view/layouts"
-	pages "mobile-backend-boilerplate/internal/view/pages/public"
+	"mobile-backend-boilerplate/internal/view/pages"
 	"net/http"
 	"regexp"
 	"strconv"

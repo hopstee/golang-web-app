@@ -3,9 +3,8 @@ package web
 import (
 	"mobile-backend-boilerplate/internal/transport/http/options"
 	"mobile-backend-boilerplate/internal/transport/http/web/handler"
-	"mobile-backend-boilerplate/internal/transport/http/web/middleware"
 	"mobile-backend-boilerplate/internal/view/layouts"
-	public_pages "mobile-backend-boilerplate/internal/view/pages/public"
+	"mobile-backend-boilerplate/internal/view/pages"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -33,17 +32,17 @@ func NewRouter(opts options.Options) *chi.Mux {
 		data := layouts.NewPublicLayoutProps(r)
 		data.Centered = true
 
-		handler.HandleStaticPage(w, r, public_pages.IndexPage(data), public_pages.IndexPageContent(data))
+		handler.HandleStaticPage(w, r, pages.IndexPage(data), pages.IndexPageContent(data))
 	})
 
 	r.Get("/about", func(w http.ResponseWriter, r *http.Request) {
 		data := layouts.NewPublicLayoutProps(r)
-		handler.HandleStaticPage(w, r, public_pages.AboutPage(data), public_pages.AboutPageContent(data))
+		handler.HandleStaticPage(w, r, pages.AboutPage(data), pages.AboutPageContent(data))
 	})
 
 	r.Get("/projects", func(w http.ResponseWriter, r *http.Request) {
 		data := layouts.NewPublicLayoutProps(r)
-		handler.HandleStaticPage(w, r, public_pages.ProjectsPage(data), public_pages.ProjectsPageContent(data))
+		handler.HandleStaticPage(w, r, pages.ProjectsPage(data), pages.ProjectsPageContent(data))
 	})
 
 	r.Route("/contact", func(r chi.Router) {
@@ -55,22 +54,7 @@ func NewRouter(opts options.Options) *chi.Mux {
 		data := layouts.NewPublicLayoutProps(r)
 		data.WideWrapper = true
 
-		handler.HandleStaticPage(w, r, public_pages.BlogPage(data), public_pages.BlogPageContent(data))
-	})
-
-	r.Route("/auth", func(r chi.Router) {
-		r.Route("/login", func(r chi.Router) {
-			r.Get("/", opts.WebAuthHandler.Show)
-			r.Post("/", opts.WebAuthHandler.Submit)
-		})
-
-		r.Get("/logout", opts.WebAuthHandler.Logout)
-	})
-
-	r.With(middleware.AuthMiddleware(opts.WebAuthService)).Group(func(r chi.Router) {
-		r.Get("/dashboard", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte{'t', 'e', 's', 't'})
-		})
+		handler.HandleStaticPage(w, r, pages.BlogPage(data), pages.BlogPageContent(data))
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
@@ -88,7 +72,7 @@ func NewRouter(opts options.Options) *chi.Mux {
 		data := layouts.NewPublicLayoutProps(r)
 		data.Centered = true
 
-		handler.HandleStaticPage(w, r, public_pages.NotFoundPage(data), public_pages.NotFoundPageContent(data))
+		handler.HandleStaticPage(w, r, pages.NotFoundPage(data), pages.NotFoundPageContent(data))
 	})
 
 	return r

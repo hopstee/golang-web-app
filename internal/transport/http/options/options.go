@@ -11,14 +11,14 @@ type Options struct {
 	StaticDir string
 
 	MobileAuthHandler *apiHandlers.MobileAuthHandler
+	AdminAuthHandler  *apiHandlers.AdminAuthHandler
 	RequestHandler    *apiHandlers.RequestHandler
 
-	WebAuthHandler *webHandlers.WebAuthHandler
 	PostHandler    *webHandlers.PostHandler
 	ContactHandler *webHandlers.ContactHandler
 
 	MobileAuthService *service.MobileAuthService
-	WebAuthService    *service.WebAuthService
+	AdminAuthService  *service.AdminAuthService
 	PostService       *service.PostService
 
 	Logger *slog.Logger

@@ -9,7 +9,7 @@ func (d *Dependencies) InitServices() {
 		[]byte(d.Config.Authentication.JWT.Secret),
 		d.Logger,
 	)
-	d.WebAuthService = service.NewWebAuthService(
+	d.AdminAuthService = service.NewAdminAuthService(
 		d.AdminRepo,
 		[]byte(d.Config.Authentication.JWT.Secret),
 		d.Logger,

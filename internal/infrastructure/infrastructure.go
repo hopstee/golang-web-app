@@ -16,24 +16,30 @@ type Dependencies struct {
 	Logger *slog.Logger
 	Config *config.Config
 
+	// repos
 	AuthRepo    repository.AuthRepository
 	UserRepo    repository.UserRepository
 	AdminRepo   repository.AdminRepository
 	RequestRepo repository.RequestRepository
 	PostRepo    repository.PostRepository
 
+	// notifiers
 	TelegramNotifier notifier.Notifier
 
+	// services
 	MobileAuthService *service.MobileAuthService
-	WebAuthService    *service.WebAuthService
+	AdminAuthService  *service.AdminAuthService
 	UserService       *service.UserService
 	AdminService      *service.AdminService
 	RequestService    *service.RequestService
 	PostService       *service.PostService
 
+	// api handlers
 	MobileAuthHandler *apiHandler.MobileAuthHandler
-	WebAuthHandler    *webHandler.WebAuthHandler
+	AdminAuthHandler  *apiHandler.AdminAuthHandler
 	RequestHandler    *apiHandler.RequestHandler
-	PostHandler       *webHandler.PostHandler
-	ContactHandler    *webHandler.ContactHandler
+
+	// web handlers
+	PostHandler    *webHandler.PostHandler
+	ContactHandler *webHandler.ContactHandler
 }
