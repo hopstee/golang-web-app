@@ -1,7 +1,6 @@
 package infrastructure
 
 import (
-	"database/sql"
 	"log/slog"
 	"mobile-backend-boilerplate/internal/config"
 	"mobile-backend-boilerplate/internal/notifier"
@@ -12,16 +11,11 @@ import (
 )
 
 type Dependencies struct {
-	DB     *sql.DB
 	Logger *slog.Logger
 	Config *config.Config
 
-	// repos
-	AuthRepo    repository.AuthRepository
-	UserRepo    repository.UserRepository
-	AdminRepo   repository.AdminRepository
-	RequestRepo repository.RequestRepository
-	PostRepo    repository.PostRepository
+	// repo
+	Repository repository.Repository
 
 	// notifiers
 	TelegramNotifier notifier.Notifier
