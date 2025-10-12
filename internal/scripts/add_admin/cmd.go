@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"mobile-backend-boilerplate/internal/config"
 	"mobile-backend-boilerplate/internal/repository"
+	"mobile-backend-boilerplate/internal/repository/postgres"
 	"mobile-backend-boilerplate/internal/repository/sqlite"
 	cmdHelper "mobile-backend-boilerplate/pkg/helper/cmd"
 	passwordHelper "mobile-backend-boilerplate/pkg/helper/password"
@@ -66,6 +67,16 @@ var Command = &cobra.Command{
 			adminRepo = sqlite.NewAdminRepo(db, logger)
 
 			fmt.Println("SQLite repository initialized with DSN:", config.Database.DataSource)
+		case "postgres":
+			repo, err = postgres.NewPostgreSQLRepository(config.Database.DataSource, logger)
+			if err != nil {
+				log.Fatalf("failed to init postgres repository: %v", err)
+			}
+
+			db := repo.(*postgres.PostgreSQLRepository).DB
+			adminRepo = postgres.NewAdminRepo(db, logger)
+
+			fmt.Println("PostgreSQL repository initialized with DSN:", config.Database.DataSource)
 		default:
 			log.Fatalf("unsupported database driver: %s", config.Database.Driver)
 		}
