@@ -34,19 +34,12 @@ func Init() (*App, error) {
 		return nil, err
 	}
 
-	db, err := infrastructure.InitDB(cfg, log)
-	if err != nil {
-		log.Error("failed to initialize database", slog.Any("err", err))
-		return nil, err
-	}
-
 	deps := infrastructure.Dependencies{
-		DB:     db,
 		Logger: log,
 		Config: cfg,
 	}
 
-	if err := deps.InitRepos(); err != nil {
+	if err := deps.InitRepository(); err != nil {
 		return nil, err
 	}
 
@@ -81,7 +74,7 @@ func Init() (*App, error) {
 	return &App{
 		Router: router,
 		Config: cfg,
-		DB:     db,
+		DB:     deps.Repository.Database(),
 		Logger: log,
 	}, nil
 }
