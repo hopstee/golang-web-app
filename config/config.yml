@@ -2,7 +2,7 @@ server:
   addr: ":8080"
 
 database:
-  driver: "sqlite"
+  driver: "postgres"
   dsn: "./data/app.db"
 
 authentication:

@@ -5,6 +5,7 @@ import "time"
 type Post struct {
 	ID         int64     `json:"id"`
 	Title      string    `json:"title"`
+	Slug       string    `json:"slug"`
 	HeroImgURL string    `json:"hero_img_url"`
 	Content    string    `json:"content"`
 	Likes      int64     `json:"likes"`
@@ -18,6 +19,7 @@ type PostRepository interface {
 	GetPublicByID(id int64) (Post, error)
 	GetAll() ([]Post, error)
 	GetByID(id int64) (Post, error)
+	GetBySlug(slug string) (Post, error)
 	Create(post Post) (int64, error)
 	Update(post Post) error
 	Delete(id int64) error
