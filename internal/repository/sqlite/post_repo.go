@@ -57,7 +57,7 @@ func (r *postRepo) getAllPosts(query string, args ...interface{}) ([]repository.
 }
 
 func (r *postRepo) GetByID(id int64) (repository.Post, error) {
-	return r.getPostByID(`
+	return r.getPost(`
 		SELECT id, title, hero_img_url, content, likes, is_public, updated_at, created_at
 		FROM posts
 		WHERE id = ?
@@ -65,15 +65,23 @@ func (r *postRepo) GetByID(id int64) (repository.Post, error) {
 }
 
 func (r *postRepo) GetPublicByID(id int64) (repository.Post, error) {
-	return r.getPostByID(`
+	return r.getPost(`
 		SELECT id, title, hero_img_url, content, likes, is_public, updated_at, created_at
 		FROM posts
 		WHERE id = ? AND is_public = true
 	`, id)
 }
 
-func (r *postRepo) getPostByID(query string, id int64) (repository.Post, error) {
-	rows := r.DB.QueryRow(query, id)
+func (r *postRepo) GetBySlug(slug string) (repository.Post, error) {
+	return r.getPost(`
+		SELECT id, title, slug, hero_img_url, content, likes, is_public, updated_at, created_at
+		FROM posts
+		WHERE slug = ? AND is_public = true
+	`, slug)
+}
+
+func (r *postRepo) getPost(query string, arg interface{}) (repository.Post, error) {
+	rows := r.DB.QueryRow(query, arg)
 
 	var post repository.Post
 
@@ -89,10 +97,10 @@ func (r *postRepo) getPostByID(query string, id int64) (repository.Post, error) 
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			r.Logger.Warn("post not found", slog.Int64("id", id))
+			r.Logger.Warn("post not found", slog.Any("arg", arg))
 			return post, repository.ErrNotFound
 		}
-		r.Logger.Error("failed to query post", slog.Int64("id", id), slog.Any("err", err))
+		r.Logger.Error("failed to query post", slog.Any("arg", arg), slog.Any("err", err))
 		return post, err
 	}
 

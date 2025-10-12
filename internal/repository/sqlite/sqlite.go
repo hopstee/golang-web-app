@@ -15,6 +15,7 @@ type SQLiteRepository struct {
 
 	auth    repository.AuthRepository
 	user    repository.UserRepository
+	admin   repository.AdminRepository
 	post    repository.PostRepository
 	request repository.RequestRepository
 }
@@ -34,7 +35,9 @@ func NewSQLiteRepository(dsn string, logger *slog.Logger) (*SQLiteRepository, er
 
 	repository.user = NewUserRepo(db, logger)
 	repository.auth = NewAuthRepo(db, logger)
+	repository.admin = NewAdminRepo(db, logger)
 	repository.post = NewPostRepo(db, logger)
+	repository.request = NewRequestRepo(db, logger)
 
 	if err = repository.Migrate(Up, false); err != nil {
 		logger.Error("migration failed", slog.Any("err", err))
@@ -44,12 +47,20 @@ func NewSQLiteRepository(dsn string, logger *slog.Logger) (*SQLiteRepository, er
 	return repository, nil
 }
 
+func (r *SQLiteRepository) Database() *sql.DB {
+	return r.DB
+}
+
 func (r *SQLiteRepository) Auth() repository.AuthRepository {
 	return r.auth
 }
 
 func (r *SQLiteRepository) User() repository.UserRepository {
 	return r.user
+}
+
+func (r *SQLiteRepository) Admin() repository.AdminRepository {
+	return r.admin
 }
 
 func (r *SQLiteRepository) Post() repository.PostRepository {
