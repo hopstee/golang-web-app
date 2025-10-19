@@ -11,21 +11,34 @@ import (
 func NewRouter(opts options.Options) *chi.Mux {
 	r := chi.NewRouter()
 
-	r.With(customMiddleware.CorsMiddleware).Group(func(r chi.Router) {
-		r.Route("/auth", func(r chi.Router) {
-			r.Post("/login", opts.MobileAuthHandler.Login)
-			r.Post("/register", opts.MobileAuthHandler.Register)
-			r.Post("/refresh", opts.MobileAuthHandler.Refresh)
-			r.Post("/logout", opts.MobileAuthHandler.Logout)
+	r.Route("/v1", func(r chi.Router) {
+		r.With(customMiddleware.CorsMiddleware).Group(func(r chi.Router) {
+			r.Route("/auth", func(r chi.Router) {
+				r.Post("/login", opts.MobileAuthHandler.Login)
+				r.Post("/register", opts.MobileAuthHandler.Register)
+				r.Post("/refresh", opts.MobileAuthHandler.Refresh)
+				r.Post("/logout", opts.MobileAuthHandler.Logout)
 
-			r.With(customMiddleware.AdminAuthMiddleware(opts.AdminAuthService)).Group(func(r chi.Router) {
-				r.Get("/me", opts.MobileAuthHandler.MeMobile)
+				r.With(customMiddleware.JWTAuthMiddleware(opts.MobileAuthService)).Group(func(r chi.Router) {
+					r.Get("/me", opts.MobileAuthHandler.MeMobile)
+				})
+			})
+
+			r.Route("/admin", func(r chi.Router) {
+				r.Route("/auth", func(r chi.Router) {
+					r.Post("/login", opts.AdminAuthHandler.Login)
+					r.Post("/logout", opts.AdminAuthHandler.Logout)
+
+					r.With(customMiddleware.AdminAuthMiddleware(opts.AdminAuthService)).Group(func(r chi.Router) {
+						r.Get("/me", opts.AdminAuthHandler.MeWeb)
+					})
+				})
 			})
 		})
-	})
 
-	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`{"status":"ok"}`))
+		r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte(`{"status":"ok"}`))
+		})
 	})
 
 	return r
