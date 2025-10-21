@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface AuthLayoutProps {
@@ -8,15 +8,17 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, isLoading } = useAuth();
 
-    if (user) {
-        navigate("/admin/dashboard");
-    }
+    useEffect(() => {
+        if (!isLoading && user) {
+            navigate("/admin/dashboard");
+        }
+    }, [isLoading, user, navigate]);
 
     return (
         <div className="w-screen h-screen flex items-center justify-center">
-            { children }
+            {children}
         </div>
     )
 }

@@ -1,14 +1,25 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Separator } from "../ui/separator";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "../ui/breadcrumb";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 interface DashboardLayoutProps {
     children: ReactNode
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
+    const navigate = useNavigate();
+    const { user, isLoading } = useAuth();
+
+    useEffect(() => {
+        if (!isLoading && !user) {
+            navigate("/admin/login");
+        }
+    }, [isLoading, user, navigate]);
+
     return (
         <SidebarProvider className="w-screen">
             <AppSidebar />
@@ -35,7 +46,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </header>
 
                 <div className="flex flex-1 flex-col gap-4 p-4">
-                    { children }
+                    {children}
                     <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                         <div className="bg-muted/50 aspect-video rounded-xl" />
                         <div className="bg-muted/50 aspect-video rounded-xl" />

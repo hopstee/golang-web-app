@@ -1,6 +1,7 @@
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarMenu,
     SidebarMenuButton,
@@ -9,8 +10,9 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ChevronDown } from "lucide-react"
+import UserNav from "./UserNav"
 
 export function AppSidebar() {
     return (
@@ -58,6 +60,9 @@ export function AppSidebar() {
                     </SidebarMenu>
                 </SidebarGroup >
             </SidebarContent >
+            <SidebarFooter>
+                <UserNav />
+            </SidebarFooter>
         </Sidebar >
     )
 }

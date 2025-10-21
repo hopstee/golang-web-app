@@ -5,7 +5,7 @@ export async function fetchMe(): Promise<User> {
     return await apiFetch("/api/v1/admin/auth/me", { credentials: "include" });
 }
 
-export async function loginRequest(username: string, password: string): Promise<User> {
+export async function loginRequest(username: string, password: string): Promise<void> {
     return apiFetch("/api/v1/admin/auth/login", {
         method: "POST",
         credentials: "include",

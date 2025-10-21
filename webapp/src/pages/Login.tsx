@@ -9,19 +9,16 @@ import { useForm } from "@tanstack/react-form"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import { normalizeErrors } from "@/lib/utils";
+import { LogIn } from "lucide-react";
 
 const formSchema = z.object({
-    name: z
-        .string()
-        .min(1, "Введите логин"),
-    password: z
-        .string()
-        .min(1, "Введите пароль"),
+    name: z.string().min(1, "Введите логин"),
+    password: z.string().min(1, "Введите пароль"),
 });
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, isLoading } = useAuth();
 
     const form = useForm({
         defaultValues: {
@@ -66,7 +63,7 @@ const Login: React.FC = () => {
                         id="dashboard-login-form"
                         onSubmit={(e) => {
                             e.preventDefault();
-                            form.handleSubmit();
+                            void form.handleSubmit();
                         }}
                     >
                         <FieldGroup>
@@ -131,10 +128,11 @@ const Login: React.FC = () => {
                         <Button
                             type="submit"
                             form="dashboard-login-form"
-                            disabled={form.state.isFormValidating || form.state.isSubmitting}
+                            className="w-full"
+                            disabled={form.state.isFormValidating || form.state.isSubmitting || isLoading}
                         >
                             Войти
-                            {(form.state.isFormValidating || form.state.isSubmitting) && <Spinner />}
+                            {form.state.isSubmitting || isLoading ? <Spinner /> : <LogIn />}
                         </Button>
                     </Field>
                 </CardFooter>

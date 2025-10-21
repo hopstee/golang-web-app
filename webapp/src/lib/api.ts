@@ -19,7 +19,13 @@ async function apiFetch<T>(
         throw new Error(`API error (${res.status}): ${text}`);
     }
 
-    return res.json() as Promise<T>;
+    const text = await res.text();
+
+    try {
+        return JSON.parse(text) as T;
+    } catch {
+        return text as unknown as T;
+    }
 }
 
 export { apiFetch };
