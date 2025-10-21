@@ -2,8 +2,8 @@ server:
   addr: ":8080"
 
 database:
-  driver: "sqlite"
-  dsn: "./data/app.db"
+  driver: "postgres"
+  dsn: "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable"
 
 authentication:
   jwt:
