@@ -18,7 +18,7 @@ run: build
 
 .PHONY: watch
 watch:
-	${MAKE} -j2 watch-app watch-templ
+	${MAKE} -j3 watch-app watch-templ watch-webapp
 
 .PHONY: watch-app
 watch-app:
@@ -34,6 +34,12 @@ watch-templ:
 	--watch \
 	--proxy="http://localhost:8080" \
 	--open-browser=false
+
+.PHONY: watch-webapp
+watch-webapp:
+	cd ./webapp && \
+	npm ci && \
+	npm run dev
 
 .PHONY: build-scripts
 build-scripts:
