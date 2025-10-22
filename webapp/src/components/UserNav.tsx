@@ -29,8 +29,8 @@ export default function UserNav() {
                                 <AvatarFallback className="rounded-lg">A</AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-medium">{user?.name}</span>
-                                <span className="truncate text-xs">{user?.email}</span>
+                                <span className="truncate font-medium">{user?.username}</span>
+                                <span className="truncate text-xs">{user?.role}</span>
                             </div>
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
