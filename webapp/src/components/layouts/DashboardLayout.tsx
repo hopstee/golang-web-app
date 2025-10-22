@@ -5,6 +5,7 @@ import { Separator } from "../ui/separator";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "../ui/breadcrumb";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "../ThemeToggle";
 
 interface DashboardLayoutProps {
     children: ReactNode
@@ -43,6 +44,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
+
+                    <div className="ml-auto">
+                        <ThemeToggle />
+                    </div>
                 </header>
 
                 <div className="flex flex-1 flex-col gap-4 p-4">
