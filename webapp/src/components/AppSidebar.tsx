@@ -3,62 +3,101 @@ import {
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
+    SidebarGroupLabel,
+    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { ChevronDown } from "lucide-react"
+import { ChevronRight, ChevronsRight, Command, Image, Phone, ScanEye } from "lucide-react"
 import UserNav from "./UserNav"
 
 export function AppSidebar() {
     return (
         <Sidebar>
+            <SidebarHeader>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton size="lg" asChild>
+                            <a href="#">
+                                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                                    <Command className="size-4" />
+                                </div>
+                                <div className="grid flex-1 text-left text-sm leading-tight">
+                                    <span className="truncate font-medium">Дэшборд</span>
+                                    <span className="truncate text-xs">Сводка</span>
+                                </div>
+                            </a>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
+                    <SidebarGroupLabel>Контент</SidebarGroupLabel>
                     <SidebarMenu>
                         <SidebarMenuItem>
-                            <SidebarMenuButton>Дэшборд</SidebarMenuButton>
+                            <SidebarMenuButton asChild tooltip="Главная">
+                                <a href="#">
+                                    <ChevronsRight />
+                                    <span>Главная</span>
+                                </a>
+                            </SidebarMenuButton>
                         </SidebarMenuItem>
-
-                        <Collapsible
-                            title="Страницы"
-                            defaultOpen
-                            className="group/collapsible"
-                        >
-                            <SidebarMenuItem>
-                                <CollapsibleTrigger asChild>
-                                    <SidebarMenuButton>
-                                        Страницы{" "}
-                                        <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                                    </SidebarMenuButton>
-                                </CollapsibleTrigger>
-                            </SidebarMenuItem>
-                            <CollapsibleContent>
-                                <SidebarMenuSub>
-                                    <SidebarMenuSubItem>
-                                        <SidebarMenuSubButton asChild>
-                                            <a href="#">Главная</a>
-                                        </SidebarMenuSubButton>
-                                    </SidebarMenuSubItem>
-                                    <SidebarMenuSubItem>
-                                        <SidebarMenuSubButton asChild>
-                                            <a href="#">Обо мне</a>
-                                        </SidebarMenuSubButton>
-                                    </SidebarMenuSubItem>
-                                    <SidebarMenuSubItem>
-                                        <SidebarMenuSubButton asChild>
-                                            <a href="#">Проекты</a>
-                                        </SidebarMenuSubButton>
-                                    </SidebarMenuSubItem>
-                                </SidebarMenuSub>
-                            </CollapsibleContent>
-                        </Collapsible>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild tooltip="Обо мне">
+                                <a href="#">
+                                    <ChevronRight />
+                                    <span>Обо мне</span>
+                                </a>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild tooltip="Проекты">
+                                <a href="#">
+                                    <ChevronRight />
+                                    <span>Проекты</span>
+                                </a>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
                     </SidebarMenu>
-                </SidebarGroup >
+                </SidebarGroup>
+
+                <SidebarGroup>
+                    <SidebarGroupLabel>Настройки</SidebarGroupLabel>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild tooltip="SEO параметры">
+                                <a href="#">
+                                    <ScanEye />
+                                    <span>SEO параметры</span>
+                                </a>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild tooltip="Контактные данные">
+                                <a href="#">
+                                    <Phone />
+                                    <span>Контактные данные</span>
+                                </a>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarGroup>
+
+                <SidebarGroup>
+                    <SidebarGroupLabel>Медиа</SidebarGroupLabel>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild tooltip="Галерея">
+                                <a href="#">
+                                    <Image />
+                                    <span>Галерея</span>
+                                </a>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarGroup>
             </SidebarContent >
             <SidebarFooter>
                 <UserNav />
