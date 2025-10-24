@@ -46,7 +46,7 @@ export default function UserNav() {
                             disabled={isLoading}
                         >
                             {isLoading ? <Spinner /> : <LogOut />}
-                            Log out
+                            Выйти
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

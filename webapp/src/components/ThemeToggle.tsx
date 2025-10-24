@@ -1,16 +1,20 @@
-import { Moon, Sun } from "lucide-react"
+import { Monitor, Moon, Sun } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/hooks/useTheme"
+import type { Theme } from "@/context/ThemeContext"
 
 export function ThemeToggle() {
-    const { setTheme } = useTheme()
+    const { theme, setTheme } = useTheme()
 
     return (
         <DropdownMenu>
@@ -21,16 +25,23 @@ export function ThemeToggle() {
                     <span className="sr-only">Сменить тему</span>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme("light")}>
-                    Светлая
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                    Темная
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
-                    Системная
-                </DropdownMenuItem>
+            <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>Цветовая схема</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup value={theme} onValueChange={(theme) => setTheme(theme as Theme)}>
+                    <DropdownMenuRadioItem value="light">
+                        Светлая
+                        <Sun className="size-4 ml-auto"/>
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="dark">
+                        Темная
+                        <Moon className="size-4 ml-auto"/>
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="system">
+                        Системная
+                        <Monitor className="size-4 ml-auto"/>
+                    </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
             </DropdownMenuContent>
         </DropdownMenu>
     )
