@@ -1,3 +1,18 @@
+// @page: projects
+// @title: Проекты
+// @layout: public
+
+// @field heading: string = "Проекты"
+
+// @field projects_sections[]: list[object] = "Секции проектов"
+// @field projects_sections[].name: string = "Название секции"
+// @field projects_sections[].projects: list[object] = "Список проектов в секции"
+// @field projects_sections[].projects[].name: string = "Название проекта"
+// @field projects_sections[].projects[].description: string = "Описание проекта"
+// @field projects_sections[].projects[].url: string = "Ссылка на проект"
+// @field projects_sections[].projects[].technologies: list[string] = "Список технологий, использованных в проекте"
+// @field projects_sections[].projects[].in_development: bool = "В разработке"
+
 package pages
 
 import (
@@ -195,7 +210,6 @@ templ ProjectItem(project ProjectItemData) {
 				@partials.Tooltip(partials.Top, "Проект находится в разработке", 150) {
 					<div class="warning-container h-7">
 						@icons.BageAlert("h-4")
-						// <BadgeAlert class="h-4" />
 					</div>
 				}
 			}

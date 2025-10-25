@@ -1,3 +1,10 @@
+// @layout: public
+// @title: "Public Layout"
+// @field title: string = "SEO заголовок"
+// @field description: text = "SEO описание"
+// @field image: string = "Изображение для предпросмотра"
+// @field url: string = "Канонический URL"
+
 package layouts
 
 import (
@@ -15,19 +22,13 @@ type PublicLayoutProps struct {
 	WithTopPadding bool
 	WideWrapper    bool
 	Centered       bool
-	WithNavigation bool
 }
 
 var publicHead = meta.HeadData{
-	Title:        "Korobka",
-	WithMetaTags: true,
-
-	Meta: meta.MetaTagsData{
-		Title:       "Korobka",
-		Description: "Best agency",
-		URL:         "test-url",
-		Image:       "no-image",
-	},
+	Title:       "Korobka",
+	Description: "Best agency",
+	URL:         "test-url",
+	Image:       "no-image",
 }
 
 func NewPublicLayoutProps(r *http.Request) PublicLayoutProps {
@@ -37,22 +38,19 @@ func NewPublicLayoutProps(r *http.Request) PublicLayoutProps {
 		WithTopPadding: true,
 		WideWrapper:    false,
 		Centered:       false,
-		WithNavigation: true,
 	}
 }
 
 templ PublicLayout(props PublicLayoutProps) {
-    @BaseLayout(props.HeadData) {
-        @PublicLayoutPartial(props) {
-            { children... }
-        }
-    }
+	@BaseLayout(props.HeadData) {
+		@PublicLayoutPartial(props) {
+			{ children... }
+		}
+	}
 }
 
 templ PublicLayoutPartial(props PublicLayoutProps) {
-	if props.WithNavigation {
-		@partials.Navigation(props.CurrentPath)
-	}
+	@partials.Navigation(props.CurrentPath)
 	<div class={ topPaddingClass(props.WithTopPadding) }>
 		<div class={ wideWrapperClass(props.WideWrapper) }>
 			<div class="container">

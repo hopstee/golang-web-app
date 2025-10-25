@@ -26,7 +26,7 @@ watch-app:
 	--build.cmd "${MAKE} build-app" \
 	--build.bin "${APP_BINPATH}" \
 	--build.include_ext "go" \
-	--build.exclude_dir "bin, data"
+	--build.exclude_dir "bin, data, webapp"
 
 .PHONY: watch-templ
 watch-templ:
@@ -52,3 +52,7 @@ add-admin: build-scripts
 .PHONY: upsert-admin
 upsert-admin: build-scripts
 	${SCRIPT_BINPATH} create --force
+
+.PHONY: gen-schemas
+gen-schemas: build-scripts
+	${SCRIPT_BINPATH} generate

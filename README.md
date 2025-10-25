@@ -75,6 +75,21 @@ make add-admin
 
 ---
 
+## Static pages schema generator
+
+### Declaration
+
+| Directive                      | Description                                            |
+| ------------------------------ | -------------------------------------------------------|
+| `@page: id`                    | Page ID                                                |
+| `@layout: id`                  | Connect layout to the page                             |
+| `@title: text`                 | Readable title                                         |
+| `@parent: id`                  | Set parent block                                       |
+| `@blocks: block1, block2, ...` | List of blocks for this page                           |
+| `@field ...`                   | Fields description (with support for nesting and `[]`) |
+
+---
+
 ## License
 
 MIT License.

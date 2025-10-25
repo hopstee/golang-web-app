@@ -4,6 +4,7 @@
 /bin/*
 /data/*
 /static/uploads/*
+/internal/schemas/*
 
 /tmp
 

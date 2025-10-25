@@ -1,4 +1,4 @@
-package add_admin
+package addadmin
 
 import (
 	"fmt"

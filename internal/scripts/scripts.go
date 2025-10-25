@@ -3,7 +3,8 @@ package scripts
 import (
 	"github.com/spf13/cobra"
 
-	"mobile-backend-boilerplate/internal/scripts/add_admin"
+	addadmin "mobile-backend-boilerplate/internal/scripts/add_admin"
+	generateschemas "mobile-backend-boilerplate/internal/scripts/generate_schema"
 )
 
 var rootCmd = &cobra.Command{
@@ -16,5 +17,6 @@ func Execute() error {
 }
 
 func init() {
-	rootCmd.AddCommand(add_admin.Command)
+	rootCmd.AddCommand(addadmin.Command)
+	rootCmd.AddCommand(generateschemas.Command)
 }
