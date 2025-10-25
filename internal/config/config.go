@@ -18,6 +18,17 @@ type Database struct {
 	DataSource string `mapstructure:"dsn"`
 }
 
+type KVStore struct {
+	Type  string `mapstructure:"type"`
+	Redis Redis  `mapstructure:"redis"`
+}
+
+type Redis struct {
+	Addr     string `mapstructure:"addr"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
+}
+
 type JWTAuth struct {
 	Secret string `mapstructure:"secret"`
 }
@@ -35,12 +46,19 @@ type Static struct {
 	Dir string `mapstructure:"dir"`
 }
 
+type Schemas struct {
+	Pages   string `mapstructure:"pages"`
+	Modules string `mapstructure:"modules"`
+}
+
 type Config struct {
 	Server         Server         `mapstructure:"server"`
 	Database       Database       `mapstructure:"database"`
+	KVStore        KVStore        `mapstructure:"kvstore"`
 	Authentication Authentication `mapstructure:"authentication"`
 	Telegram       Telegram       `mapstructure:"telegram"`
 	Static         Static         `mapstructure:"static"`
+	Schemas        Schemas        `mapstructure:"schemas"`
 }
 
 func LoadConfig(path string) (*Config, error) {

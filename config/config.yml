@@ -5,6 +5,13 @@ database:
   driver: "postgres"
   dsn: "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable"
 
+kvstore:
+  type: "redis"
+  redis:
+    addr: "${REDIS_HOST}:${REDIS_PORT}"
+    password: "${REDIS_PASSWORD}"
+    db: ${REDIS_DB}
+
 authentication:
   jwt:
     secret: "${JWT_SECRET}"
@@ -15,3 +22,7 @@ telegram:
 
 static:
   dir: "./static"
+
+schemas:
+  pages: "./internal/schemas/pages.v1.json"
+  modules: "./internal/schemas/modules.v1.json"

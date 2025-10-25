@@ -26,6 +26,7 @@ type App struct {
 }
 
 func Init() (*App, error) {
+	ctx := context.Background()
 	log := logger.New(slog.LevelDebug)
 
 	cfg, err := config.LoadConfig("config/config.yml")
@@ -43,6 +44,9 @@ func Init() (*App, error) {
 		return nil, err
 	}
 
+	if err := deps.InitKVStore(ctx); err != nil {
+		return nil, err
+	}
 	deps.InitNotifiers()
 	deps.InitServices()
 	deps.InitHandlers()

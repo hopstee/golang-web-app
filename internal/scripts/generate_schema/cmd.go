@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
+	"mobile-backend-boilerplate/internal/kvstore"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -12,29 +13,6 @@ import (
 
 	"github.com/spf13/cobra"
 )
-
-type Field struct {
-	Name   string  `json:"name"`
-	Type   string  `json:"type"`
-	Label  string  `json:"label,omitempty"`
-	Schema *Schema `json:"schema,omitempty"`
-}
-
-type Schema struct {
-	Fields []Field `json:"fields"`
-}
-
-type EntitySchema struct {
-	ID       string          `json:"id"`
-	Title    string          `json:"title"`
-	Type     string          `json:"type"` // layout / block / page / module
-	Layout   string          `json:"layout,omitempty"`
-	Parent   string          `json:"parent,omitempty"`
-	Blocks   []string        `json:"blocks,omitempty"`
-	SEO      []Field         `json:"seo,omitempty"`
-	Content  []Field         `json:"content,omitempty"`
-	Children []*EntitySchema `json:"children,omitempty"`
-}
 
 var (
 	// fieldExp = regexp.MustCompile(`@field\s+([\w\[\]\.]+):\s*([\w\[\]]+)(?:\s*=\s*"([^"]+)")?`)
@@ -75,7 +53,7 @@ var Command = &cobra.Command{
 			}
 		}
 
-		pages := make([]*EntitySchema, 0, len(pagesSchemas))
+		pages := make([]*kvstore.EntitySchema, 0, len(pagesSchemas))
 		for _, p := range pagesSchemas {
 			pages = append(pages, p)
 		}
@@ -85,7 +63,7 @@ var Command = &cobra.Command{
 		os.WriteFile(output, data, 0644)
 		fmt.Println("Pages schemas generated:", output)
 
-		modules := make([]*EntitySchema, 0, len(modulesSchemas))
+		modules := make([]*kvstore.EntitySchema, 0, len(modulesSchemas))
 		for _, m := range modulesSchemas {
 			modules = append(modules, m)
 		}
@@ -101,8 +79,8 @@ func init() {
 	Command.Flags().String("version", "v1", "Schema version")
 }
 
-func parseDir(dir, typ string) map[string]*EntitySchema {
-	schemas := make(map[string]*EntitySchema)
+func parseDir(dir, typ string) map[string]*kvstore.EntitySchema {
+	schemas := make(map[string]*kvstore.EntitySchema)
 	filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".templ") {
 			return nil
@@ -121,17 +99,17 @@ func parseDir(dir, typ string) map[string]*EntitySchema {
 	return schemas
 }
 
-func parseFile(path string) EntitySchema {
+func parseFile(path string) kvstore.EntitySchema {
 	fmt.Println("File: ", path)
 	file, err := os.Open(path)
 	if err != nil {
-		return EntitySchema{}
+		return kvstore.EntitySchema{}
 	}
 	defer file.Close()
 
-	entity := EntitySchema{}
+	entity := kvstore.EntitySchema{}
 	scanner := bufio.NewScanner(file)
-	rootSchema := &Schema{Fields: []Field{}}
+	rootSchema := &kvstore.Schema{Fields: []kvstore.Field{}}
 
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -167,7 +145,7 @@ func parseFile(path string) EntitySchema {
 	return entity
 }
 
-func addNestedField(schema *Schema, fullPath, fieldType, label string) {
+func addNestedField(schema *kvstore.Schema, fullPath, fieldType, label string) {
 	parts := strings.Split(fullPath, ".")
 	current := schema
 
@@ -176,7 +154,7 @@ func addNestedField(schema *Schema, fullPath, fieldType, label string) {
 		part := strings.TrimSuffix(rawPart, "[]")
 		isLeaf := i == len(parts)-1
 
-		var existing *Field
+		var existing *kvstore.Field
 		for j := range current.Fields {
 			if current.Fields[j].Name == part {
 				existing = &current.Fields[j]
@@ -185,13 +163,13 @@ func addNestedField(schema *Schema, fullPath, fieldType, label string) {
 		}
 
 		if existing == nil {
-			newField := Field{
+			newField := kvstore.Field{
 				Name:  part,
 				Type:  guessType(isArray, isLeaf, fieldType),
 				Label: label,
 			}
 			if !isLeaf {
-				newField.Schema = &Schema{}
+				newField.Schema = &kvstore.Schema{}
 			}
 			current.Fields = append(current.Fields, newField)
 			existing = &current.Fields[len(current.Fields)-1]
@@ -199,7 +177,7 @@ func addNestedField(schema *Schema, fullPath, fieldType, label string) {
 
 		if !isLeaf {
 			if existing.Schema == nil {
-				existing.Schema = &Schema{}
+				existing.Schema = &kvstore.Schema{}
 			}
 			current = existing.Schema
 		}

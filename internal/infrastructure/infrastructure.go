@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"log/slog"
 	"mobile-backend-boilerplate/internal/config"
+	"mobile-backend-boilerplate/internal/kvstore"
 	"mobile-backend-boilerplate/internal/notifier"
 	"mobile-backend-boilerplate/internal/repository"
 	"mobile-backend-boilerplate/internal/service"
@@ -16,6 +17,9 @@ type Dependencies struct {
 
 	// repo
 	Repository repository.Repository
+
+	// kvstore
+	KVStore kvstore.KVStore
 
 	// notifiers
 	TelegramNotifier notifier.Notifier
