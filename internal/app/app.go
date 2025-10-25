@@ -59,11 +59,13 @@ func Init() (*App, error) {
 		MobileAuthService: deps.MobileAuthService,
 		AdminAuthService:  deps.AdminAuthService,
 		PostService:       deps.PostService,
+		PagesService:      deps.PagesService,
 
 		// api handlers
 		MobileAuthHandler: deps.MobileAuthHandler,
 		AdminAuthHandler:  deps.AdminAuthHandler,
 		RequestHandler:    deps.RequestHandler,
+		PagesHandler:      deps.PagesHandler,
 
 		// web handlers
 		PostHandler:    deps.PostHandler,

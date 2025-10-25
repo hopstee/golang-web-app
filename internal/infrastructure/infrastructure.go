@@ -31,11 +31,13 @@ type Dependencies struct {
 	AdminService      *service.AdminService
 	RequestService    *service.RequestService
 	PostService       *service.PostService
+	PagesService      *service.PagesService
 
 	// api handlers
 	MobileAuthHandler *apiHandler.MobileAuthHandler
 	AdminAuthHandler  *apiHandler.AdminAuthHandler
 	RequestHandler    *apiHandler.RequestHandler
+	PagesHandler      *apiHandler.PagesHandler
 
 	// web handlers
 	PostHandler    *webHandler.PostHandler

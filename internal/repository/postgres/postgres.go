@@ -18,6 +18,7 @@ type PostgreSQLRepository struct {
 	admin   repository.AdminRepository
 	post    repository.PostRepository
 	request repository.RequestRepository
+	pages   repository.PagesRepository
 }
 
 func NewPostgreSQLRepository(dsn string, logger *slog.Logger) (*PostgreSQLRepository, error) {
@@ -40,6 +41,7 @@ func NewPostgreSQLRepository(dsn string, logger *slog.Logger) (*PostgreSQLReposi
 	repository.admin = NewAdminRepo(db, logger)
 	repository.post = NewPostRepo(db, logger)
 	repository.request = NewRequestRepo(db, logger)
+	repository.pages = NewPagesRepo(db, logger)
 
 	if err = repository.Migrate(Up, false); err != nil {
 		logger.Error("migration failed", slog.Any("err", err))
@@ -73,4 +75,8 @@ func (r *PostgreSQLRepository) Post() repository.PostRepository {
 
 func (r *PostgreSQLRepository) Request() repository.RequestRepository {
 	return r.request
+}
+
+func (r *PostgreSQLRepository) Pages() repository.PagesRepository {
+	return r.pages
 }

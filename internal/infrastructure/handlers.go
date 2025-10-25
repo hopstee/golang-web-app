@@ -9,6 +9,7 @@ func (d *Dependencies) InitHandlers() {
 	d.MobileAuthHandler = apiHandler.NewMobileAuthHandler(d.MobileAuthService, d.UserService)
 	d.AdminAuthHandler = apiHandler.NewAdminAuthHandler(d.AdminAuthService, d.AdminService)
 	d.RequestHandler = apiHandler.NewRequestHandler(d.RequestService, d.TelegramNotifier)
+	d.PagesHandler = apiHandler.NewPagesHandler(d.PagesService)
 
 	d.PostHandler = webHandler.NewPostHandler(d.PostService)
 	d.ContactHandler = webHandler.NewContactHandler(d.RequestService, d.TelegramNotifier)

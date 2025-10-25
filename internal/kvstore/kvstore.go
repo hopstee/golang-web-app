@@ -25,8 +25,15 @@ type EntitySchema struct {
 	Children []*EntitySchema `json:"children,omitempty"`
 }
 
+type EntityData struct {
+}
+
 type KVStore interface {
 	SetSchemas(ctx context.Context, pages, modules []*EntitySchema) error
 	GetPages(ctx context.Context) ([]*EntitySchema, error)
 	GetModules(ctx context.Context) ([]*EntitySchema, error)
+
+	SetPageData(ctx context.Context, slug string, data map[string]interface{}) error
+	GetPageData(ctx context.Context, slug string) (map[string]interface{}, error)
+	DeletePageData(ctx context.Context, slug string) error
 }

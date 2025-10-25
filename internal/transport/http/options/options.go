@@ -13,6 +13,7 @@ type Options struct {
 	MobileAuthHandler *apiHandlers.MobileAuthHandler
 	AdminAuthHandler  *apiHandlers.AdminAuthHandler
 	RequestHandler    *apiHandlers.RequestHandler
+	PagesHandler      *apiHandlers.PagesHandler
 
 	PostHandler    *webHandlers.PostHandler
 	ContactHandler *webHandlers.ContactHandler
@@ -20,6 +21,7 @@ type Options struct {
 	MobileAuthService *service.MobileAuthService
 	AdminAuthService  *service.AdminAuthService
 	PostService       *service.PostService
+	PagesService      *service.PagesService
 
 	Logger *slog.Logger
 }

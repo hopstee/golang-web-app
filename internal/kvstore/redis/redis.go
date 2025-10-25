@@ -46,6 +46,25 @@ func (r *RedisKVStore) GetModules(ctx context.Context) (modules []*kvstore.Entit
 	return modules, nil
 }
 
+func (r *RedisKVStore) SetPageData(ctx context.Context, slug string, data map[string]interface{}) error {
+	key := fmt.Sprintf("page:%s", slug)
+	return r.setJSON(ctx, key, data)
+}
+
+func (r *RedisKVStore) GetPageData(ctx context.Context, slug string) (map[string]interface{}, error) {
+	key := fmt.Sprintf("page:%s", slug)
+	var data map[string]interface{}
+	if err := r.getJSON(ctx, key, &data); err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func (r *RedisKVStore) DeletePageData(ctx context.Context, slug string) error {
+	key := fmt.Sprintf("page:%s", slug)
+	return r.client.Del(ctx, key).Err()
+}
+
 func (r *RedisKVStore) setJSON(ctx context.Context, key string, value interface{}) error {
 	data, err := json.Marshal(value)
 	if err != nil {

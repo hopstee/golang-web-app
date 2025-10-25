@@ -33,6 +33,14 @@ func NewRouter(opts options.Options) *chi.Mux {
 						r.Get("/me", opts.AdminAuthHandler.MeWeb)
 					})
 				})
+
+				r.With(customMiddleware.AdminAuthMiddleware(opts.AdminAuthService)).Group(func(r chi.Router) {
+					r.Get("/pages", opts.PagesHandler.GetAllPagesSchemas)
+					r.Get("/pages/{slug}/schema", opts.PagesHandler.GetPageSchema)
+					r.Get("/pages/{slug}/data", opts.PagesHandler.GetPageData)
+					r.Put("/pages/{slug}/data", opts.PagesHandler.UpdatePageData)
+					r.Delete("/pages/{slug}", opts.PagesHandler.DeletePage)
+				})
 			})
 		})
 
