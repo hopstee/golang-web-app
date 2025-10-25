@@ -6,7 +6,7 @@ import (
 	"path"
 
 	"github.com/mattermost/morph"
-	"github.com/mattermost/morph/drivers/sqlite"
+	"github.com/mattermost/morph/drivers/postgres"
 	mbindata "github.com/mattermost/morph/sources/embedded"
 )
 
@@ -22,9 +22,9 @@ const (
 )
 
 func (s *PostgreSQLRepository) initMorph(dryRun bool, timeoutSeconds int) (*morph.Morph, error) {
-	driver, err := sqlite.WithInstance(s.DB)
+	driver, err := postgres.WithInstance(s.DB)
 	if err != nil {
-		return nil, fmt.Errorf("failed to init morph sqlite driver: %w", err)
+		return nil, fmt.Errorf("failed to init morph postgres driver: %w", err)
 	}
 
 	assetsList, err := assets.ReadDir("migrations")
@@ -48,8 +48,6 @@ func (s *PostgreSQLRepository) initMorph(dryRun bool, timeoutSeconds int) (*morp
 	}
 
 	opts := []morph.EngineOption{
-		// PostgreSQL does not support locking
-		// morph.WithLock("migrations-lock-key"),
 		morph.SetMigrationTableName(migrationsTableName),
 		morph.SetStatementTimeoutInSeconds(timeoutSeconds),
 		morph.SetDryRun(dryRun),
@@ -57,7 +55,7 @@ func (s *PostgreSQLRepository) initMorph(dryRun bool, timeoutSeconds int) (*morp
 
 	engine, err := morph.New(context.Background(), driver, src, opts...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to creare morph engine: %w", err)
+		return nil, fmt.Errorf("failed to create morph engine: %w", err)
 	}
 
 	return engine, nil
