@@ -7,7 +7,6 @@ import (
 	"mobile-backend-boilerplate/internal/config"
 	"mobile-backend-boilerplate/internal/repository"
 	"mobile-backend-boilerplate/internal/repository/postgres"
-	"mobile-backend-boilerplate/internal/repository/sqlite"
 	cmdHelper "mobile-backend-boilerplate/pkg/helper/cmd"
 	passwordHelper "mobile-backend-boilerplate/pkg/helper/password"
 	customLogger "mobile-backend-boilerplate/pkg/logger"
@@ -57,16 +56,6 @@ var Command = &cobra.Command{
 		var adminRepo repository.AdminRepository
 
 		switch config.Database.Driver {
-		case "sqlite":
-			repo, err = sqlite.NewSQLiteRepository(config.Database.DataSource, logger)
-			if err != nil {
-				log.Fatalf("failed to init sqlite repository: %v", err)
-			}
-
-			db := repo.(*sqlite.SQLiteRepository).DB
-			adminRepo = sqlite.NewAdminRepo(db, logger)
-
-			fmt.Println("SQLite repository initialized with DSN:", config.Database.DataSource)
 		case "postgres":
 			repo, err = postgres.NewPostgreSQLRepository(config.Database.DataSource, logger)
 			if err != nil {
