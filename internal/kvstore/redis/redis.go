@@ -13,6 +13,11 @@ type RedisKVStore struct {
 	client *redis.Client
 }
 
+type KVData struct {
+	Key  string
+	Data []*kvstore.EntitySchema
+}
+
 func NewRedisKVStore(addr, password string, db int) *RedisKVStore {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -22,13 +27,25 @@ func NewRedisKVStore(addr, password string, db int) *RedisKVStore {
 	return &RedisKVStore{client: rdb}
 }
 
-func (r *RedisKVStore) SetSchemas(ctx context.Context, pages, modules []*kvstore.EntitySchema) error {
-	if err := r.setJSON(ctx, "schema:pages", pages); err != nil {
-		return fmt.Errorf("set pages: %w", err)
+func (r *RedisKVStore) SetSchemas(ctx context.Context, schemas *kvstore.SchemasList) error {
+	kvData := []KVData{
+		{"schema:schema", schemas.Schema},
+		{"schema:pages", schemas.Pages},
+		{"schema:layouts", schemas.Layouts},
+		{"schema:modules", schemas.Modules},
+		{"schema:blocks", schemas.Blocks},
+		{"schema:shared", schemas.Shared},
 	}
-	if err := r.setJSON(ctx, "schema:modules", modules); err != nil {
-		return fmt.Errorf("set modules: %w", err)
+
+	for _, schema := range kvData {
+		if err := r.client.Del(ctx, schema.Key).Err(); err != nil {
+			return fmt.Errorf("delete %s: %v", schema.Key, err)
+		}
+		if err := r.setJSON(ctx, schema.Key, schema.Data); err != nil {
+			return fmt.Errorf("set %s: %w", schema.Key, err)
+		}
 	}
+
 	return nil
 }
 

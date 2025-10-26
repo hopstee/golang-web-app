@@ -10,6 +10,11 @@ import (
 	"os"
 )
 
+type schemaFile struct {
+	Path string
+	Dst  *[]*kvstore.EntitySchema
+}
+
 func (d *Dependencies) InitKVStore(ctx context.Context) error {
 	var kvStore kvstore.KVStore
 
@@ -33,29 +38,52 @@ func (d *Dependencies) InitKVStore(ctx context.Context) error {
 }
 
 func loadSchemas(ctx context.Context, kvs kvstore.KVStore, config *config.Config) error {
-	pagesData, err := os.ReadFile(config.Schemas.Pages)
-	if err != nil {
-		return fmt.Errorf("failed to read pages schema: %w", err)
+	var (
+		schema, pages, layouts, blocks, modules, shared []*kvstore.EntitySchema
+		files                                           = []schemaFile{
+			{config.Schemas.Schema, &schema},
+			{config.Schemas.Pages, &pages},
+			{config.Schemas.Layouts, &layouts},
+			{config.Schemas.Blocks, &blocks},
+			{config.Schemas.Modules, &modules},
+			{config.Schemas.Shared, &shared},
+		}
+	)
+
+	for _, f := range files {
+		if err := readAndUnmarshal(f); err != nil {
+			return err
+		}
 	}
 
-	var pages []*kvstore.EntitySchema
-	if err := json.Unmarshal(pagesData, &pages); err != nil {
-		return fmt.Errorf("unmarshal pages schema: %w", err)
+	schemas := &kvstore.SchemasList{
+		Schema:  schema,
+		Pages:   pages,
+		Layouts: layouts,
+		Blocks:  blocks,
+		Modules: modules,
+		Shared:  shared,
 	}
 
-	modulesData, err := os.ReadFile(config.Schemas.Modules)
-	if err != nil {
-		return fmt.Errorf("failed to read modules schema: %w", err)
-	}
-
-	var modules []*kvstore.EntitySchema
-	if err := json.Unmarshal(modulesData, &modules); err != nil {
-		return fmt.Errorf("unmarshal modules schema: %w", err)
-	}
-
-	if err := kvs.SetSchemas(ctx, pages, modules); err != nil {
+	if err := kvs.SetSchemas(ctx, schemas); err != nil {
 		return err
 	}
 
+	fmt.Println("schema loaded")
+	return nil
+}
+
+func readAndUnmarshal(file schemaFile) error {
+	data, err := os.ReadFile(file.Path)
+	if err != nil {
+		return fmt.Errorf("failed to read file %s: %w", file.Path, err)
+	}
+
+	var schemas []*kvstore.EntitySchema
+	if err := json.Unmarshal(data, &schemas); err != nil {
+		return fmt.Errorf("unmarshal file %s: %w", file.Path, err)
+	}
+
+	*file.Dst = schemas
 	return nil
 }

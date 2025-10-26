@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
+	"log"
 	"mobile-backend-boilerplate/internal/kvstore"
 	"os"
 	"path/filepath"
@@ -26,52 +27,91 @@ var Command = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		version, _ := cmd.Flags().GetString("version")
 
-		layoutSchemas := parseDir("internal/view/layouts", "layout")
-		blocksSchemas := parseDir("internal/view/blocks", "block")
-		pagesSchemas := parseDir("internal/view/pages", "page")
-		modulesSchemas := parseDir("internal/view/modules", "module")
+		root := "internal/view"
 
-		for _, page := range pagesSchemas {
-			if page.Layout != "" {
-				if layout, ok := layoutSchemas[page.Layout]; ok {
-					page.SEO = layout.Content
+		entities := parseAll(root)
+
+		for _, entity := range entities {
+			refs := make([]string, 0)
+			if len(entity.Blocks) > 0 {
+				for _, b := range entity.Blocks {
+					refs = append(refs, b)
+					if child, ok := entities[b]; ok {
+						entity.Children = append(entity.Children, child)
+					}
 				}
 			}
 
-			for _, blockId := range page.Blocks {
-				if block, ok := blocksSchemas[blockId]; ok {
-					page.Children = append(page.Children, block)
+			if entity.Layout != "" {
+				refs = append(refs, entity.Layout)
+				if layout, ok := entities[entity.Layout]; ok {
+					entity.LayoutFields = layout.Content
+					entity.Children = append(entity.Children, layout)
 				}
+			}
+
+			if entity.Parent != "" {
+				refs = append(refs, entity.Parent)
+				if parent, ok := entities[entity.Parent]; ok {
+					parent.Children = append(parent.Children, entity)
+				}
+			}
+
+			entity.Refs = refs
+		}
+
+		pages := make([]*kvstore.EntitySchema, 0)
+		layouts := make([]*kvstore.EntitySchema, 0)
+		blocks := make([]*kvstore.EntitySchema, 0)
+		modules := make([]*kvstore.EntitySchema, 0)
+		shared := make([]*kvstore.EntitySchema, 0)
+
+		for _, entity := range entities {
+			switch entity.Type {
+			case "page":
+				pages = append(pages, entity)
+			case "layout":
+				layouts = append(layouts, entity)
+			case "block":
+				blocks = append(blocks, entity)
+			case "module":
+				modules = append(modules, entity)
+			case "shared":
+				shared = append(shared, entity)
+			default:
+				pages = append(pages, entity)
 			}
 		}
 
-		for _, block := range blocksSchemas {
-			if block.Parent != "" {
-				if parent, ok := blocksSchemas[block.Parent]; ok {
-					parent.Children = append(parent.Children, block)
-				}
-			}
+		if err := saveSchemas("schema", version, entities); err != nil {
+			log.Fatal("[error]: error saving schema:", err)
 		}
+		log.Println("[info]: schema saved successfully")
 
-		pages := make([]*kvstore.EntitySchema, 0, len(pagesSchemas))
-		for _, p := range pagesSchemas {
-			pages = append(pages, p)
+		if err := saveList("pages", version, pages); err != nil {
+			log.Fatal("[error]: error saving pages list:", err)
 		}
+		log.Println("[info]: pages list saved successfully")
 
-		output := fmt.Sprintf("internal/schemas/pages.%s.json", version)
-		data, _ := json.MarshalIndent(pages, "", "	")
-		os.WriteFile(output, data, 0644)
-		fmt.Println("Pages schemas generated:", output)
-
-		modules := make([]*kvstore.EntitySchema, 0, len(modulesSchemas))
-		for _, m := range modulesSchemas {
-			modules = append(modules, m)
+		if err := saveList("layouts", version, layouts); err != nil {
+			log.Fatal("[error]: error saving layouts list:", err)
 		}
+		log.Println("[info]: layouts list saved successfully")
 
-		output = fmt.Sprintf("internal/schemas/modules.%s.json", version)
-		data, _ = json.MarshalIndent(modules, "", "	")
-		os.WriteFile(output, data, 0644)
-		fmt.Println("Modules schemas generated:", output)
+		if err := saveList("blocks", version, blocks); err != nil {
+			log.Fatal("[error]: error saving blocks list:", err)
+		}
+		log.Println("[info]: blocks list saved successfully")
+
+		if err := saveList("modules", version, modules); err != nil {
+			log.Fatal("[error]: error saving modules list:", err)
+		}
+		log.Println("[info]: modules list saved successfully")
+
+		if err := saveList("shared", version, shared); err != nil {
+			log.Fatal("[error]: error saving shared list:", err)
+		}
+		log.Println("[info]: shared list saved successfully")
 	},
 }
 
@@ -79,7 +119,7 @@ func init() {
 	Command.Flags().String("version", "v1", "Schema version")
 }
 
-func parseDir(dir, typ string) map[string]*kvstore.EntitySchema {
+func parseAll(dir string) map[string]*kvstore.EntitySchema {
 	schemas := make(map[string]*kvstore.EntitySchema)
 	filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".templ") {
@@ -87,10 +127,14 @@ func parseDir(dir, typ string) map[string]*kvstore.EntitySchema {
 		}
 
 		entity := parseFile(path)
-		entity.Type = typ
 
 		if entity.ID == "" {
 			entity.ID = strings.TrimSuffix(info.Name(), ".templ")
+		}
+
+		if entity.Type == "" {
+			log.Printf("[warning] file %s has no @type directive — skipping\n", path)
+			return nil
 		}
 
 		schemas[entity.ID] = &entity
@@ -100,33 +144,46 @@ func parseDir(dir, typ string) map[string]*kvstore.EntitySchema {
 }
 
 func parseFile(path string) kvstore.EntitySchema {
-	fmt.Println("File: ", path)
 	file, err := os.Open(path)
 	if err != nil {
+		log.Println("[error] error open file:", path, err)
 		return kvstore.EntitySchema{}
 	}
 	defer file.Close()
 
 	entity := kvstore.EntitySchema{}
-	scanner := bufio.NewScanner(file)
+	entity.Blocks = make([]string, 0)
+	entity.Refs = make([]string, 0)
+	entity.Children = make([]*kvstore.EntitySchema, 0)
+	entity.LayoutFields = make([]kvstore.Field, 0)
+
 	rootSchema := &kvstore.Schema{Fields: []kvstore.Field{}}
+	scanner := bufio.NewScanner(file)
+
+	moduleMode := "standalone"
 
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 
 		switch {
-		case strings.Contains(line, "@page:"):
-			entity.ID = getTagValue(line, "@page:")
+		case strings.Contains(line, "@type:"):
+			entity.Type = getTagValue(line, "@type:")
+		case strings.Contains(line, "@id:"):
+			entity.ID = getTagValue(line, "@id:")
+		case strings.Contains(line, "@title:"):
+			entity.Title = getTagValue(line, "@title:")
 		case strings.Contains(line, "@layout:"):
 			entity.Layout = getTagValue(line, "@layout:")
 		case strings.Contains(line, "@parent:"):
 			entity.Parent = getTagValue(line, "@parent:")
-		case strings.Contains(line, "@title:"):
-			entity.Title = getTagValue(line, "@title:")
 		case strings.Contains(line, "@blocks:"):
 			entity.Blocks = parseList(getTagValue(line, "@blocks:"))
-		case strings.Contains(line, "@module:"):
-			entity.ID = getTagValue(line, "@module:")
+		case strings.Contains(line, "@mode:"):
+			moduleMode = getTagValue(line, "@mode:")
+			entity.Mode = moduleMode
+		case strings.Contains(line, "@shared:"):
+			entity.Type = "shared"
+			entity.ID = getTagValue(line, "@shared:")
 		case strings.Contains(line, "@field"):
 			if m := fieldExp.FindStringSubmatch(line); len(m) > 0 {
 				fullPath := m[1]
@@ -141,7 +198,6 @@ func parseFile(path string) kvstore.EntitySchema {
 	}
 
 	entity.Content = rootSchema.Fields
-	fmt.Println(entity)
 	return entity
 }
 
@@ -216,4 +272,51 @@ func guessType(isArray, isLeaf bool, explicit string) string {
 		return "list[object]"
 	}
 	return "object"
+}
+
+func saveSchemas(name, version string, schemas map[string]*kvstore.EntitySchema) error {
+	outDir := "internal/schemas"
+	err := os.MkdirAll(outDir, 0755)
+	if err != nil {
+		return err
+	}
+
+	list := make([]*kvstore.EntitySchema, 0, len(schemas))
+	for _, entity := range schemas {
+		list = append(list, entity)
+	}
+
+	filename := fmt.Sprintf("%s/%s.%s.json", outDir, name, version)
+	data, err := json.MarshalIndent(list, "", "	")
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(filename, data, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func saveList(name, version string, list []*kvstore.EntitySchema) error {
+	outDir := "internal/schemas"
+	err := os.MkdirAll(outDir, 0755)
+	if err != nil {
+		return err
+	}
+
+	filename := fmt.Sprintf("%s/%s.%s.json", outDir, name, version)
+	data, err := json.MarshalIndent(list, "", "	")
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(filename, data, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -47,8 +47,12 @@ type Static struct {
 }
 
 type Schemas struct {
+	Schema  string `mapstructure:"schema"`
 	Pages   string `mapstructure:"pages"`
+	Layouts string `mapstructure:"layouts"`
+	Blocks  string `mapstructure:"blocks"`
 	Modules string `mapstructure:"modules"`
+	Shared  string `mapstructure:"shared"`
 }
 
 type Config struct {

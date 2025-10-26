@@ -41,6 +41,14 @@ func TestRedisKVStore_SetGetSchemas(t *testing.T) {
 		},
 	}
 
+	layouts := []*kvstore.EntitySchema{
+		{
+			ID:    "layout1",
+			Title: "Layout One",
+			Type:  "layout",
+		},
+	}
+
 	modules := []*kvstore.EntitySchema{
 		{
 			ID:    "module1",
@@ -49,8 +57,14 @@ func TestRedisKVStore_SetGetSchemas(t *testing.T) {
 		},
 	}
 
+	schemas := &kvstore.SchemasList{
+		Pages:   pages,
+		Layouts: layouts,
+		Modules: modules,
+	}
+
 	// Set schemas
-	if err := kv.SetSchemas(ctx, pages, modules); err != nil {
+	if err := kv.SetSchemas(ctx, schemas); err != nil {
 		t.Fatalf("SetSchemas failed: %v", err)
 	}
 
@@ -80,7 +94,7 @@ func TestRedisKVStore_GetEmpty(t *testing.T) {
 	kv := NewRedisKVStore(getTestRedisAddr(), getTestRedisPassword(), 0)
 
 	// Очистим ключи
-	kv.SetSchemas(ctx, []*kvstore.EntitySchema{}, []*kvstore.EntitySchema{})
+	kv.SetSchemas(ctx, &kvstore.SchemasList{})
 
 	pages, err := kv.GetPages(ctx)
 	if err != nil {
