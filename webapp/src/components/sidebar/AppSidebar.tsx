@@ -9,10 +9,19 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { ChevronRight, ChevronsRight, Command, Image, Phone, ScanEye } from "lucide-react"
+import { Command, Image, Phone, ScanEye } from "lucide-react"
 import UserNav from "./UserNav"
+import { usePageStore } from "@/store/PagesStore"
+import DynamicContent from "./DynamicContent";
+import { useEffect } from "react";
 
 export function AppSidebar() {
+    const { fetchAll } = usePageStore();
+
+    useEffect(() => {
+        fetchAll();
+    }, [fetchAll]);
+
     return (
         <Sidebar>
             <SidebarHeader>
@@ -33,35 +42,7 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Контент</SidebarGroupLabel>
-                    <SidebarMenu>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip="Главная">
-                                <a href="#">
-                                    <ChevronsRight />
-                                    <span>Главная</span>
-                                </a>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip="Обо мне">
-                                <a href="#">
-                                    <ChevronRight />
-                                    <span>Обо мне</span>
-                                </a>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip="Проекты">
-                                <a href="#">
-                                    <ChevronRight />
-                                    <span>Проекты</span>
-                                </a>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    </SidebarMenu>
-                </SidebarGroup>
+                <DynamicContent />
 
                 <SidebarGroup>
                     <SidebarGroupLabel>Настройки</SidebarGroupLabel>
