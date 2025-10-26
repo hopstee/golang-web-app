@@ -18,4 +18,5 @@ func (d *Dependencies) InitServices() {
 	d.AdminService = service.NewAdminService(d.Repository.Admin(), d.Logger)
 	d.RequestService = service.NewRequestService(d.Repository.Request(), d.Logger)
 	d.PostService = service.NewPostService(d.Repository.Post(), d.Logger)
+	d.PagesService = service.NewPagesService(d.Repository.Pages(), d.KVStore, d.Logger)
 }
