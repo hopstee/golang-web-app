@@ -19,7 +19,7 @@ export function AppSidebar() {
     const { fetchAll } = usePageStore();
 
     useEffect(() => {
-        fetchAll();
+        fetchAll(true);
     }, [fetchAll]);
 
     return (

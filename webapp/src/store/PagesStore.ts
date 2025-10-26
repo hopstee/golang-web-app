@@ -7,7 +7,7 @@ interface PagesState {
     pages: PageSchema[]
     pageData: Record<string, PageData>
     loading: boolean
-    fetchAll: () => Promise<void>
+    fetchAll: (force?: boolean) => Promise<void>
     fetchPage: (slug: string) => Promise<void>
 }
 
@@ -18,9 +18,9 @@ export const usePageStore = create<PagesState>()(
             pageData: {},
             loading: false,
 
-            async fetchAll() {
-                if (get().pages.length > 0) return;
-                
+            async fetchAll(force = false) {
+                if (!force && get().pages.length > 0) return;
+
                 set({ loading: true });
                 const schemas = await fetchAllSchemas();
                 set({ loading: false, pages: schemas });
