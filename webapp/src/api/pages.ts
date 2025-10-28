@@ -1,5 +1,5 @@
 import { apiFetch } from "@/lib/api";
-import type { Page, PageData, PageSchema } from "@/types/pages";
+import type { PageData, PageDataData, PageSchema } from "@/types/pages";
 
 export async function fetchAllSchemas(): Promise<PageSchema[]> {
     return await apiFetch("/api/v1/admin/pages");
@@ -13,9 +13,9 @@ export async function fetchPageData(slug: string): Promise<PageData> {
     return await apiFetch(`/api/v1/admin/pages/${slug}/data`);
 }
 
-export async function updatePageData(slug: string, data: Page): Promise<void> {
+export async function updatePageData(slug: string, data: PageDataData): Promise<void> {
     return apiFetch(`/api/v1/admin/pages/${slug}/data`, {
-        method: "POST",
+        method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

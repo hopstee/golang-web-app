@@ -1,25 +1,30 @@
 import { usePageStore } from "@/store/PagesStore";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { ChevronsRight } from "lucide-react";
+import { Circle } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
 
 export default function DynamicContent() {
+    const { slug } = useParams<{ slug: string }>()
     const { pages } = usePageStore();
-    console.log(pages);
 
     return (
         <SidebarGroup>
             <SidebarGroupLabel>Контент</SidebarGroupLabel>
             <SidebarMenu>
-                {pages.map(page => (
-                    <SidebarMenuItem key={page.id}>
-                        <SidebarMenuButton asChild tooltip={page.title}>
-                            <a href="#">
-                                <ChevronsRight />
-                                <span>{page.title}</span>
-                            </a>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))}
+                {pages.map(page => {
+                    const selectedPage = slug === page.id;
+                    return (
+                        <SidebarMenuItem key={page.id}>
+                            <SidebarMenuButton asChild tooltip={page.title} isActive={!!selectedPage}>
+                                <Link to={`/admin/schemas/${page.id}`}>
+                                    {selectedPage && <Circle className="!size-2 fill-current" />}
+                                    {!selectedPage && <Circle className="!size-2" />}
+                                    <span>{page.title}</span>
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    )
+                })}
             </SidebarMenu>
         </SidebarGroup>
     );

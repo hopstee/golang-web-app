@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"mobile-backend-boilerplate/internal/kvstore"
@@ -61,6 +62,10 @@ func (s *PagesService) GetPageData(ctx context.Context, slug string) (*kvstore.E
 
 	page, err := s.pagesRepo.GetBySlug(ctx, slug)
 	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			emptyData := make(map[string]interface{})
+			return schema, emptyData, nil
+		}
 		return nil, nil, err
 	}
 
@@ -90,7 +95,7 @@ func (s *PagesService) UpdatePageData(ctx context.Context, slug string, data map
 		Slug:    slug,
 		Content: content,
 	}
-	if err := s.pagesRepo.Update(ctx, page); err != nil {
+	if err := s.pagesRepo.Upsert(ctx, page); err != nil {
 		return err
 	}
 

@@ -18,7 +18,6 @@ type Page struct {
 type PagesRepository interface {
 	GetBySlug(ctx context.Context, slug string) (*Page, error)
 	GetAll(ctx context.Context) ([]*Page, error)
-	Create(ctx context.Context, page *Page) error
-	Update(ctx context.Context, page *Page) error
+	Upsert(ctx context.Context, page *Page) error
 	DeleteBySlug(ctx context.Context, slug string) error
 }

@@ -72,40 +72,31 @@ func (r *pagesRepo) GetAll(ctx context.Context) ([]*repository.Page, error) {
 	return pages, nil
 }
 
-func (r *pagesRepo) Create(ctx context.Context, page *repository.Page) error {
+func (r *pagesRepo) Upsert(ctx context.Context, page *repository.Page) error {
 	var id int64
+	var updatedAt time.Time
+
 	query := `
 		INSERT INTO pages (title, slug, content, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5)
-		RETURNING id
+		ON CONFLICT (slug)
+		DO UPDATE SET
+			title = EXCLUDED.title,
+			content = EXCLUDED.content,
+			updated_at = EXCLUDED.updated_at
+		RETURNING id, updated_at
 	`
+
 	err := r.DB.QueryRowContext(
 		ctx, query, page.Title, page.Slug, page.Content, time.Now(), time.Now(),
-	).Scan(&id)
+	).Scan(&id, &updatedAt)
 	if err != nil {
-		r.Logger.Error("failed to create page", slog.Any("err", err))
+		r.Logger.Error("failed to upsert page", slog.Any("err", err))
 		return err
 	}
 
 	page.ID = id
-	return nil
-}
-
-func (r *pagesRepo) Update(ctx context.Context, page *repository.Page) error {
-	query := `
-		UPDATE pages
-		SET title = $1, slug = $2, content = $3, updated_at = $4
-		WHERE id = $5
-		RETURNING id, updated_at
-	`
-	err := r.DB.QueryRowContext(
-		ctx, query, page.Title, page.Slug, page.Content, time.Now(), page.ID,
-	).Scan(&page.ID, &page.UpdatedAt)
-	if err != nil {
-		r.Logger.Error("failed to update page", slog.Any("err", err))
-		return err
-	}
-
+	page.UpdatedAt = updatedAt
 	return nil
 }
 

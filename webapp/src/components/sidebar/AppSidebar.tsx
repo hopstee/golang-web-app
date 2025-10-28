@@ -14,6 +14,7 @@ import UserNav from "./UserNav"
 import { usePageStore } from "@/store/PagesStore"
 import DynamicContent from "./DynamicContent";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export function AppSidebar() {
     const { fetchAll } = usePageStore();
@@ -28,7 +29,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <a href="#">
+                            <Link to="/admin/dashboard">
                                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                                     <Command className="size-4" />
                                 </div>
@@ -36,7 +37,7 @@ export function AppSidebar() {
                                     <span className="truncate font-medium">Дэшборд</span>
                                     <span className="truncate text-xs">Сводка</span>
                                 </div>
-                            </a>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

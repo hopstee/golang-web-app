@@ -20,6 +20,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         queryKey: ["me"],
         queryFn: fetchMe,
         retry: false,
+        refetchOnWindowFocus: false,
     });
 
     const loginMutation = useMutation<User, Error, { email: string; password: string }>({
