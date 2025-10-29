@@ -1,62 +1,71 @@
-import { usePageStore } from "@/store/PagesStore"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { Spinner } from "@/components/ui/spinner"
-import { centerContent } from "@/lib/render"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import FieldsScaffold from "./FieldsScaffold"
-import { PageDataTypes, type PageDataData } from "@/types/pages"
-import { Button } from "../ui/button"
-import { Save } from "lucide-react"
-import { toast } from "sonner"
+import { usePageStore } from "@/store/PagesStore";
+import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+import { Spinner } from "@/components/ui/spinner";
+import { centerContent } from "@/lib/render";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import FieldsScaffold from "./FieldsScaffold";
+import { PageDataTypes, type PageDataData } from "@/types/pages";
+import { Button } from "../ui/button";
+import { Save } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Editor() {
-    const { slug } = useParams<{ slug: string }>()
-    const { pageData, fetchPage, savePageData, loading, updating } = usePageStore()
+    const { slug } = useParams<{ slug: string }>();
+    const { pageData, fetchPage, savePageData, loading, updating } = usePageStore();
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const [pageValues, setPageValues] = useState<PageDataData>({ layout_fields: {}, content: {} })
-    const [changed, setChanged] = useState(false)
+    const currentTabFromUrl = searchParams.get("tab") || "content";
+    const [selectedTab, setSelectedTab] = useState<string>(currentTabFromUrl);
+
+    const [pageValues, setPageValues] = useState<PageDataData>({ layout_fields: {}, content: {} });
+    const [changed, setChanged] = useState(false);
 
     useEffect(() => {
-        if (slug) fetchPage(slug)
-    }, [fetchPage, slug])
+        if (slug) fetchPage(slug);
+    }, [fetchPage, slug]);
 
-    const page = slug ? pageData[slug] : null
+    const page = slug ? pageData[slug] : null;
 
     useEffect(() => {
         if (page?.data && slug) {
-            setPageValues(page.data)
-            setChanged(false)
+            setPageValues(page.data);
+            setChanged(false);
         }
-    }, [page?.data, slug])
+    }, [page?.data, slug]);
 
-    if (!slug || !page) return centerContent("Нет данных")
-    if (loading) return centerContent(<Spinner />)
+    const handleTabChange = (tab: string) => {
+        setSelectedTab(tab);
+        setSearchParams({ tab })
+    }
 
-    const schema = page.schema || {}
+    if (!slug || !page) return centerContent("Нет данных");
+    if (loading) return centerContent(<Spinner />);
+
+    const schema = page.schema || {};
 
     const handlePartChange = (key: string, value: Record<string, unknown>) => {
         setPageValues((prev) => ({
             ...prev,
             [key]: value,
-        }))
-        setChanged(true)
+        }));
+        setChanged(true);
     }
 
     const handleSave = async () => {
-        if (!slug || !changed) return
+        if (!slug || !changed) return;
 
         toast.promise(
             async () => {
-                await savePageData(slug, pageValues)
-                setChanged(false)
+                await savePageData(slug, pageValues);
+                setChanged(false);
             },
             {
                 loading: "Обновляем данные...",
                 success: "Данные страницы обновленны",
                 error: "Не удалось обновить данные страницы",
             }
-        )
+        );
     }
 
     return (
@@ -74,25 +83,25 @@ export default function Editor() {
                 </Button>
             </div>
 
-            <Tabs defaultValue="layout">
+            <Tabs defaultValue={selectedTab} onValueChange={handleTabChange}>
                 <TabsList>
-                    <TabsTrigger value="layout">Макет</TabsTrigger>
                     <TabsTrigger value="content">Содержимое страницы</TabsTrigger>
+                    <TabsTrigger value="layout">Макет</TabsTrigger>
                 </TabsList>
-
-                <TabsContent value="layout">
-                    <FieldsScaffold
-                        fields={schema.layout_fields || []}
-                        data={pageValues.layout_fields || {}}
-                        onChange={(data) => handlePartChange(PageDataTypes.LAYOUT_FIELDS, data)}
-                    />
-                </TabsContent>
 
                 <TabsContent value="content">
                     <FieldsScaffold
                         fields={schema.content || []}
                         data={pageValues.content || {}}
                         onChange={(data) => handlePartChange(PageDataTypes.CONTENT, data)}
+                    />
+                </TabsContent>
+
+                <TabsContent value="layout">
+                    <FieldsScaffold
+                        fields={schema.layout_fields || []}
+                        data={pageValues.layout_fields || {}}
+                        onChange={(data) => handlePartChange(PageDataTypes.LAYOUT_FIELDS, data)}
                     />
                 </TabsContent>
             </Tabs>
