@@ -8,14 +8,14 @@ import FieldsScaffold from "./FieldsScaffold"
 import { PageDataTypes, type PageDataData } from "@/types/pages"
 import { Button } from "../ui/button"
 import { Save } from "lucide-react"
+import { toast } from "sonner"
 
 export default function Editor() {
     const { slug } = useParams<{ slug: string }>()
-    const { pageData, fetchPage, savePageData, loading } = usePageStore()
+    const { pageData, fetchPage, savePageData, loading, updating } = usePageStore()
 
     const [pageValues, setPageValues] = useState<PageDataData>({ layout_fields: {}, content: {} })
     const [changed, setChanged] = useState(false)
-    const [saving, setSaving] = useState(false)
 
     useEffect(() => {
         if (slug) fetchPage(slug)
@@ -24,8 +24,6 @@ export default function Editor() {
     const page = slug ? pageData[slug] : null
 
     useEffect(() => {
-        console.log(slug)
-        console.log(page?.data)
         if (page?.data && slug) {
             setPageValues(page.data)
             setChanged(false)
@@ -47,17 +45,18 @@ export default function Editor() {
 
     const handleSave = async () => {
         if (!slug || !changed) return
-        setSaving(true)
-        try {
-            console.log(slug)
-            console.log(pageValues)
-            await savePageData(slug, pageValues)
-            setChanged(false)
-        } catch (e) {
-            console.error("Ошибка при сохранении:", e)
-        } finally {
-            setSaving(false)
-        }
+
+        toast.promise(
+            async () => {
+                await savePageData(slug, pageValues)
+                setChanged(false)
+            },
+            {
+                loading: "Обновляем данные...",
+                success: "Данные страницы обновленны",
+                error: "Не удалось обновить данные страницы",
+            }
+        )
     }
 
     return (
@@ -66,11 +65,11 @@ export default function Editor() {
                 <h1>Редактор страницы <span className="font-bold">{page.schema.title}</span></h1>
                 <Button
                     onClick={handleSave}
-                    disabled={!changed || saving}
+                    disabled={!changed || updating}
                     size="sm"
                     className="disabled:cursor-not-allowed"
                 >
-                    {saving ? <Spinner /> : <Save />}
+                    {updating ? <Spinner /> : <Save />}
                     Сохранить
                 </Button>
             </div>

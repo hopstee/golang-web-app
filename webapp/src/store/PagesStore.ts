@@ -7,6 +7,7 @@ interface PagesState {
     pages: PageSchema[]
     pageData: Record<string, PageData>
     loading: boolean
+    updating: boolean
     error: boolean
     errorMessage: string
     fetchAll: (force?: boolean) => Promise<void>
@@ -20,6 +21,7 @@ export const usePageStore = create<PagesState>()(
             pages: [],
             pageData: {},
             loading: false,
+            updating: false,
             error: false,
             errorMessage: "",
 
@@ -59,7 +61,7 @@ export const usePageStore = create<PagesState>()(
             },
 
             async savePageData(slug, data) {
-                set({ loading: true });
+                set({ updating: true });
                 try {
                     await updatePageData(slug, data);
                     set(state => ({
@@ -71,7 +73,7 @@ export const usePageStore = create<PagesState>()(
                 } catch (err) {
                     set({ error: true, errorMessage: (err as Error).message });
                 } finally {
-                    set({ loading: false });
+                    set({ updating: false });
                 }
             },
         }),

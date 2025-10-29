@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './providers/AuthProvider.tsx';
 import AppRoutes from './AppRoutes.tsx';
 import { ThemeProvider } from './providers/ThemeProvider.tsx';
+import { Toaster } from '@/components/ui/sonner';
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
         <AuthProvider>
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <AppRoutes />
+            <Toaster />
           </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
