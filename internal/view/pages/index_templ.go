@@ -3,17 +3,21 @@
 // templ: version: v0.3.943
 // @type: page
 
-// @page: index
+// @id: index
 
 // @title: Приветствие
 
 // @layout: public
 
+// @blocks: some_list
+
+// @field image: img = "Картинка"
+
 // @field heading: string = "Приветствие"
 
-// @field paragraphs: list[string] = "Параграфы (каждый элемент — <p>)"
+// @field paragraphs: list[text] = "Описание"
 
-// @field cta: string = "Оставить заявку"
+// @field cta: string = "Текст кнопки"
 
 package pages
 

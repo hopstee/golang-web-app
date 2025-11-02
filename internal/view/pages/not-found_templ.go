@@ -3,15 +3,15 @@
 // templ: version: v0.3.943
 // @type: page
 
-// @page: not_found
+// @id: not_found
 
 // @title: Пустая страница
 
 // @layout: public
 
-// @field image: string = "Путь к изображению"
+// @field image: img = "Путь к изображению"
 
-// @field heading: string = "Пустая страница"
+// @field heading: string = "Текст"
 
 package pages
 

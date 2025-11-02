@@ -5,13 +5,13 @@
 
 // @id: public
 
-// @title: "Public Layout"
+// @title: Основной макет
 
 // @field title: string = "SEO заголовок"
 
 // @field description: text = "SEO описание"
 
-// @field image: string = "Изображение для предпросмотра"
+// @field image: img = "Изображение для предпросмотра"
 
 // @field url: string = "Канонический URL"
 

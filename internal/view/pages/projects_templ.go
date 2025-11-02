@@ -3,17 +3,17 @@
 // templ: version: v0.3.943
 // @type: page
 
-// @name: projects
+// @id: projects
 
 // @title: Проекты
 
 // @layout: public
 
-// @field heading: string = "Проекты"
+// @field heading: string = "Заголовок"
 
-// @field projects_sections[]: list[object] = "Секции проектов"
+// @field projects_sections[]: list[object] = "Секция проектов"
 
-// @field projects_sections[].name: string = "Название секции"
+// @field projects_sections[].name: string = "Название"
 
 // @field projects_sections[].projects: list[object] = "Список проектов в секции"
 
@@ -23,7 +23,7 @@
 
 // @field projects_sections[].projects[].url: string = "Ссылка на проект"
 
-// @field projects_sections[].projects[].technologies: list[string] = "Список технологий, использованных в проекте"
+// @field projects_sections[].projects[].technologies: list[string] = "Инструмент, использованный в проекте"
 
 // @field projects_sections[].projects[].in_development: bool = "В разработке"
 

@@ -3,23 +3,23 @@
 // templ: version: v0.3.943
 // @type: page
 
-// @page: about
+// @id: about
 
 // @title: Обо мне
 
 // @layout: public
 
-// @field heading: string = "Заголовок страницы"
+// @field heading: string = "Заголовок"
 
-// @field paragraphs: list[string] = "Параграфы (каждый элемент — <p>)"
+// @field paragraphs: list[text] = "Описание"
 
-// @field skills_title: string = "Навыки"
+// @field skills_title: string = "Заголовок раздела навыков"
 
-// @field skills[]: list[object] = "Секции навыков"
+// @field skills[]: list[object] = "Секция навыков"
 
 // @field skills[].title: string = "Название секции"
 
-// @field skills[].technologies: list[string] = "Список технологий в секции"
+// @field skills[].technologies: list[string] = "Инструмент"
 
 package pages
 
