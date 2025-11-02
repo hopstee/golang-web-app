@@ -1,11 +1,12 @@
 import type { Field } from "@/types/pages";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "../ui/textarea";
 import { useEffect, useState } from "react";
-import { Checkbox } from "../ui/checkbox";
-import { Button } from "../ui/button";
-import { Plus, Trash2 } from "lucide-react";
+import FileUploader from "./fields/FileUploader";
+import StringField from "./fields/StringField";
+import TextField from "./fields/TextField";
+import BoolField from "./fields/BoolField";
+import ListField from "./fields/ListField";
+import { getDefaultValue } from "@/lib/utils";
 
 interface FieldsScaffoldProps {
     fields: Field[];
@@ -50,143 +51,40 @@ export default function FieldsScaffold(props: FieldsScaffoldProps) {
 
         switch (field.type) {
             case "string":
-                return (
-                    <Input
-                        value={value as string}
-                        onChange={(e) => handleChange(field.name, e.target.value)}
-                        placeholder={field.label}
-                    />
-                );
+                return <StringField field={field} value={value as string} onChange={handleChange} />;
             case "text":
-                return (
-                    <Textarea
-                        value={value as string}
-                        onChange={(e) => handleChange(field.name, e.target.value)}
-                        placeholder={field.label}
-                    />
-                );
+                return <TextField field={field} value={value as string} onChange={handleChange} />;
             case "bool":
             case "boolean":
-                return (
-                    <Checkbox
-                        checked={value === "true"}
-                        onCheckedChange={(checked) => handleChange(field.name, String(checked))}
-                    />
-                );
+                return <BoolField field={field} value={String(value)} onChange={handleChange} />;
+            case "img":
+                return <FileUploader field={field} value={value as string} onChange={handleChange} />;
             case "list[string]":
-                return (
-                    <div className="border-l pl-4 space-y-3">
-                        {value && (value as string[]).map((v, i) => (
-                            <div key={i} className="flex items-center gap-2">
-                                <Input
-                                    value={v}
-                                    placeholder={field.label}
-                                    onChange={(e) => {
-                                        const updated = [...(value as string[])]
-                                        updated[i] = e.target.value
-                                        handleChange(field.name, updated)
-                                    }}
-                                />
-                                <Button
-                                    size="icon-sm"
-                                    variant="destructive"
-                                    onClick={() => handleDelete(field.name, i)}
-                                >
-                                    <Trash2 />
-                                </Button>
-                            </div>
-                        ))}
-                        <Button
-                            onClick={() => handleChange(field.name, [...(value as string[]), ""])}
-                            variant="secondary"
-                            size="sm"
-                        >
-                            <Plus />
-                            Добавить запись
-                        </Button>
-                    </div>
-                );
+                return <ListField
+                    type="list[string]"
+                    field={field}
+                    value={value as unknown[]}
+                    handleChange={handleChange}
+                    handleDelete={handleDelete}
+                />;
             case "list[text]":
-                return (
-                    <div className="border-l pl-4 space-y-3">
-                        {value && (value as string[]).map((v, i) => (
-                            <div key={i} className="flex items-center gap-2">
-                                <Textarea
-                                    key={i}
-                                    value={v}
-                                    onChange={(e) => {
-                                        const updated = [...(value as string[])]
-                                        updated[i] = e.target.value
-                                        handleChange(field.name, updated)
-                                    }}
-                                />
-                                <Button
-                                    size="icon-sm"
-                                    variant="destructive"
-                                    onClick={() => handleDelete(field.name, i)}
-                                >
-                                    <Trash2 />
-                                </Button>
-                            </div>
-                        ))}
-                        <Button
-                            onClick={() => handleChange(field.name, [...(value as string[]), ""])}
-                            variant="secondary"
-                            size="sm"
-                        >
-                            <Plus />
-                            Добавить текст
-                        </Button>
-                    </div>
-                );
+                return <ListField
+                    type="list[text]"
+                    field={field}
+                    value={value as unknown[]}
+                    handleChange={handleChange}
+                    handleDelete={handleDelete}
+                />;
 
             case "list[object]":
                 return (
-                    <div className="border-l pl-4 space-y-3">
-                        {value && (value as Record<string, unknown>[]).map((item, index) => (
-                            <div key={index} className="border-b space-y-2 pb-6">
-                                <div className="flex items-center justify-between">
-                                    <Label>
-                                        {field.label} #{index + 1}
-                                    </Label>
-                                    <Button
-                                        type="button"
-                                        variant="destructive"
-                                        size="sm"
-                                        onClick={() => handleDelete(field.name, index)}
-                                    >
-                                        <Trash2 />
-                                        Удалить
-                                    </Button>
-                                </div>
-                                <FieldsScaffold
-                                    fields={field.schema?.fields || []}
-                                    data={item}
-                                    onChange={(updatedItem) => {
-                                        const updated = [...(value as Record<string, unknown>[])];
-                                        updated[index] = updatedItem;
-                                        handleChange(field.name, updated);
-                                    }}
-                                />
-                            </div>
-                        ))}
-                        <Button
-                            onClick={() =>
-                                handleChange(field.name, [
-                                    ...(value as Record<string, unknown>[]),
-                                    field.schema?.fields.reduce(
-                                        (acc, f) => ({ ...acc, [f.name]: getDefaultValue(f.type) }),
-                                        {}
-                                    ) ?? {},
-                                ])
-                            }
-                            variant="secondary"
-                            size="sm"
-                        >
-                            <Plus />
-                            Добавить объект
-                        </Button>
-                    </div>
+                    <ListField
+                        type="list[object]"
+                        field={field}
+                        value={value as unknown[]}
+                        handleChange={handleChange}
+                        handleDelete={handleDelete}
+                    />
                 );
         }
     }
@@ -205,10 +103,4 @@ export default function FieldsScaffold(props: FieldsScaffoldProps) {
             ))}
         </div>
     )
-}
-
-function getDefaultValue(type: string): unknown {
-    if (type.startsWith("list[")) return [];
-    if (type === "bool" || type === "boolean") return false;
-    return "";
 }

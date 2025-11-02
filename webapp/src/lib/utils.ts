@@ -21,3 +21,9 @@ export function normalizeErrors(errors?: unknown): { message: string }[] | undef
     return [{ message: (errors as Error).message }];
   return [{ message: String(errors) }];
 };
+
+export function getDefaultValue(type: string): unknown {
+  if (type.startsWith("list[")) return [];
+  if (type === "bool" || type === "boolean") return false;
+  return "";
+}

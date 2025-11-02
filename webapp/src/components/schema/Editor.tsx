@@ -43,6 +43,7 @@ export default function Editor() {
     if (loading) return centerContent(<Spinner />);
 
     const schema = page.schema || {};
+    console.log(schema)
 
     const handlePartChange = (key: string, value: Record<string, unknown>) => {
         setPageValues((prev) => ({
@@ -71,7 +72,7 @@ export default function Editor() {
     return (
         <div className="space-y-4">
             <div className="flex justify-between">
-                <h1>Редактор страницы <span className="font-bold">{page.schema.title}</span></h1>
+                <h1 className="text-muted-foreground">Редактор страницы <span className="font-bold text-foreground">{page.schema.title}</span></h1>
                 <Button
                     onClick={handleSave}
                     disabled={!changed || updating}
@@ -83,7 +84,7 @@ export default function Editor() {
                 </Button>
             </div>
 
-            <Tabs defaultValue={selectedTab} onValueChange={handleTabChange}>
+            <Tabs defaultValue={selectedTab} onValueChange={handleTabChange} className="space-y-4 max-w-3xl w-full mx-auto">
                 <TabsList>
                     <TabsTrigger value="content">Содержимое страницы</TabsTrigger>
                     <TabsTrigger value="layout">Макет</TabsTrigger>
