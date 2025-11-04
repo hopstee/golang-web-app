@@ -6,6 +6,8 @@ import { AspectRatio } from "../../ui/aspect-ratio";
 import type { Field } from "@/types/pages";
 import { Button } from "@/components/ui/button";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+
 interface FileUploaderProps {
     field: Field;
     value: string;
@@ -22,7 +24,19 @@ export default function FileUploader(props: FileUploaderProps) {
 
     useEffect(() => {
         if (props.value && imgRef.current) {
-            imgRef.current.src = props.value;
+            if (props.value.startsWith("deleted:")) {
+                imgRef.current.src = "";
+                setFileExists(false);
+                return;
+            }
+
+            if (props.value.includes("blob:")) {
+                imgRef.current.src = props.value;
+                setFileExists(true);
+                return;
+            }
+
+            imgRef.current.src = `${API_BASE_URL}/${props.value}`;
             setFileExists(!!props.value);
         }
     }, [props.value]);
@@ -30,10 +44,14 @@ export default function FileUploader(props: FileUploaderProps) {
     const handleRemoveImage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
         const image = imgRef.current;
-        if (image) {
-            image.src = "";
+        const currentSrc = image?.src || "";
+        if (image && !!currentSrc.length) {
+            const deletedSrc = `deleted:${currentSrc}`;
+            image.src = deletedSrc;
             setFileExists(false);
-            props.onChange(props.field.name, "");
+
+            const srcWithoutBaseUrl = deletedSrc.replace(`${API_BASE_URL}/`, "");
+            props.onChange(props.field.name, srcWithoutBaseUrl);
         }
     }
 

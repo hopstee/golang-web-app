@@ -14,6 +14,7 @@ type Options struct {
 	AdminAuthHandler  *apiHandlers.AdminAuthHandler
 	RequestHandler    *apiHandlers.RequestHandler
 	PagesHandler      *apiHandlers.PagesHandler
+	FilesHandler      *apiHandlers.FilesHandler
 
 	PostHandler    *webHandlers.PostHandler
 	ContactHandler *webHandlers.ContactHandler

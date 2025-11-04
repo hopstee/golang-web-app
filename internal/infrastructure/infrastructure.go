@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"log/slog"
 	"mobile-backend-boilerplate/internal/config"
+	"mobile-backend-boilerplate/internal/filestorage"
 	"mobile-backend-boilerplate/internal/kvstore"
 	"mobile-backend-boilerplate/internal/notifier"
 	"mobile-backend-boilerplate/internal/repository"
@@ -21,6 +22,9 @@ type Dependencies struct {
 	// kvstore
 	KVStore kvstore.KVStore
 
+	// filestorage
+	FileStorage filestorage.FileStorage
+
 	// notifiers
 	TelegramNotifier notifier.Notifier
 
@@ -38,6 +42,7 @@ type Dependencies struct {
 	AdminAuthHandler  *apiHandler.AdminAuthHandler
 	RequestHandler    *apiHandler.RequestHandler
 	PagesHandler      *apiHandler.PagesHandler
+	FilesHandler      *apiHandler.FilesHandler
 
 	// web handlers
 	PostHandler    *webHandler.PostHandler

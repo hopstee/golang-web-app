@@ -42,6 +42,11 @@ func NewRouter(opts options.Options) *chi.Mux {
 						r.Put("/{slug}/data", opts.PagesHandler.UpdatePageData)
 						r.Delete("/{slug}", opts.PagesHandler.DeletePage)
 					})
+
+					r.Route("/files", func(r chi.Router) {
+						r.Post("/", opts.FilesHandler.UploadFile)
+						r.Delete("/", opts.FilesHandler.DeleteFile)
+					})
 				})
 			})
 		})

@@ -9,6 +9,8 @@ import { PageDataTypes, type PageDataData } from "@/types/pages";
 import { Button } from "../ui/button";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
+import { deleteFile, uploadFile } from "@/api/files";
+import { getFileType } from "@/lib/utils";
 
 export default function Editor() {
     const { slug } = useParams<{ slug: string }>();
@@ -43,7 +45,6 @@ export default function Editor() {
     if (loading) return centerContent(<Spinner />);
 
     const schema = page.schema || {};
-    console.log(schema)
 
     const handlePartChange = (key: string, value: Record<string, unknown>) => {
         setPageValues((prev) => ({
@@ -56,9 +57,61 @@ export default function Editor() {
     const handleSave = async () => {
         if (!slug || !changed) return;
 
+        const uploadImg = async (blobURL: string): Promise<string> => {
+            let res: string;
+            try {
+                const response = await fetch(blobURL);
+                const blob = await response.blob();
+                const formData = new FormData();
+                const fileType = getFileType(blob.type);
+                formData.append("file", blob, `uploaded_file.${fileType}`);
+
+                res = await uploadFile(formData);
+            } catch (error) {
+                throw new Error("Ошибка при получении данных изображения");
+            }
+            return res;
+        }
+
+        const prepareFiles = async (data: unknown): Promise<unknown> => {
+            if (typeof data === "string") {
+                if ((data as string).startsWith("blob:")) {
+                    return await uploadImg(data);
+                }
+                if ((data as string).startsWith("deleted:")) {
+                    if ((data as string).indexOf("blob:") === -1) {
+                        const withoutDeletedPrefix = (data as string).replace("deleted:", "");
+                        try {
+                            await deleteFile(withoutDeletedPrefix);
+                        } catch (error) {
+                            console.error("Ошибка при удалении файла:", error);
+                        }
+                    }
+                    return "";
+                }
+                return data;
+            }
+
+            if (Array.isArray(data)) {
+                return await Promise.all(data.map(prepareFiles));
+            }
+
+
+            if (typeof data === "object" && data !== null) {
+                const newData: Record<string, unknown> = {};
+                for (const [key, value] of Object.entries(data)) {
+                    newData[key] = await prepareFiles(value);
+                }
+                return newData;
+            }
+
+            return data;
+        }
+
         toast.promise(
             async () => {
-                await savePageData(slug, pageValues);
+                const updatedValues = await prepareFiles(pageValues);
+                await savePageData(slug, (updatedValues as PageDataData));
                 setChanged(false);
             },
             {

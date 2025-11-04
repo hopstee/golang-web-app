@@ -47,6 +47,11 @@ func Init() (*App, error) {
 	if err := deps.InitKVStore(ctx); err != nil {
 		return nil, err
 	}
+
+	if err := deps.InitFileStorage(); err != nil {
+		return nil, err
+	}
+
 	deps.InitNotifiers()
 	deps.InitServices()
 	deps.InitHandlers()
@@ -66,6 +71,7 @@ func Init() (*App, error) {
 		AdminAuthHandler:  deps.AdminAuthHandler,
 		RequestHandler:    deps.RequestHandler,
 		PagesHandler:      deps.PagesHandler,
+		FilesHandler:      deps.FilesHandler,
 
 		// web handlers
 		PostHandler:    deps.PostHandler,

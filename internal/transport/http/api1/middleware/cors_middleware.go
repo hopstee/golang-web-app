@@ -10,6 +10,10 @@ func CorsMiddleware(next http.Handler) http.Handler {
 		switch origin {
 		case "http://localhost:8080", "http://localhost:5173":
 			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Set("Vary", "Origin")
+		default:
+			next.ServeHTTP(w, r)
+			return
 		}
 
 		w.Header().Set("Access-Control-Allow-Credentials", "true")

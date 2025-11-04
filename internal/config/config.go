@@ -10,7 +10,8 @@ import (
 )
 
 type Server struct {
-	Addr string `mapstructure:"addr"`
+	Addr    string `mapstructure:"addr"`
+	BaseURL string `mapstructure:"base_url"`
 }
 
 type Database struct {
@@ -27,6 +28,15 @@ type Redis struct {
 	Addr     string `mapstructure:"addr"`
 	Password string `mapstructure:"password"`
 	DB       int    `mapstructure:"db"`
+}
+
+type FileStorage struct {
+	Type  string       `mapstructure:"type"`
+	Local LocalStorage `mapstructure:"local"`
+}
+
+type LocalStorage struct {
+	BasePath string `mapstructure:"base_path"`
 }
 
 type JWTAuth struct {
@@ -59,6 +69,7 @@ type Config struct {
 	Server         Server         `mapstructure:"server"`
 	Database       Database       `mapstructure:"database"`
 	KVStore        KVStore        `mapstructure:"kvstore"`
+	FileStorage    FileStorage    `mapstructure:"filestorage"`
 	Authentication Authentication `mapstructure:"authentication"`
 	Telegram       Telegram       `mapstructure:"telegram"`
 	Static         Static         `mapstructure:"static"`

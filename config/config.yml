@@ -1,5 +1,6 @@
 server:
   addr: ":8080"
+  base_url: "http://localhost:8080"
 
 database:
   driver: "postgres"
@@ -11,6 +12,11 @@ kvstore:
     addr: "${REDIS_HOST}:${REDIS_PORT}"
     password: "${REDIS_PASSWORD}"
     db: ${REDIS_DB}
+
+filestorage:
+  type: "local"
+  local:
+    base_path: "./static/uploads"
 
 authentication:
   jwt:

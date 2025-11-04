@@ -5,11 +5,13 @@ async function apiFetch<T>(
     options: RequestInit = {}
 ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
+    const isFormData = options.body instanceof FormData;
+
     const res = await fetch(url, {
         ...options,
         credentials: "include",
         headers: {
-            "Content-Type": "application/json",
+            ...(isFormData ? {} : {"Content-Type": "application/json"}),
             ...(options.headers || {}),
         },
     });
