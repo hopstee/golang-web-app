@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"mobile-backend-boilerplate/internal/service"
 	"mobile-backend-boilerplate/internal/transport/http/api1/middleware"
+	"mobile-backend-boilerplate/pkg/helper/response"
 	"net/http"
 )
 
@@ -108,6 +109,5 @@ func (h *MobileAuthHandler) MeMobile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
+	response.WriteJSON(w, user)
 }

@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"mobile-backend-boilerplate/internal/service"
+	"mobile-backend-boilerplate/pkg/helper/response"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -24,7 +25,7 @@ func (h *PagesHandler) GetAllPagesSchemas(w http.ResponseWriter, r *http.Request
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	writeJSON(w, schemas)
+	response.WriteJSON(w, schemas)
 }
 
 func (h *PagesHandler) GetPageSchema(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +35,7 @@ func (h *PagesHandler) GetPageSchema(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	writeJSON(w, schema)
+	response.WriteJSON(w, schema)
 }
 
 func (h *PagesHandler) GetPageData(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +45,7 @@ func (h *PagesHandler) GetPageData(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	writeJSON(w, map[string]interface{}{
+	response.WriteJSON(w, map[string]interface{}{
 		"schema": schema,
 		"data":   data,
 	})
@@ -76,9 +77,4 @@ func (h *PagesHandler) DeletePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
-}
-
-func writeJSON(w http.ResponseWriter, v interface{}) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(v)
 }
