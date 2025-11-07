@@ -33,6 +33,7 @@ export function getFileType(type: string): string {
         "image/png": "png",
         "image/jpeg": "jpg",
         "image/webp": "webp",
+        "image/svg+xml": "svg",
         "image/gif": "gif",
         "application/pdf": "pdf",
         "text/plain": "txt",

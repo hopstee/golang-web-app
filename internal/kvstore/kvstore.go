@@ -35,6 +35,7 @@ type EntitySchema struct {
 	Parent       string          `json:"parent,omitempty"`
 	Mode         string          `json:"mode,omitempty"`
 	Blocks       []string        `json:"blocks,omitempty"`
+	Shared       []string        `json:"shared,omitempty"`
 	Refs         []string        `json:"refs,omitempty"`
 	LayoutFields []Field         `json:"layout_fields,omitempty"`
 	Content      []Field         `json:"content,omitempty"`
@@ -50,6 +51,11 @@ type SchemasList struct {
 	Shared  []*EntitySchema
 }
 
+type ShortEntityData struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+}
+
 type KVStore interface {
 	SetSchemas(ctx context.Context, schemas *SchemasList) error
 
@@ -57,7 +63,7 @@ type KVStore interface {
 	Set(ctx context.Context, key string, data any) error
 	Delete(ctx context.Context, key string) error
 
-	GetEntityNamesByType(ctx context.Context, entityType string) ([]string, error)
+	GetEntityDataByType(ctx context.Context, entityType string) ([]ShortEntityData, error)
 	GetEntitySchema(ctx context.Context, prefix string, slug string) (*EntitySchema, error)
 	GetEntityData(ctx context.Context, key string) (map[string]interface{}, error)
 	SetEntityData(ctx context.Context, key string, data map[string]interface{}) error

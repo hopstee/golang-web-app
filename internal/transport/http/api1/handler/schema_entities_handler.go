@@ -31,8 +31,8 @@ func (h *SchemaEntityHandler) GetEntityNamesByType(w http.ResponseWriter, r *htt
 }
 
 func (h *SchemaEntityHandler) GetEntitySchema(w http.ResponseWriter, r *http.Request) {
-	slug := chi.URLParam(r, "slug")
 	entityType := chi.URLParam(r, "type")
+	slug := chi.URLParam(r, "slug")
 	schema, err := h.schemaEntitiesService.GetEntitySchema(r.Context(), entityType, slug)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

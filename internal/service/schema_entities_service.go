@@ -24,7 +24,7 @@ func NewSchemaEntityService(schemaEntitiesRepo repository.SchemaEntityRepository
 	}
 }
 
-func (s *SchemaEntityService) GetEntitiesName(ctx context.Context, entityType string) ([]string, error) {
+func (s *SchemaEntityService) GetEntitiesName(ctx context.Context, entityType string) ([]kvstore.ShortEntityData, error) {
 	var key string
 	switch entityType {
 	case repository.PageEntity:
@@ -35,7 +35,7 @@ func (s *SchemaEntityService) GetEntitiesName(ctx context.Context, entityType st
 		return nil, fmt.Errorf("unknown entity type: %s", entityType)
 	}
 
-	names, err := s.kvstore.GetEntityNamesByType(ctx, key)
+	names, err := s.kvstore.GetEntityDataByType(ctx, key)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (s *SchemaEntityService) GetEntitySchema(ctx context.Context, entityType st
 	case repository.PageEntity:
 		key = kvstore.SchemaKeyPages
 	case repository.SharedEntity:
-		key = kvstore.SchemaKeyBlocks
+		key = kvstore.SchemaKeyShared
 	default:
 		return nil, fmt.Errorf("unknown entity type: %s", entityType)
 	}

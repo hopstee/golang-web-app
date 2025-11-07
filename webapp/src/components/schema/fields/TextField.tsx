@@ -1,5 +1,5 @@
 import { Textarea } from "@/components/ui/textarea";
-import type { Field } from "@/types/pages";
+import type { Field } from "@/types/entities";
 
 interface TextFieldProps {
     field: Field;

@@ -1,4 +1,4 @@
-import type { Field } from "@/types/pages";
+import type { Field } from "@/types/entities";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import FileUploader from "./fields/FileUploader";

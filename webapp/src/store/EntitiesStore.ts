@@ -1,39 +1,39 @@
 import { fetchEntitiesNames, fetchEntityData, fetchEntitySchema, updateEntityData } from "@/api/entities"
-import type { EntityData, EntityDataData, EntitySchema } from "@/types/pages"
+import type { EntityData, EntitySchema, ShortEntityData } from "@/types/entities"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
 interface EntitiesState {
-    pages: string[]
-    shared: string[]
-    pageData: Record<string, EntityData>
-    sharedData: Record<string, EntityData>
+    pages: ShortEntityData[]
+    shared: ShortEntityData[]
+    entityData: Record<string, EntityData>
+    entitySchema: Record<string, EntitySchema>
     loading: boolean
     updating: boolean
     error: boolean
     errorMessage: string
     fetchAll: (force?: boolean) => Promise<void>
     fetchEntity: (type: string, slug: string) => Promise<void>
-    saveEntityData: (slug: string, updated: EntityDataData) => Promise<void>
+    saveEntityData: (slug: string, updated: Record<string, unknown>) => Promise<void>
 }
 
 export const useEntityStore = create<EntitiesState>()(
-    persist(
+    // persist(
         (set, get) => ({
             pages: [],
             shared: [],
-            pageData: {},
-            sharedData: {},
+            entityData: {},
+            entitySchema: {},
             loading: false,
             updating: false,
             error: false,
             errorMessage: "",
 
             async fetchAll(force = false) {
-                if (!force && get().pages.length > 0) return;
+                if (!force && get().pages.length > 0 && get().shared.length > 0) return;
 
-                let pages: string[] = [];
-                let shared: string[] = [];
+                let pages: ShortEntityData[] = [];
+                let shared: ShortEntityData[] = [];
                 set({ loading: true });
                 try {
                     pages = await fetchEntitiesNames("page");
@@ -46,10 +46,10 @@ export const useEntityStore = create<EntitiesState>()(
             },
 
             async fetchEntity(type: string, slug: string) {
-                if (get().pageData[slug]) return;
+                if (get().entityData[slug] && get().entitySchema[slug]) return;
 
                 let data: EntityData | undefined;
-                let schema: EntitySchema;
+                let schema: EntitySchema | undefined;
                 set({ loading: true });
                 try {
                     data = await fetchEntityData(slug);
@@ -61,21 +61,25 @@ export const useEntityStore = create<EntitiesState>()(
                 }
 
                 if (data) {
-                    set(state => ({
-                        pageData: { ...state.pageData, [slug]: { ...data } },
-                        loading: false,
-                    }));
+                    console.log(data)
+                    set(state => ({ entityData: { ...state.entityData, [slug]: { ...data } } }));
                 }
+                if (schema) {
+                    set(state => ({ entitySchema: { ...state.entitySchema, [slug]: { ...schema } } }));
+                }
+
+                set({ loading: false });
             },
 
             async saveEntityData(slug, data) {
                 set({ updating: true });
                 try {
                     await updateEntityData(slug, data);
+
                     set(state => ({
-                        pageData: {
-                            ...state.pageData,
-                            [slug]: { ...state.pageData[slug], data }
+                        entityData: {
+                            ...state.entityData,
+                            [slug]: { ...state.entityData[slug], ...data }
                         },
                     }));
                 } catch (err) {
@@ -85,6 +89,6 @@ export const useEntityStore = create<EntitiesState>()(
                 }
             },
         }),
-        { name: "entities-store" }
-    )
+    //     { name: "entities-store" }
+    // )
 )

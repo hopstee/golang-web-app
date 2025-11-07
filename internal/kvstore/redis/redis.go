@@ -46,7 +46,7 @@ func (r *RedisKVStore) SetSchemas(ctx context.Context, schemas *kvstore.SchemasL
 		}
 	}
 
-	var pagesList []string
+	var pagesList []kvstore.ShortEntityData
 	for _, page := range schemas.Pages {
 		key := kvstore.EntityDataPrefix + page.ID
 		if err := r.client.Del(ctx, key).Err(); err != nil {
@@ -55,7 +55,7 @@ func (r *RedisKVStore) SetSchemas(ctx context.Context, schemas *kvstore.SchemasL
 		if err := r.setJSON(ctx, key, page.Content); err != nil {
 			return fmt.Errorf("set %s: %w", key, err)
 		}
-		pagesList = append(pagesList, page.Title)
+		pagesList = append(pagesList, kvstore.ShortEntityData{ID: page.ID, Title: page.Title})
 	}
 
 	err := r.Set(ctx, kvstore.PagesListCacheKey, pagesList)
@@ -63,7 +63,7 @@ func (r *RedisKVStore) SetSchemas(ctx context.Context, schemas *kvstore.SchemasL
 		return fmt.Errorf("set %s: %w", kvstore.PagesListCacheKey, err)
 	}
 
-	var sharedList []string
+	var sharedList []kvstore.ShortEntityData
 	for _, shared := range schemas.Shared {
 		key := kvstore.EntityDataPrefix + shared.ID
 		if err := r.client.Del(ctx, key).Err(); err != nil {
@@ -72,7 +72,7 @@ func (r *RedisKVStore) SetSchemas(ctx context.Context, schemas *kvstore.SchemasL
 		if err := r.setJSON(ctx, key, shared.Content); err != nil {
 			return fmt.Errorf("set %s: %w", key, err)
 		}
-		sharedList = append(sharedList, shared.Title)
+		sharedList = append(sharedList, kvstore.ShortEntityData{ID: shared.ID, Title: shared.Title})
 	}
 
 	err = r.Set(ctx, kvstore.SharedListCacheKey, sharedList)
@@ -99,12 +99,12 @@ func (r *RedisKVStore) Delete(ctx context.Context, key string) error {
 }
 
 // Helper methods for entites
-func (r *RedisKVStore) GetEntityNamesByType(ctx context.Context, entityType string) ([]string, error) {
-	var entityNames []string
-	if err := r.getJSON(ctx, entityType, &entityNames); err != nil {
+func (r *RedisKVStore) GetEntityDataByType(ctx context.Context, entityType string) ([]kvstore.ShortEntityData, error) {
+	var entityData []kvstore.ShortEntityData
+	if err := r.getJSON(ctx, entityType, &entityData); err != nil {
 		return nil, err
 	}
-	return entityNames, nil
+	return entityData, nil
 }
 
 func (r *RedisKVStore) GetEntitySchema(ctx context.Context, key string, slug string) (*kvstore.EntitySchema, error) {

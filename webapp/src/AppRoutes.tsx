@@ -11,7 +11,8 @@ const AppRoutes: React.FC = () => (
 
         <Route path="/admin" element={<ProtectedRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="schemas/:slug" element={<EditorPage />} />
+            <Route path="page/schemas/:slug" element={<EditorPage type="page" />} />
+            <Route path="shared/schemas/:slug" element={<EditorPage type="shared" />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

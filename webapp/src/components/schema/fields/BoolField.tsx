@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import type { Field } from "@/types/pages";
+import type { Field } from "@/types/entities";
 
 interface BoolFieldProps {
     field: Field;

@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import type { Field } from "@/types/pages";
+import type { Field } from "@/types/entities";
 
 interface StringField {
     field: Field;

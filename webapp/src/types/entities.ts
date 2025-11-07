@@ -2,9 +2,14 @@ export interface Entity {
 	id: string;
 	title: string;
 	slug: string;
-	content: EntityDataData;
+	content: Record<string, unknown>;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface ShortEntityData {
+	id: string;
+	title: string;
 }
 
 export const EntityDataTypes = {
@@ -12,21 +17,9 @@ export const EntityDataTypes = {
 	CONTENT: "content",
 } as const
 
-export interface EntityDataData {
-	layout_fields: Record<string, unknown>
-	content: Record<string, unknown>
-}
-
 export interface EntityData {
-	data: EntityDataData;
-	schema: {
-		id: string;
-		title: string;
-		type: string;
-		layout: string;
-		layout_fields: Field[];
-		content: Field[];
-	}
+	content: Record<string, unknown>;
+	[key: string]: unknown;
 }
 
 export interface Field {

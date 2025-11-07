@@ -1,6 +1,7 @@
 package localstorage
 
 import (
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -38,10 +39,17 @@ func (ls *LocalStorage) SaveFile(name string, data []byte) (path string, err err
 }
 
 func (ls *LocalStorage) DeleteFile(path string) error {
-	err := os.Remove(path)
-	if err != nil {
-		ls.logger.Error("Failed to delete file", slog.String("path", path), slog.Any("err", err))
-		return err
+	if _, err := os.Stat(path); err == nil {
+		err := os.Remove(path)
+		if err != nil {
+			ls.logger.Error("Failed to delete file", slog.String("path", path), slog.Any("err", err))
+			return err
+		}
+	} else if errors.Is(err, os.ErrNotExist) {
+		ls.logger.Info("File does not exist, nothing to delete", slog.String("path", path))
+	} else {
+		ls.logger.Error("Error checking file existence", slog.String("path", path), slog.Any("err", err))
 	}
+
 	return nil
 }

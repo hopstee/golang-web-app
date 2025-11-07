@@ -1,7 +1,7 @@
 import { apiFetch } from "@/lib/api";
-import type { EntityData, EntityDataData, EntitySchema } from "@/types/pages";
+import type { EntityData, EntitySchema, ShortEntityData } from "@/types/entities";
 
-export async function fetchEntitiesNames(type: string): Promise<string[]> {
+export async function fetchEntitiesNames(type: string): Promise<ShortEntityData[]> {
     return await apiFetch(`/api/v1/admin/entity/${type}/names`);
 }
 
@@ -13,7 +13,7 @@ export async function fetchEntityData(slug: string): Promise<EntityData> {
     return await apiFetch(`/api/v1/admin/entity/${slug}/data`);
 }
 
-export async function updateEntityData(slug: string, data: EntityDataData): Promise<void> {
+export async function updateEntityData(slug: string, data: Record<string, unknown>): Promise<void> {
     return apiFetch(`/api/v1/admin/entity/${slug}/data`, {
         method: "PUT",
         credentials: "include",

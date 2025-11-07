@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { Field } from "@/types/pages";
+import type { Field } from "@/types/entities";
 import { Plus, Trash2 } from "lucide-react";
 import FieldsScaffold from "../FieldsScaffold";
 import { getDefaultValue } from "@/lib/utils";
@@ -98,11 +98,11 @@ function renderTextsList(props: ListFieldProps) {
 
 function renderObjectsList(props: ListFieldProps) {
     return (
-        <div className="border-l pl-4 space-y-3">
+        <div className="space-y-3">
             {props.value && (props.value as Record<string, unknown>[]).map((item, index) => (
-                <div key={index} className="border-b space-y-2 pb-6">
+                <div key={index} className="space-y-2 p-4 rounded-xl bg-muted/30">
                     <div className="flex items-center justify-between">
-                        <Label>
+                        <Label className="text-lg font-bold">
                             {props.field.label} #{index + 1}
                         </Label>
                         <Button

@@ -24,7 +24,7 @@ func NewSchemaEntityRepo(db *sql.DB, logger *slog.Logger) *schemaEntityRepo {
 func (r *schemaEntityRepo) GetBySlug(ctx context.Context, slug string) (*repository.SchemaEntity, error) {
 	query := `
 		SELECT id, title, slug, content, created_at, updated_at
-		FROM schemaEntities
+		FROM schema_entities
 		WHERE slug = $1
 		LIMIT 1;
 	`
@@ -48,13 +48,13 @@ func (r *schemaEntityRepo) GetBySlug(ctx context.Context, slug string) (*reposit
 func (r *schemaEntityRepo) GetAll(ctx context.Context) ([]*repository.SchemaEntity, error) {
 	query := `
 		SELECT id, title, slug, content, created_at, updated_at
-		FROM schemaEntities
+		FROM schema_entities
 		ORDER BY created_at DESC;
 	`
 
 	rows, err := r.DB.QueryContext(ctx, query)
 	if err != nil {
-		r.Logger.Error("failed to get all schemaEntities", slog.Any("err", err))
+		r.Logger.Error("failed to get all schema_entities", slog.Any("err", err))
 		return nil, err
 	}
 	defer rows.Close()
@@ -77,8 +77,8 @@ func (r *schemaEntityRepo) Upsert(ctx context.Context, schemaEntity *repository.
 	var updatedAt time.Time
 
 	query := `
-		INSERT INTO schemaEntities (title, slug, content, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO schema_entities (title, type, slug, content, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6)
 		ON CONFLICT (slug)
 		DO UPDATE SET
 			title = EXCLUDED.title,
@@ -88,7 +88,7 @@ func (r *schemaEntityRepo) Upsert(ctx context.Context, schemaEntity *repository.
 	`
 
 	err := r.DB.QueryRowContext(
-		ctx, query, schemaEntity.Title, schemaEntity.Slug, schemaEntity.Content, time.Now(), time.Now(),
+		ctx, query, schemaEntity.Title, schemaEntity.Type, schemaEntity.Slug, schemaEntity.Content, time.Now(), time.Now(),
 	).Scan(&id, &updatedAt)
 	if err != nil {
 		r.Logger.Error("failed to upsert schemaEntity", slog.Any("err", err))
@@ -102,7 +102,7 @@ func (r *schemaEntityRepo) Upsert(ctx context.Context, schemaEntity *repository.
 
 func (r *schemaEntityRepo) DeleteBySlug(ctx context.Context, slug string) error {
 	query := `
-		DELETE FROM schemaEntities
+		DELETE FROM schema_entities
 		WHERE slug = $1
 	`
 	_, err := r.DB.ExecContext(ctx, query, slug)

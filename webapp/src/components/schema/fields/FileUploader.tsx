@@ -3,7 +3,7 @@ import { ImagePlus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Spinner } from "../../ui/spinner";
 import { AspectRatio } from "../../ui/aspect-ratio";
-import type { Field } from "@/types/pages";
+import type { Field } from "@/types/entities";
 import { Button } from "@/components/ui/button";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
