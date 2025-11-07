@@ -1,11 +1,11 @@
-import { usePageStore } from "@/store/PagesStore";
+import { useEntityStore } from "@/store/EntitiesStore";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { Spinner } from "@/components/ui/spinner";
 import { centerContent } from "@/lib/render";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FieldsScaffold from "./FieldsScaffold";
-import { PageDataTypes, type PageDataData } from "@/types/pages";
+import { EntityDataTypes, type EntityDataData } from "@/types/pages";
 import { Button } from "../ui/button";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
@@ -14,13 +14,13 @@ import { getFileType } from "@/lib/utils";
 
 export default function Editor() {
     const { slug } = useParams<{ slug: string }>();
-    const { pageData, fetchPage, savePageData, loading, updating } = usePageStore();
+    const { pageData, fetchPage, savePageData, loading, updating } = useEntityStore();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const currentTabFromUrl = searchParams.get("tab") || "content";
     const [selectedTab, setSelectedTab] = useState<string>(currentTabFromUrl);
 
-    const [pageValues, setPageValues] = useState<PageDataData>({ layout_fields: {}, content: {} });
+    const [pageValues, setPageValues] = useState<EntityDataData>({ layout_fields: {}, content: {} });
     const [changed, setChanged] = useState(false);
 
     useEffect(() => {
@@ -111,7 +111,7 @@ export default function Editor() {
         toast.promise(
             async () => {
                 const updatedValues = await prepareFiles(pageValues);
-                await savePageData(slug, (updatedValues as PageDataData));
+                await savePageData(slug, (updatedValues as EntityDataData));
                 setChanged(false);
             },
             {
@@ -147,7 +147,7 @@ export default function Editor() {
                     <FieldsScaffold
                         fields={schema.content || []}
                         data={pageValues.content || {}}
-                        onChange={(data) => handlePartChange(PageDataTypes.CONTENT, data)}
+                        onChange={(data) => handlePartChange(EntityDataTypes.CONTENT, data)}
                     />
                 </TabsContent>
 
@@ -155,7 +155,7 @@ export default function Editor() {
                     <FieldsScaffold
                         fields={schema.layout_fields || []}
                         data={pageValues.layout_fields || {}}
-                        onChange={(data) => handlePartChange(PageDataTypes.LAYOUT_FIELDS, data)}
+                        onChange={(data) => handlePartChange(EntityDataTypes.LAYOUT_FIELDS, data)}
                     />
                 </TabsContent>
             </Tabs>

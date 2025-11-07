@@ -35,12 +35,11 @@ func NewRouter(opts options.Options) *chi.Mux {
 				})
 
 				r.With(customMiddleware.AdminAuthMiddleware(opts.AdminAuthService)).Group(func(r chi.Router) {
-					r.Route("/pages", func(r chi.Router) {
-						r.Get("/", opts.PagesHandler.GetAllPagesSchemas)
-						r.Get("/{slug}/schema", opts.PagesHandler.GetPageSchema)
-						r.Get("/{slug}/data", opts.PagesHandler.GetPageData)
-						r.Put("/{slug}/data", opts.PagesHandler.UpdatePageData)
-						r.Delete("/{slug}", opts.PagesHandler.DeletePage)
+					r.Route("/entity", func(r chi.Router) {
+						r.Get("/{type}/names", opts.SchemaEntityHandler.GetEntityNamesByType)
+						r.Get("/{type}/{slug}/schema", opts.SchemaEntityHandler.GetEntitySchema)
+						r.Get("/{slug}/data", opts.SchemaEntityHandler.GetEntityData)
+						r.Put("/{slug}/data", opts.SchemaEntityHandler.UpdateEntityData)
 					})
 
 					r.Route("/files", func(r chi.Router) {

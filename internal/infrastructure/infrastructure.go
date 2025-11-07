@@ -29,20 +29,20 @@ type Dependencies struct {
 	TelegramNotifier notifier.Notifier
 
 	// services
-	MobileAuthService *service.MobileAuthService
-	AdminAuthService  *service.AdminAuthService
-	UserService       *service.UserService
-	AdminService      *service.AdminService
-	RequestService    *service.RequestService
-	PostService       *service.PostService
-	PagesService      *service.PagesService
+	MobileAuthService   *service.MobileAuthService
+	AdminAuthService    *service.AdminAuthService
+	UserService         *service.UserService
+	AdminService        *service.AdminService
+	RequestService      *service.RequestService
+	PostService         *service.PostService
+	SchemaEntityService *service.SchemaEntityService
 
 	// api handlers
-	MobileAuthHandler *apiHandler.MobileAuthHandler
-	AdminAuthHandler  *apiHandler.AdminAuthHandler
-	RequestHandler    *apiHandler.RequestHandler
-	PagesHandler      *apiHandler.PagesHandler
-	FilesHandler      *apiHandler.FilesHandler
+	MobileAuthHandler   *apiHandler.MobileAuthHandler
+	AdminAuthHandler    *apiHandler.AdminAuthHandler
+	RequestHandler      *apiHandler.RequestHandler
+	SchemaEntityHandler *apiHandler.SchemaEntityHandler
+	FilesHandler        *apiHandler.FilesHandler
 
 	// web handlers
 	PostHandler    *webHandler.PostHandler

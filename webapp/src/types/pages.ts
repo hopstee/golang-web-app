@@ -1,24 +1,24 @@
-export interface Page {
+export interface Entity {
 	id: string;
 	title: string;
 	slug: string;
-	content: PageDataData;
+	content: EntityDataData;
 	createdAt: string;
 	updatedAt: string;
 }
 
-export const PageDataTypes = {
+export const EntityDataTypes = {
 	LAYOUT_FIELDS: "layout_fields",
 	CONTENT: "content",
 } as const
 
-export interface PageDataData {
+export interface EntityDataData {
 	layout_fields: Record<string, unknown>
 	content: Record<string, unknown>
 }
 
-export interface PageData {
-	data: PageDataData;
+export interface EntityData {
+	data: EntityDataData;
 	schema: {
 		id: string;
 		title: string;
@@ -41,7 +41,7 @@ export interface Schema {
 	fields: Field[];
 }
 
-export const PageSchemaType = {
+export const EntitySchemaType = {
 	LAYOUT: "layout",
 	BLOCK: "block",
 	PAGE: "page",
@@ -49,14 +49,14 @@ export const PageSchemaType = {
 	SHARED: "shared",
 } as const
 
-export interface PageSchema {
+export interface EntitySchema {
 	id: string;
 	title: string;
-	type: typeof PageSchemaType;
+	type: typeof EntitySchemaType;
 	layout: string;
 	parent: string;
 	blocks: string[];
 	seo: Field[];
 	content: Field[];
-	children: PageSchema[];
+	children: EntitySchema[];
 }

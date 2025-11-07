@@ -1,25 +1,29 @@
-import { fetchAllSchemas, fetchPageData, updatePageData } from "@/api/pages"
-import type { PageData, PageDataData, PageSchema } from "@/types/pages"
+import { fetchEntitiesNames, fetchEntityData, fetchEntitySchema, updateEntityData } from "@/api/entities"
+import type { EntityData, EntityDataData, EntitySchema } from "@/types/pages"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
-interface PagesState {
-    pages: PageSchema[]
-    pageData: Record<string, PageData>
+interface EntitiesState {
+    pages: string[]
+    shared: string[]
+    pageData: Record<string, EntityData>
+    sharedData: Record<string, EntityData>
     loading: boolean
     updating: boolean
     error: boolean
     errorMessage: string
     fetchAll: (force?: boolean) => Promise<void>
-    fetchPage: (slug: string) => Promise<void>
-    savePageData: (slug: string, updated: PageDataData) => Promise<void>
+    fetchEntity: (type: string, slug: string) => Promise<void>
+    saveEntityData: (slug: string, updated: EntityDataData) => Promise<void>
 }
 
-export const usePageStore = create<PagesState>()(
+export const useEntityStore = create<EntitiesState>()(
     persist(
         (set, get) => ({
             pages: [],
+            shared: [],
             pageData: {},
+            sharedData: {},
             loading: false,
             updating: false,
             error: false,
@@ -28,24 +32,28 @@ export const usePageStore = create<PagesState>()(
             async fetchAll(force = false) {
                 if (!force && get().pages.length > 0) return;
 
-                let schemas: PageSchema[] = [];
+                let pages: string[] = [];
+                let shared: string[] = [];
                 set({ loading: true });
                 try {
-                    schemas = await fetchAllSchemas();
+                    pages = await fetchEntitiesNames("page");
+                    shared = await fetchEntitiesNames("shared");
                 } catch (err) {
                     set({ error: true, errorMessage: (err as Error).message });
                 } finally {
-                    set({ loading: false, pages: schemas });
+                    set({ loading: false, pages, shared });
                 }
             },
 
-            async fetchPage(slug: string) {
+            async fetchEntity(type: string, slug: string) {
                 if (get().pageData[slug]) return;
 
-                let data: PageData | undefined;
+                let data: EntityData | undefined;
+                let schema: EntitySchema;
                 set({ loading: true });
                 try {
-                    data = await fetchPageData(slug);
+                    data = await fetchEntityData(slug);
+                    schema = await fetchEntitySchema(type, slug);
                 } catch (error) {
                     set({ error: true, errorMessage: (error as Error).message });
                 } finally {
@@ -60,10 +68,10 @@ export const usePageStore = create<PagesState>()(
                 }
             },
 
-            async savePageData(slug, data) {
+            async saveEntityData(slug, data) {
                 set({ updating: true });
                 try {
-                    await updatePageData(slug, data);
+                    await updateEntityData(slug, data);
                     set(state => ({
                         pageData: {
                             ...state.pageData,
@@ -77,6 +85,6 @@ export const usePageStore = create<PagesState>()(
                 }
             },
         }),
-        { name: "pages-store" }
+        { name: "entities-store" }
     )
 )

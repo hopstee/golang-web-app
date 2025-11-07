@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/sidebar"
 import { Command, Image, Phone, ScanEye } from "lucide-react"
 import UserNav from "./UserNav"
-import { usePageStore } from "@/store/PagesStore"
+import { useEntityStore } from "@/store/EntitiesStore"
 import DynamicContent from "./DynamicContent";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export function AppSidebar() {
-    const { fetchAll } = usePageStore();
+    const { fetchAll } = useEntityStore();
 
     useEffect(() => {
         fetchAll(true);

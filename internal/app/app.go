@@ -61,17 +61,17 @@ func Init() (*App, error) {
 		StaticDir: cfg.Static.Dir,
 
 		// services
-		MobileAuthService: deps.MobileAuthService,
-		AdminAuthService:  deps.AdminAuthService,
-		PostService:       deps.PostService,
-		PagesService:      deps.PagesService,
+		MobileAuthService:   deps.MobileAuthService,
+		AdminAuthService:    deps.AdminAuthService,
+		PostService:         deps.PostService,
+		SchemaEntityService: deps.SchemaEntityService,
 
 		// api handlers
-		MobileAuthHandler: deps.MobileAuthHandler,
-		AdminAuthHandler:  deps.AdminAuthHandler,
-		RequestHandler:    deps.RequestHandler,
-		PagesHandler:      deps.PagesHandler,
-		FilesHandler:      deps.FilesHandler,
+		MobileAuthHandler:   deps.MobileAuthHandler,
+		AdminAuthHandler:    deps.AdminAuthHandler,
+		RequestHandler:      deps.RequestHandler,
+		SchemaEntityHandler: deps.SchemaEntityHandler,
+		FilesHandler:        deps.FilesHandler,
 
 		// web handlers
 		PostHandler:    deps.PostHandler,

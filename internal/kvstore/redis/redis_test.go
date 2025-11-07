@@ -77,16 +77,6 @@ func TestRedisKVStore_SetGetSchemas(t *testing.T) {
 	if !reflect.DeepEqual(pages, gotPages) {
 		t.Errorf("pages mismatch:\nwant: %+v\ngot: %+v", pages, gotPages)
 	}
-
-	// Get modules
-	gotModules, err := kv.GetModules(ctx)
-	if err != nil {
-		t.Fatalf("GetModules failed: %v", err)
-	}
-
-	if !reflect.DeepEqual(modules, gotModules) {
-		t.Errorf("modules mismatch:\nwant: %+v\ngot: %+v", modules, gotModules)
-	}
 }
 
 func TestRedisKVStore_GetEmpty(t *testing.T) {
@@ -102,13 +92,5 @@ func TestRedisKVStore_GetEmpty(t *testing.T) {
 	}
 	if len(pages) != 0 {
 		t.Errorf("expected no pages, got %d", len(pages))
-	}
-
-	modules, err := kv.GetModules(ctx)
-	if err != nil {
-		t.Fatalf("GetModules failed: %v", err)
-	}
-	if len(modules) != 0 {
-		t.Errorf("expected no modules, got %d", len(modules))
 	}
 }

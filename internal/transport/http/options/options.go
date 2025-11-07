@@ -10,19 +10,19 @@ import (
 type Options struct {
 	StaticDir string
 
-	MobileAuthHandler *apiHandlers.MobileAuthHandler
-	AdminAuthHandler  *apiHandlers.AdminAuthHandler
-	RequestHandler    *apiHandlers.RequestHandler
-	PagesHandler      *apiHandlers.PagesHandler
-	FilesHandler      *apiHandlers.FilesHandler
+	MobileAuthHandler   *apiHandlers.MobileAuthHandler
+	AdminAuthHandler    *apiHandlers.AdminAuthHandler
+	RequestHandler      *apiHandlers.RequestHandler
+	SchemaEntityHandler *apiHandlers.SchemaEntityHandler
+	FilesHandler        *apiHandlers.FilesHandler
 
 	PostHandler    *webHandlers.PostHandler
 	ContactHandler *webHandlers.ContactHandler
 
-	MobileAuthService *service.MobileAuthService
-	AdminAuthService  *service.AdminAuthService
-	PostService       *service.PostService
-	PagesService      *service.PagesService
+	MobileAuthService   *service.MobileAuthService
+	AdminAuthService    *service.AdminAuthService
+	PostService         *service.PostService
+	SchemaEntityService *service.SchemaEntityService
 
 	Logger *slog.Logger
 }

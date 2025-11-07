@@ -1,11 +1,11 @@
-import { usePageStore } from "@/store/PagesStore";
+import { useEntityStore } from "@/store/EntitiesStore";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Circle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 export default function DynamicContent() {
     const { slug } = useParams<{ slug: string }>()
-    const { pages } = usePageStore();
+    const { pages } = useEntityStore();
 
     return (
         <SidebarGroup>

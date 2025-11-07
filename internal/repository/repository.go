@@ -15,5 +15,5 @@ type Repository interface {
 	Admin() AdminRepository
 	Post() PostRepository
 	Request() RequestRepository
-	Pages() PagesRepository
+	SchemaEntity() SchemaEntityRepository
 }
