@@ -178,6 +178,8 @@ func parseFile(path string) kvstore.EntitySchema {
 			entity.Parent = getTagValue(line, "@parent:")
 		case strings.Contains(line, "@blocks:"):
 			entity.Blocks = parseList(getTagValue(line, "@blocks:"))
+		case strings.Contains(line, "@shared:"):
+			entity.Shared = parseList(getTagValue(line, "@shared:"))
 		case strings.Contains(line, "@mode:"):
 			moduleMode = getTagValue(line, "@mode:")
 			entity.Mode = moduleMode

@@ -11,6 +11,8 @@
 
 // @blocks: some_list
 
+// @shared: contacts
+
 // @field image: img = "Картинка"
 
 // @field heading: string = "Приветствие"
