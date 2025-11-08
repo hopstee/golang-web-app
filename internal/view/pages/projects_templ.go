@@ -19,7 +19,7 @@
 
 // @field projects_sections[].projects[].name: string = "Название проекта"
 
-// @field projects_sections[].projects[].description: string = "Описание проекта"
+// @field projects_sections[].projects[].description: text = "Описание проекта"
 
 // @field projects_sections[].projects[].url: string = "Ссылка на проект"
 
