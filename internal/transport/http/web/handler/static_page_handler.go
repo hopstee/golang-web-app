@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"log"
 	"mobile-backend-boilerplate/internal/repository"
 	"mobile-backend-boilerplate/internal/service"
 	"mobile-backend-boilerplate/internal/view/layouts"
@@ -37,8 +36,6 @@ func (h *StaticPageHandler) RenderStaticPage(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	log.Printf("Unknown page data: %+v", pageData)
-
 	layoutData := layouts.NewPublicLayoutProps(r)
 	switch path {
 	case "index":
@@ -55,8 +52,6 @@ func (h *StaticPageHandler) RenderStaticPage(w http.ResponseWriter, r *http.Requ
 			PageContent:   indexContent,
 		}
 
-		log.Printf("Index page data: %+v", indexPageData)
-
 		HandleStaticPage(w, r, pages.IndexPage(indexPageData), pages.IndexPageContent(indexPageData))
 	case "about":
 		var aboutContent pages.AboutPagePartialProps
@@ -70,8 +65,6 @@ func (h *StaticPageHandler) RenderStaticPage(w http.ResponseWriter, r *http.Requ
 			PageContent:   aboutContent,
 		}
 
-		log.Printf("About page data: %+v", aboutPageData)
-
 		HandleStaticPage(w, r, pages.AboutPage(aboutPageData), pages.AboutPageContent(aboutPageData))
 	case "projects":
 		var projectsContent pages.ProjectPagePartialProps
@@ -84,8 +77,6 @@ func (h *StaticPageHandler) RenderStaticPage(w http.ResponseWriter, r *http.Requ
 			LayoutContent: layoutData,
 			PageContent:   projectsContent,
 		}
-
-		log.Printf("Project page data: %+v", projectPageData)
 
 		HandleStaticPage(w, r, pages.ProjectsPage(projectPageData), pages.ProjectsPageContent(projectPageData))
 	}

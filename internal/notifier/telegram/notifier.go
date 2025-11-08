@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log/slog"
 	"mobile-backend-boilerplate/internal/notifier"
-	"mobile-backend-boilerplate/internal/repository"
-	"mobile-backend-boilerplate/pkg/helper/markdown"
 	"net/http"
 	"net/url"
 )
@@ -24,15 +22,9 @@ func NewTelegramNotifier(token string, chatID string, logger *slog.Logger) notif
 	}
 }
 
-func (n *TelegramNotifier) SendMessage(request repository.Request) error {
+func (n *TelegramNotifier) SendMessage(msg string) error {
 	n.Logger.Info("send telegram notification message attempt")
 	apiUrl := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", n.token)
-
-	msg := fmt.Sprintf("*Имя:* %s\n", markdown.EscapeMarkdownV2(request.Name))
-	msg += fmt.Sprintf("*Сообщение:* %s\n", markdown.EscapeMarkdownV2(request.Message))
-	msg += fmt.Sprintf("*Способ связи:* %s\n", markdown.EscapeMarkdownV2(request.ContactType))
-	msg += fmt.Sprintf("*Телефон:* %s\n", markdown.EscapeMarkdownV2(request.Phone))
-	msg += fmt.Sprintf("*Почта:* %s\n", markdown.EscapeMarkdownV2(request.Email))
 
 	resp, err := http.PostForm(apiUrl, url.Values{
 		"chat_id":    {n.chatID},
@@ -50,9 +42,5 @@ func (n *TelegramNotifier) SendMessage(request repository.Request) error {
 		return fmt.Errorf("telegram api error: %v", resp.Status)
 	}
 
-	return nil
-}
-
-func (n *TelegramNotifier) SendMessageWithRetry(request repository.Request) error {
 	return nil
 }
