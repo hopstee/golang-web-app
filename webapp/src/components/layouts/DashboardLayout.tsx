@@ -52,9 +52,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     </div>
                 </header>
 
-                <ScrollArea className="w-full h-full">
+                <ScrollArea className={cn(
+                    "w-full",
+                    `h-[calc(100svh-var(--spacing)*16)]`
+                )}>
                     <div className={cn(
-                        "flex flex-1 flex-col gap-4 p-4",
+                        "flex flex-1 flex-col gap-4 p-4 pb-16",
                     )}>
                         {children}
                     </div>
