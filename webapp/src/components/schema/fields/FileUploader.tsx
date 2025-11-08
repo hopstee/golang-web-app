@@ -109,7 +109,7 @@ export default function FileUploader(props: FileUploaderProps) {
         <AspectRatio
             ratio={16 / 9}
             className={cn(
-                "w-full dark:bg-input/30 shadow-xs rounded-md transition-all cursor-cell overflow-hidden",
+                "w-full bg-input/10 dark:bg-input/30 shadow-xs rounded-md transition-all cursor-cell overflow-hidden",
                 "border border-input hover:border-ring hover:ring-[3px] hover:ring-ring/50",
                 "flex flex-col gap-2 items-center justify-center",
                 isOverDropZone && "border-ring ring-[3px] ring-ring/50",
