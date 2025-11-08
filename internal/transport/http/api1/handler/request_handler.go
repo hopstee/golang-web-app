@@ -2,9 +2,11 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"mobile-backend-boilerplate/internal/notifier"
 	"mobile-backend-boilerplate/internal/repository"
 	"mobile-backend-boilerplate/internal/service"
+	"mobile-backend-boilerplate/pkg/helper/markdown"
 	"net/http"
 )
 
@@ -33,7 +35,12 @@ func (h *RequestHandler) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.notifier.SendMessage(req)
+	msg := fmt.Sprintf("*Имя:* %s\n", markdown.EscapeMarkdownV2(req.Name))
+	msg += fmt.Sprintf("*Сообщение:* %s\n", markdown.EscapeMarkdownV2(req.Message))
+	msg += fmt.Sprintf("*Способ связи:* %s\n", markdown.EscapeMarkdownV2(req.ContactType))
+	msg += fmt.Sprintf("*Телефон:* %s\n", markdown.EscapeMarkdownV2(req.Phone))
+	msg += fmt.Sprintf("*Почта:* %s\n", markdown.EscapeMarkdownV2(req.Email))
+	err = h.notifier.SendMessage(msg)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
