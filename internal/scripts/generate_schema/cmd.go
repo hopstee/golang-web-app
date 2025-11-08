@@ -183,9 +183,6 @@ func parseFile(path string) kvstore.EntitySchema {
 		case strings.Contains(line, "@mode:"):
 			moduleMode = getTagValue(line, "@mode:")
 			entity.Mode = moduleMode
-		case strings.Contains(line, "@shared:"):
-			entity.Type = "shared"
-			entity.ID = getTagValue(line, "@shared:")
 		case strings.Contains(line, "@field"):
 			if m := fieldExp.FindStringSubmatch(line); len(m) > 0 {
 				fullPath := m[1]

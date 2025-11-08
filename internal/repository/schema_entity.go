@@ -9,6 +9,8 @@ import (
 const (
 	PageEntity   = "page"
 	SharedEntity = "shared"
+
+	MainContentKey = "content"
 )
 
 type SchemaEntity struct {

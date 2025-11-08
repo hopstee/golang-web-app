@@ -40,6 +40,21 @@ import (
 	"mobile-backend-boilerplate/internal/view/partials"
 )
 
+type ProjectPageProps struct {
+	LayoutContent layouts.PublicLayoutProps
+	PageContent   ProjectPagePartialProps
+}
+
+type ProjectPagePartialProps struct {
+	Heading          string                `json:"heading"`
+	ProjectsSections []ProjectsSectionData `json:"projects_sections"`
+}
+
+type ProjectsSectionData struct {
+	Name     string
+	Projects []ProjectItemData
+}
+
 type ProjectItemData struct {
 	Name          string
 	Description   string
@@ -48,131 +63,7 @@ type ProjectItemData struct {
 	InDevelopment bool
 }
 
-type ProjectsSectionData struct {
-	Name     string
-	Projects []ProjectItemData
-}
-
-type ProjectsData struct {
-	ProjectsSections []ProjectsSectionData
-}
-
-var projects = ProjectsData{
-	ProjectsSections: []ProjectsSectionData{
-		{
-			Name: "Реализованные",
-			Projects: []ProjectItemData{
-				{
-					Name:        "Система продажи билетов",
-					Description: "Полностью разработал фронтенд: личный кабинет, страницы мероприятий, корзину и оформление заказов.",
-					URL:         "https://cultural.md",
-					Technologies: []string{
-						"Next.js",
-					},
-				},
-				{
-					Name:        "Сайт-портфолио",
-					Description: "Современный адаптивный мультиязычный сайт, демонстрирующий навыки и проекты.",
-					URL:         "https://edkr.vercel.app",
-					Technologies: []string{
-						"Next.js",
-					},
-				},
-				{
-					Name:        "Личный сайт / сайт личного бренда",
-					Description: "Блог с админкой, интеграция с Telegram для заявок, универсальное применение для личного бренда.",
-					URL:         "/",
-					Technologies: []string{
-						"Go", "Astro", "SQLite",
-					},
-				},
-			},
-		},
-		{
-			Name: "Open Source / репозитории",
-			Projects: []ProjectItemData{
-				{
-					Name:        "Доработанный клиент Mattermost",
-					Description: "Массовые действия и пересылка сообщений для удобной командной работы.",
-					URL:         "https://cultural.md",
-					Technologies: []string{
-						"Go", "React",
-					},
-				},
-				{
-					Name:        "Плагин прочтения для Mattermost",
-					Description: "Добавляет функционал отображения количества просмотров сообщений и кто их просмотрел.",
-					URL:         "#",
-					Technologies: []string{
-						"Go", "React",
-					},
-				},
-				{
-					Name:          "Сервис транскрибирования",
-					Description:   "Автоматическая расшифровка аудио в текст с удобным API и нейросетью Whisper от OpenAI.",
-					URL:           "/",
-					Technologies:  []string{"Python", "Redis", "Docker"},
-					InDevelopment: true,
-				},
-				{
-					Name:        "Бот для сохранения ссылок",
-					Description: "Сохраняет и предоставляет ссылки другим пользователям по сгенерированному коду.",
-					URL:         "/",
-					Technologies: []string{
-						"NestJS", "SQLite",
-					},
-				},
-				{
-					Name:        "Система управления переменными окружения",
-					Description: "Инструмент для удобного менеджмента env-переменных.",
-					URL:         "/",
-					Technologies: []string{
-						"Laravel", "React", "PostgreSQL",
-					},
-				},
-			},
-		},
-		{
-			Name: "Опыт в командах",
-			Projects: []ProjectItemData{
-				{
-					Name:        "Crossnetics",
-					Description: "Разработка web3 маркетплейса: рефакторинг и реализация модуля заявок.",
-					URL:         "https://crossnetics.io/",
-					Technologies: []string{
-						"NestJS", "Next.js", "MySQL", "Redis", "Elasticsearch", "Docker",
-					},
-				},
-				{
-					Name:        "Oculeus",
-					Description: "Разработка CRM системы: реализация модулей и внутреннего чата.",
-					URL:         "https://www.oculeus.com/",
-					Technologies: []string{
-						"NestJS", "React", "PostgreSQL", "Redis", "Elasticsearch", "Docker",
-					},
-				},
-				{
-					Name:        "Ilab",
-					Description: "Разработка системы контроля зарядных станций: личный кабинет, процесс зарядки и другие функции.",
-					URL:         "https://ilab.md",
-					Technologies: []string{
-						"Codeigniter", "MySQL", "Nginx",
-					},
-				},
-				{
-					Name:        "Unifun",
-					Description: "Разработка доски объявлений: личный кабинет, поиск, аутентификация и другие функции.",
-					URL:         "https://unifun.com/",
-					Technologies: []string{
-						"Laravel", "MySQL", "Nginx",
-					},
-				},
-			},
-		},
-	},
-}
-
-func ProjectsPage(props layouts.PublicLayoutProps) templ.Component {
+func ProjectsPage(props ProjectPageProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -205,13 +96,13 @@ func ProjectsPage(props layouts.PublicLayoutProps) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = ProjectsPagePartial(projects).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ProjectsPagePartial(props.PageContent).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layouts.PublicLayout(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layouts.PublicLayout(props.LayoutContent).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -219,7 +110,7 @@ func ProjectsPage(props layouts.PublicLayoutProps) templ.Component {
 	})
 }
 
-func ProjectsPageContent(props layouts.PublicLayoutProps) templ.Component {
+func ProjectsPageContent(props ProjectPageProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -252,13 +143,13 @@ func ProjectsPageContent(props layouts.PublicLayoutProps) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = ProjectsPagePartial(projects).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ProjectsPagePartial(props.PageContent).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layouts.PublicLayoutPartial(props).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layouts.PublicLayoutPartial(props.LayoutContent).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -266,7 +157,7 @@ func ProjectsPageContent(props layouts.PublicLayoutProps) templ.Component {
 	})
 }
 
-func ProjectsPagePartial(projects ProjectsData) templ.Component {
+func ProjectsPagePartial(props ProjectPagePartialProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -287,17 +178,30 @@ func ProjectsPagePartial(projects ProjectsData) templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n        .content {\n            padding-bottom: calc(var(--space-xl));\n            display: flex;\n            flex-direction: column;\n        }\n\n        .section {\n            color: var(--foreground);\n            font-weight: 600;\n        }\n    </style><div class=\"content\"><h1>Проекты</h1>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n        .content {\n            padding-bottom: calc(var(--space-xl));\n            display: flex;\n            flex-direction: column;\n        }\n\n        .section {\n            color: var(--foreground);\n            font-weight: 600;\n        }\n    </style><div class=\"content\"><h1>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, section := range projects.ProjectsSections {
+		var templ_7745c5c3_Var6 string
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(props.Heading)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 74, Col: 21}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</h1>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		for _, section := range props.ProjectsSections {
 			templ_7745c5c3_Err = ProjectsSection(section).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -321,25 +225,25 @@ func ProjectsSection(projectsSection ProjectsSectionData) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var6 == nil {
-			templ_7745c5c3_Var6 = templ.NopComponent
+		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var7 == nil {
+			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<h2>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<h2>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(projectsSection.Name)
+		var templ_7745c5c3_Var8 string
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(projectsSection.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 192, Col: 27}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 82, Col: 27}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h2><ul>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</h2><ul>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -349,7 +253,7 @@ func ProjectsSection(projectsSection ProjectsSectionData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</ul>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</ul>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -373,30 +277,30 @@ func ProjectItem(project ProjectItemData) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var8 == nil {
-			templ_7745c5c3_Var8 = templ.NopComponent
+		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var9 == nil {
+			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<style>\n        .badge-group {\n            display: flex;\n            flex-wrap: wrap;\n            gap: var(--space-sm);\n        }\n    </style><li><a class=\"link-container\" href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<style>\n        .badge-group {\n            display: flex;\n            flex-wrap: wrap;\n            gap: var(--space-sm);\n        }\n    </style><li><a class=\"link-container\" href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var9 templ.SafeURL
-		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(project.URL)
+		var templ_7745c5c3_Var10 templ.SafeURL
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs(project.URL)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 209, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 99, Col: 46}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" target=\"_blank\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" target=\"_blank\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if project.InDevelopment {
-			templ_7745c5c3_Var10 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_Var11 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 				if !templ_7745c5c3_IsBuffer {
@@ -408,7 +312,7 @@ func ProjectItem(project ProjectItemData) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"warning-container h-7\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"warning-container h-7\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -416,31 +320,31 @@ func ProjectItem(project ProjectItemData) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = partials.Tooltip(partials.Top, "Проект находится в разработке", 150).Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = partials.Tooltip(partials.Top, "Проект находится в разработке", 150).Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<span class=\"accent-text\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"accent-text\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(project.Name)
+		var templ_7745c5c3_Var12 string
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(project.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 217, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 107, Col: 43}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -448,7 +352,7 @@ func ProjectItem(project ProjectItemData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</a><div class=\"badge-group mt-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</a><div class=\"badge-group mt-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -458,20 +362,20 @@ func ProjectItem(project ProjectItemData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><p class=\"mt-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><p class=\"mt-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var12 string
-		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(project.Description)
+		var templ_7745c5c3_Var13 string
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(project.Description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 226, Col: 24}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 116, Col: 24}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</p></li>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</p></li>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

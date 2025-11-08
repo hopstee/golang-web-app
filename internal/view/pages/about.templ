@@ -13,21 +13,41 @@
 
 package pages
 
-import "mobile-backend-boilerplate/internal/view/layouts"
+import (
+	"mobile-backend-boilerplate/internal/view/layouts"
+	"strings"
+)
 
-templ AboutPage(props layouts.PublicLayoutProps) {
-	@layouts.PublicLayout(props) {
-		@AboutPagePartial()
+type AboutPageProps struct {
+	LayoutContent layouts.PublicLayoutProps
+	PageContent   AboutPagePartialProps
+}
+
+type AboutPagePartialProps struct {
+	Heading     string   `json:"heading"`
+	Paragraphs  []string `json:"paragraphs"`
+	SkillsTitle string   `json:"skills_title"`
+	Skills      []Skills `json:"skills"`
+}
+
+type Skills struct {
+	Title        string   `json:"title"`
+	Technologies []string `json:"technologies"`
+}
+
+templ AboutPage(props AboutPageProps) {
+	@layouts.PublicLayout(props.LayoutContent) {
+		@AboutPagePartial(props.PageContent)
 	}
 }
 
-templ AboutPageContent(props layouts.PublicLayoutProps) {
-	@layouts.PublicLayoutPartial(props) {
-		@AboutPagePartial()
+templ AboutPageContent(props AboutPageProps) {
+	@layouts.PublicLayoutPartial(props.LayoutContent) {
+		@AboutPagePartial(props.PageContent)
 	}
 }
 
-templ AboutPagePartial() {
+templ AboutPagePartial(props AboutPagePartialProps) {
 	<style>
         .content {
             padding-bottom: calc(var(--space-xl));
@@ -36,36 +56,19 @@ templ AboutPagePartial() {
         }
     </style>
 	<div class="content">
-		<h1>Обо мне:</h1>
-		<p class="mt-4">
-			Я разрабатываю продукты, которые работают и приносят результат.
-			Люблю точный и чистый код, продуманные архитектуры и функциональные
-			интерфейсы.
-		</p>
-		<p class="mt-4">
-			Как соло-разработчик, я всегда на связи, могу быстро внедрять
-			изменения и масштабировать проекты. В работе ценю практичность,
-			стабильность и понятную документацию — чтобы продукт был полезен и
-			заказчику, и пользователю.
-		</p>
-		<p class="mt-4">
-			При необходимости подключаю проверенных специалистов: дизайнера для
-			создания интерфейсов и юриста для сопровождения договоров. Юрист
-			занимается юридическим оформлением онлайн-продуктов, регистрацией
-			товарных знаков, подготовкой пользовательских соглашений и другой
-			документацией.
-		</p>
-		<h2 class="mt-8">Навыки:</h2>
+		<h1>{ props.Heading }</h1>
+		for _, p := range props.Paragraphs {
+			<p class="mt-4">
+				{ p }
+			</p>
+		}
+		<h2 class="mt-8">{ props.SkillsTitle }</h2>
 		<ul>
-			<li><span class="accent-text">Backend:</span> Laravel, Go, NestJS</li>
-			<li>
-				<span class="accent-text">Frontend:</span> React, Next.js, Astro, Flutter
-			</li>
-			<li>
-				<span class="accent-text">Базы данных:</span> SQLite, PostgreSQL, MySQL,
-				MongoDB
-			</li>
-			<li><span class="accent-text">Инфраструктура:</span> Docker, CI/CD</li>
+			for _, s := range props.Skills {
+				<li>
+					<span class="accent-text mr-2">{ s.Title }</span>{ strings.Join(s.Technologies, ", ") }
+				</li>
+			}
 		</ul>
 	</div>
 }

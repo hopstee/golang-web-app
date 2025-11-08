@@ -13,7 +13,6 @@ export interface ShortEntityData {
 }
 
 export const EntityDataTypes = {
-	LAYOUT_FIELDS: "layout_fields",
 	CONTENT: "content",
 } as const
 

@@ -28,22 +28,9 @@ func NewRouter(opts options.Options) *chi.Mux {
 		http.ServeFile(w, r, filepath.Join(opts.StaticDir, "unsupported_browser.js"))
 	})
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		data := layouts.NewPublicLayoutProps(r)
-		data.Centered = true
-
-		handler.HandleStaticPage(w, r, pages.IndexPage(data), pages.IndexPageContent(data))
-	})
-
-	r.Get("/about", func(w http.ResponseWriter, r *http.Request) {
-		data := layouts.NewPublicLayoutProps(r)
-		handler.HandleStaticPage(w, r, pages.AboutPage(data), pages.AboutPageContent(data))
-	})
-
-	r.Get("/projects", func(w http.ResponseWriter, r *http.Request) {
-		data := layouts.NewPublicLayoutProps(r)
-		handler.HandleStaticPage(w, r, pages.ProjectsPage(data), pages.ProjectsPageContent(data))
-	})
+	r.Get("/", opts.StaticPageHandler.RenderStaticPage)
+	r.Get("/about", opts.StaticPageHandler.RenderStaticPage)
+	r.Get("/projects", opts.StaticPageHandler.RenderStaticPage)
 
 	r.Route("/contact", func(r chi.Router) {
 		r.Get("/", opts.ContactHandler.Show)

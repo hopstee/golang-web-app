@@ -45,6 +45,7 @@ type Dependencies struct {
 	FilesHandler        *apiHandler.FilesHandler
 
 	// web handlers
-	PostHandler    *webHandler.PostHandler
-	ContactHandler *webHandler.ContactHandler
+	PostHandler       *webHandler.PostHandler
+	ContactHandler    *webHandler.ContactHandler
+	StaticPageHandler *webHandler.StaticPageHandler
 }

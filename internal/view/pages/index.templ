@@ -5,7 +5,7 @@
 
 // @blocks: some_list
 
-// @shared: contacts
+// @shared: contacts_block
 
 // @field image: img = "Картинка"
 // @field heading: string = "Приветствие"
@@ -14,22 +14,36 @@
 
 package pages
 
-import "mobile-backend-boilerplate/internal/view/layouts"
-import "mobile-backend-boilerplate/internal/view/icons"
+import (
+	"mobile-backend-boilerplate/internal/view/icons"
+	"mobile-backend-boilerplate/internal/view/layouts"
+)
 
-templ IndexPage(props layouts.PublicLayoutProps) {
-	@layouts.PublicLayout(props) {
-		@IndexPagePartial()
+type IndexPageProps struct {
+	LayoutContent layouts.PublicLayoutProps
+	PageContent   IndexPagePartialProps
+}
+
+type IndexPagePartialProps struct {
+	Image      string   `json:"image"`
+	Heading    string   `json:"heading"`
+	Paragraphs []string `json:"paragraphs"`
+	Cta        string   `json:"cta"`
+}
+
+templ IndexPage(props IndexPageProps) {
+	@layouts.PublicLayout(props.LayoutContent) {
+		@IndexPagePartial(props.PageContent)
 	}
 }
 
-templ IndexPageContent(props layouts.PublicLayoutProps) {
-	@layouts.PublicLayoutPartial(props) {
-		@IndexPagePartial()
+templ IndexPageContent(props IndexPageProps) {
+	@layouts.PublicLayoutPartial(props.LayoutContent) {
+		@IndexPagePartial(props.PageContent)
 	}
 }
 
-templ IndexPagePartial() {
+templ IndexPagePartial(props IndexPagePartialProps) {
 	<style>
         .personal-image {
             width: 80px;
@@ -37,20 +51,13 @@ templ IndexPagePartial() {
             border-radius: 50%;
         }
     </style>
-	<img src="/static/assets/images/personal-image-dark.png" alt="Фото" class="personal-image"/>
-	<h1>Привет! Я Эдик.</h1>
-	<p>
-		Соло-разработчик, создаю современные веб- и мобильные решения.
-		Работаю напрямую с заказчиком, без посредников. Создаю
-		стабильный, понятный код, который решает реальные бизнес-задачи.
-		Реализую полный цикл разработки: от прототипа и дизайна до
-		стабильного релиза и поддержки.
-	</p>
-	<p>
-		Разрабатываю: корпоративные сайты, лендинги, личные кабинеты,
-		CRM/ERP-системы, мобильные приложения, API-сервисы, ботов и
-		системы автоматизации.
-	</p>
+	<img src={ props.Image } alt="Фото" class="personal-image"/>
+	<h1>{ props.Heading }</h1>
+	for _, p := range props.Paragraphs {
+		<p>
+			{ p }
+		</p>
+	}
 	<a
 		href="/contact"
 		hx-get="/contact"
@@ -59,7 +66,7 @@ templ IndexPagePartial() {
 		hx-push-url="true"
 	>
 		<button class="btn">
-			Оставить заявку
+			{ props.Cta }
 			@icons.ArrowRight("h-4 triling-icon -rotate-45")
 		</button>
 	</a>

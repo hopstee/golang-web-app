@@ -3,7 +3,7 @@
 // templ: version: v0.3.943
 // @type: shared
 
-// @id: contacts
+// @id: contacts_block
 
 // @title: Контакты
 

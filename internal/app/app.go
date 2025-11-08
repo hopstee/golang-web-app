@@ -74,8 +74,9 @@ func Init() (*App, error) {
 		FilesHandler:        deps.FilesHandler,
 
 		// web handlers
-		PostHandler:    deps.PostHandler,
-		ContactHandler: deps.ContactHandler,
+		PostHandler:       deps.PostHandler,
+		ContactHandler:    deps.ContactHandler,
+		StaticPageHandler: deps.StaticPageHandler,
 
 		// other options
 		Logger: log,

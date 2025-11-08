@@ -110,3 +110,66 @@ func (s *SchemaEntityService) UpdateEntityData(ctx context.Context, slug string,
 
 	return nil
 }
+
+func (s *SchemaEntityService) CollectFullEntityData(ctx context.Context, slug string) (pageData map[string]interface{}, err error) {
+	key := kvstore.EntityDataPrefix + slug
+	schema, err := s.kvstore.GetEntitySchema(ctx, kvstore.SchemaKeyPages, slug)
+	if err != nil {
+		s.logger.Warn("CollectEntityData: failed to get entity schema", slog.String("slug", slug))
+		return nil, err
+	}
+
+	data, err := s.kvstore.GetEntityData(ctx, key)
+	if err == nil {
+		s.collectSharedData(ctx, schema.Shared, data)
+		return data, nil
+	}
+
+	schemaEntity, err := s.schemaEntitiesRepo.GetBySlug(ctx, slug)
+	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			emptyData := make(map[string]interface{})
+			return emptyData, nil
+		}
+		return nil, err
+	}
+
+	var schemaEntityData map[string]interface{}
+	if schemaEntity.Content != nil {
+		if err := json.Unmarshal(schemaEntity.Content, &schemaEntityData); err != nil {
+			schemaEntityData = make(map[string]interface{})
+		}
+	} else {
+		schemaEntityData = make(map[string]interface{})
+	}
+
+	if err := s.kvstore.SetEntityData(ctx, key, schemaEntityData); err != nil {
+		s.logger.Warn("GetSchemaEntityData: failed to set schemaEntity data to kvstore", slog.String("slug", slug))
+	}
+
+	s.collectSharedData(ctx, schema.Shared, schemaEntityData)
+
+	return schemaEntityData, nil
+}
+
+func (s *SchemaEntityService) collectSharedData(ctx context.Context, sharedList []string, data map[string]interface{}) error {
+	for _, shared := range sharedList {
+		key := kvstore.EntityDataPrefix + shared
+		sharedData, err := s.kvstore.GetEntityData(ctx, key)
+
+		if err == nil {
+			data[shared] = sharedData
+		} else {
+			schemaEntity, err := s.schemaEntitiesRepo.GetBySlug(ctx, shared)
+			if err != nil {
+				if errors.Is(err, repository.ErrNotFound) {
+					emptyData := make(map[string]interface{})
+					data[shared] = emptyData
+				}
+			} else {
+				data[shared] = schemaEntity
+			}
+		}
+	}
+	return nil
+}

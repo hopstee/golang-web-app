@@ -16,8 +16,9 @@ type Options struct {
 	SchemaEntityHandler *apiHandlers.SchemaEntityHandler
 	FilesHandler        *apiHandlers.FilesHandler
 
-	PostHandler    *webHandlers.PostHandler
-	ContactHandler *webHandlers.ContactHandler
+	PostHandler       *webHandlers.PostHandler
+	ContactHandler    *webHandlers.ContactHandler
+	StaticPageHandler *webHandlers.StaticPageHandler
 
 	MobileAuthService   *service.MobileAuthService
 	AdminAuthService    *service.AdminAuthService
