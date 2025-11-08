@@ -51,16 +51,18 @@ templ PublicLayout(props PublicLayoutProps) {
 }
 
 templ PublicLayoutPartial(props PublicLayoutProps) {
-	@partials.Navigation(props.CurrentPath)
-	<div class={ topPaddingClass(props.WithTopPadding) }>
-		<div class={ wideWrapperClass(props.WideWrapper) }>
-			<div class="container">
-				@CenteredContent(props.Centered) {
-					{ children... }
-				}
+	@BaseLayout(props.HeadData) {
+		@partials.Navigation(props.CurrentPath)
+		<div class={ topPaddingClass(props.WithTopPadding) }>
+			<div class={ wideWrapperClass(props.WideWrapper) }>
+				<div class="container">
+					@CenteredContent(props.Centered) {
+						{ children... }
+					}
+				</div>
 			</div>
 		</div>
-	</div>
+	}
 }
 
 templ CenteredContent(centered bool) {

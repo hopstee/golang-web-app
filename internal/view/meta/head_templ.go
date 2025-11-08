@@ -9,10 +9,10 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 type HeadData struct {
-	Title       string
-	Description string
-	URL         string
-	Image       string
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	URL         string `json:"url"`
+	Image       string `json:"image"`
 }
 
 func Head(headData HeadData) templ.Component {
@@ -36,14 +36,14 @@ func Head(headData HeadData) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/static/assets/favicon.ico\"><link rel=\"sitemap\" href=\"/sitemap-index.xml\"><link rel=\"preload\" href=\"/static/fonts/atkinson-regular.woff\" as=\"font\" type=\"font/woff\" crossorigin><link rel=\"preload\" href=\"/static/fonts/atkinson-bold.woff\" as=\"font\" type=\"font/woff\" crossorigin><link rel=\"preload\" href=\"/static/fonts/recama-u.woff\" as=\"font\" type=\"font/woff\" crossorigin><link rel=\"preload\" href=\"/static/fonts/dela-gothic-one-regular.woff\" as=\"font\" type=\"font/woff\" crossorigin><title>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/static/assets/favicon.ico\"><link rel=\"sitemap\" href=\"/sitemap-index.xml\"><link rel=\"preload\" href=\"/static/fonts/atkinson-regular.woff\" as=\"font\" type=\"font/woff\" crossorigin><link rel=\"preload\" href=\"/static/fonts/atkinson-bold.woff\" as=\"font\" type=\"font/woff\" crossorigin><link rel=\"preload\" href=\"/static/fonts/recama-u.woff\" as=\"font\" type=\"font/woff\" crossorigin><link rel=\"preload\" href=\"/static/fonts/dela-gothic-one-regular.woff\" as=\"font\" type=\"font/woff\" crossorigin><title hx-swap-oob=\"true\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(headData.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/meta/head.templ`, Line: 19, Col: 24}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/meta/head.templ`, Line: 19, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

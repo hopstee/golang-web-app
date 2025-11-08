@@ -111,27 +111,30 @@ func (s *SchemaEntityService) UpdateEntityData(ctx context.Context, slug string,
 	return nil
 }
 
-func (s *SchemaEntityService) CollectFullEntityData(ctx context.Context, slug string) (pageData map[string]interface{}, err error) {
+func (s *SchemaEntityService) CollectFullEntityData(ctx context.Context, slug string) (pageData map[string]interface{}, layoutName string, err error) {
+	layoutName = ""
 	key := kvstore.EntityDataPrefix + slug
 	schema, err := s.kvstore.GetEntitySchema(ctx, kvstore.SchemaKeyPages, slug)
 	if err != nil {
 		s.logger.Warn("CollectEntityData: failed to get entity schema", slog.String("slug", slug))
-		return nil, err
+		return nil, layoutName, err
 	}
+
+	layoutName = schema.Layout
 
 	data, err := s.kvstore.GetEntityData(ctx, key)
 	if err == nil {
 		s.collectSharedData(ctx, schema.Shared, data)
-		return data, nil
+		return data, layoutName, nil
 	}
 
 	schemaEntity, err := s.schemaEntitiesRepo.GetBySlug(ctx, slug)
 	if err != nil {
 		if errors.Is(err, repository.ErrNotFound) {
 			emptyData := make(map[string]interface{})
-			return emptyData, nil
+			return emptyData, layoutName, nil
 		}
-		return nil, err
+		return nil, layoutName, err
 	}
 
 	var schemaEntityData map[string]interface{}
@@ -149,7 +152,7 @@ func (s *SchemaEntityService) CollectFullEntityData(ctx context.Context, slug st
 
 	s.collectSharedData(ctx, schema.Shared, schemaEntityData)
 
-	return schemaEntityData, nil
+	return schemaEntityData, layoutName, nil
 }
 
 func (s *SchemaEntityService) collectSharedData(ctx context.Context, sharedList []string, data map[string]interface{}) error {

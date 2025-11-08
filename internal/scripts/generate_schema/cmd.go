@@ -45,7 +45,6 @@ var Command = &cobra.Command{
 			if entity.Layout != "" {
 				refs = append(refs, entity.Layout)
 				if layout, ok := entities[entity.Layout]; ok {
-					entity.LayoutFields = layout.Content
 					entity.Children = append(entity.Children, layout)
 				}
 			}
@@ -155,7 +154,6 @@ func parseFile(path string) kvstore.EntitySchema {
 	entity.Blocks = make([]string, 0)
 	entity.Refs = make([]string, 0)
 	entity.Children = make([]*kvstore.EntitySchema, 0)
-	entity.LayoutFields = make([]kvstore.Field, 0)
 
 	rootSchema := &kvstore.Schema{Fields: []kvstore.Field{}}
 	scanner := bufio.NewScanner(file)

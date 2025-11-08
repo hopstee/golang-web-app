@@ -28,18 +28,17 @@ type Schema struct {
 }
 
 type EntitySchema struct {
-	ID           string          `json:"id"`
-	Title        string          `json:"title"`
-	Type         string          `json:"type"` // layout / block / page / module / shared
-	Layout       string          `json:"layout,omitempty"`
-	Parent       string          `json:"parent,omitempty"`
-	Mode         string          `json:"mode,omitempty"`
-	Blocks       []string        `json:"blocks,omitempty"`
-	Shared       []string        `json:"shared,omitempty"`
-	Refs         []string        `json:"refs,omitempty"`
-	LayoutFields []Field         `json:"layout_fields,omitempty"`
-	Content      []Field         `json:"content,omitempty"`
-	Children     []*EntitySchema `json:"children,omitempty"`
+	ID       string          `json:"id"`
+	Title    string          `json:"title"`
+	Type     string          `json:"type"` // layout / block / page / module / shared
+	Layout   string          `json:"layout,omitempty"`
+	Parent   string          `json:"parent,omitempty"`
+	Mode     string          `json:"mode,omitempty"`
+	Blocks   []string        `json:"blocks,omitempty"`
+	Shared   []string        `json:"shared,omitempty"`
+	Refs     []string        `json:"refs,omitempty"`
+	Content  []Field         `json:"content,omitempty"`
+	Children []*EntitySchema `json:"children,omitempty"`
 }
 
 type SchemasList struct {

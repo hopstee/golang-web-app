@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"mobile-backend-boilerplate/internal/repository"
 	"mobile-backend-boilerplate/internal/service"
 	"mobile-backend-boilerplate/internal/view/layouts"
@@ -30,13 +31,28 @@ func (h *StaticPageHandler) RenderStaticPage(w http.ResponseWriter, r *http.Requ
 		path = "index"
 	}
 
-	pageData, err := h.schemaEntitiesService.CollectFullEntityData(r.Context(), path)
+	pageData, layoutName, err := h.schemaEntitiesService.CollectFullEntityData(r.Context(), path)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	log.Printf("Page data: %+v", pageData)
+
 	layoutData := layouts.NewPublicLayoutProps(r)
+	metaData := layoutData.HeadData
+	if pageMetaData, ok := pageData[layoutName]; ok {
+		if err := json.MapToStruct(pageMetaData, &metaData); err != nil {
+			http.Error(w, fmt.Sprintf("failed to decode head data: %v", err), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	layoutData.HeadData = metaData
+
+	log.Printf("Meta data: %+v", metaData)
+	log.Printf("Layout data: %+v", layoutData)
+
 	switch path {
 	case "index":
 		var indexContent pages.IndexPagePartialProps

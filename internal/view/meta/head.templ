@@ -1,10 +1,10 @@
 package meta
 
 type HeadData struct {
-	Title       string
-	Description string
-	URL         string
-	Image       string
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	URL         string `json:"url"`
+	Image       string `json:"image"`
 }
 
 templ Head(headData HeadData) {
@@ -16,7 +16,7 @@ templ Head(headData HeadData) {
 	<link rel="preload" href="/static/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin/>
 	<link rel="preload" href="/static/fonts/recama-u.woff" as="font" type="font/woff" crossorigin/>
 	<link rel="preload" href="/static/fonts/dela-gothic-one-regular.woff" as="font" type="font/woff" crossorigin/>
-	<title>{ headData.Title }</title>
+	<title hx-swap-oob="true">{ headData.Title }</title>
 	<meta name="title" content={ headData.Title }/>
 	<meta name="description" content={ headData.Description }/>
 	<meta property="og:type" content="website"/>
