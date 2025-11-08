@@ -98,9 +98,9 @@ function renderTextsList(props: ListFieldProps) {
 
 function renderObjectsList(props: ListFieldProps) {
     return (
-        <div className="space-y-3">
+        <div className="space-y-4">
             {props.value && (props.value as Record<string, unknown>[]).map((item, index) => (
-                <div key={index} className="space-y-2 p-4 rounded-xl bg-muted/30">
+                <div key={index} className="space-y-3 p-4 rounded-xl bg-foreground/2 dark:bg-ring/10">
                     <div className="flex items-center justify-between">
                         <Label className="text-lg font-bold">
                             {props.field.label} #{index + 1}

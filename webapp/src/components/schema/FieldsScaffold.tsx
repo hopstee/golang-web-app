@@ -96,7 +96,7 @@ export default function FieldsScaffold(props: FieldsScaffoldProps) {
     return (
         <div className="space-y-6">
             {fields.map(field => (
-                <div className="space-y-2" key={field.id}>
+                <div className="space-y-3" key={field.id}>
                     <Label key={field.id}>{field.label}</Label>
                     {renderField(field)}
                 </div>
