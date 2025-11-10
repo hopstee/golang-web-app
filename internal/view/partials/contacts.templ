@@ -7,7 +7,12 @@
 
 package partials
 
+type ContactsBlock struct {
+	Telegram string `json:"telegram"`
+	Phone    string `json:"phone"`
+}
+
 templ Contacts() {
-    <div>Telegram: @hopstee</div>
-    <div>Телефон: 89997777777</div>
+	<div>Telegram: @hopstee</div>
+	<div>Телефон: 89997777777</div>
 }

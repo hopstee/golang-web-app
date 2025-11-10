@@ -17,6 +17,7 @@ package pages
 import (
 	"mobile-backend-boilerplate/internal/view/icons"
 	"mobile-backend-boilerplate/internal/view/layouts"
+	"mobile-backend-boilerplate/internal/view/partials"
 )
 
 type IndexPageProps struct {
@@ -25,10 +26,11 @@ type IndexPageProps struct {
 }
 
 type IndexPagePartialProps struct {
-	Image      string   `json:"image"`
-	Heading    string   `json:"heading"`
-	Paragraphs []string `json:"paragraphs"`
-	Cta        string   `json:"cta"`
+	Image         string                 `json:"image"`
+	Heading       string                 `json:"heading"`
+	Paragraphs    []string               `json:"paragraphs"`
+	Cta           string                 `json:"cta"`
+	ContactsBlock partials.ContactsBlock `json:"contacts_block"`
 }
 
 templ IndexPage(props IndexPageProps) {

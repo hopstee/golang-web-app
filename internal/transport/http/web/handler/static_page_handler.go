@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"mobile-backend-boilerplate/internal/repository"
 	"mobile-backend-boilerplate/internal/service"
 	"mobile-backend-boilerplate/internal/view/layouts"
@@ -35,6 +36,8 @@ func (h *StaticPageHandler) RenderStaticPage(w http.ResponseWriter, r *http.Requ
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	log.Printf("PAGE DATA: %+v", pageData)
 
 	layoutData := layouts.NewPublicLayoutProps(r)
 	metaData := layoutData.HeadData

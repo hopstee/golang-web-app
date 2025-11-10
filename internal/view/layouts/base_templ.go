@@ -39,7 +39,7 @@ func BaseLayout(props meta.HeadData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<style>\n            :root {\n                --top-padding: calc(var(--spacing, 1rem) * 14);\n            }\n\n            main {\n                display: flex;\n                align-items: start;\n                justify-content: center;\n            }\n        </style><script src=\"/static/js/htmx.min.js\"></script></head><body><div class=\"top-soft-edge\"></div><main id=\"content\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<style>\n\t\t\t\t:root {\n\t\t\t\t\t--top-padding: calc(var(--spacing, 1rem) * 14);\n\t\t\t\t}\n\n\t\t\t\tmain {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: start;\n\t\t\t\t\tjustify-content: center;\n\t\t\t\t}\n\t\t\t</style><script src=\"/static/js/htmx.min.js\"></script></head><body><div class=\"top-soft-edge\"></div><main id=\"content\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -31,6 +31,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"mobile-backend-boilerplate/internal/view/icons"
 	"mobile-backend-boilerplate/internal/view/layouts"
+	"mobile-backend-boilerplate/internal/view/partials"
 )
 
 type IndexPageProps struct {
@@ -39,10 +40,11 @@ type IndexPageProps struct {
 }
 
 type IndexPagePartialProps struct {
-	Image      string   `json:"image"`
-	Heading    string   `json:"heading"`
-	Paragraphs []string `json:"paragraphs"`
-	Cta        string   `json:"cta"`
+	Image         string                 `json:"image"`
+	Heading       string                 `json:"heading"`
+	Paragraphs    []string               `json:"paragraphs"`
+	Cta           string                 `json:"cta"`
+	ContactsBlock partials.ContactsBlock `json:"contacts_block"`
 }
 
 func IndexPage(props IndexPageProps) templ.Component {
@@ -167,7 +169,7 @@ func IndexPagePartial(props IndexPagePartialProps) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(props.Image)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/index.templ`, Line: 54, Col: 23}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/index.templ`, Line: 56, Col: 23}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -180,7 +182,7 @@ func IndexPagePartial(props IndexPagePartialProps) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(props.Heading)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/index.templ`, Line: 55, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/index.templ`, Line: 57, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -198,7 +200,7 @@ func IndexPagePartial(props IndexPagePartialProps) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(p)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/index.templ`, Line: 58, Col: 6}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/index.templ`, Line: 60, Col: 6}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -216,7 +218,7 @@ func IndexPagePartial(props IndexPagePartialProps) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.Cta)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/index.templ`, Line: 69, Col: 14}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/index.templ`, Line: 71, Col: 14}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {

@@ -7,6 +7,8 @@
 
 // @title: Основной макет
 
+// @shared: common_meta
+
 // @field title: string = "SEO заголовок"
 
 // @field description: text = "SEO описание"
@@ -44,6 +46,7 @@ var publicHead = meta.HeadData{
 	Description: "Best agency",
 	URL:         "test-url",
 	Image:       "no-image",
+	CommonMeta:  meta.CommonMeta{},
 }
 
 func NewPublicLayoutProps(r *http.Request) PublicLayoutProps {

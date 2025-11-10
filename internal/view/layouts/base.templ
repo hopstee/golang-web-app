@@ -8,16 +8,16 @@ templ BaseLayout(props meta.HeadData) {
 		<head>
 			@meta.Head(props)
 			<style>
-            :root {
-                --top-padding: calc(var(--spacing, 1rem) * 14);
-            }
+				:root {
+					--top-padding: calc(var(--spacing, 1rem) * 14);
+				}
 
-            main {
-                display: flex;
-                align-items: start;
-                justify-content: center;
-            }
-        </style>
+				main {
+					display: flex;
+					align-items: start;
+					justify-content: center;
+				}
+			</style>
 			<script src="/static/js/htmx.min.js"></script>
 		</head>
 		<body>
