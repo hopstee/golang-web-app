@@ -26,7 +26,14 @@ export interface Field {
 	name: string;
 	type: string;
 	label: string;
+	options?: string[];
+	depends?: Dependency;
 	schema: Schema;
+}
+
+export interface Dependency {
+	field: string;
+	values: string[];
 }
 
 export interface Schema {

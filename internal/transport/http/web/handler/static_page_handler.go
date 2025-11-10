@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"log"
 	"mobile-backend-boilerplate/internal/repository"
 	"mobile-backend-boilerplate/internal/service"
 	"mobile-backend-boilerplate/internal/view/layouts"
@@ -37,8 +36,6 @@ func (h *StaticPageHandler) RenderStaticPage(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	log.Printf("Page data: %+v", pageData)
-
 	layoutData := layouts.NewPublicLayoutProps(r)
 	metaData := layoutData.HeadData
 	if pageMetaData, ok := pageData[layoutName]; ok {
@@ -49,9 +46,6 @@ func (h *StaticPageHandler) RenderStaticPage(w http.ResponseWriter, r *http.Requ
 	}
 
 	layoutData.HeadData = metaData
-
-	log.Printf("Meta data: %+v", metaData)
-	log.Printf("Layout data: %+v", layoutData)
 
 	switch path {
 	case "index":
@@ -95,5 +89,21 @@ func (h *StaticPageHandler) RenderStaticPage(w http.ResponseWriter, r *http.Requ
 		}
 
 		HandleStaticPage(w, r, pages.ProjectsPage(projectPageData), pages.ProjectsPageContent(projectPageData))
+	case "contact":
+		var contactContent pages.ContactPagePartialProps
+		if err := json.MapToStruct(pageData[repository.MainContentKey], &contactContent); err != nil {
+			http.Error(w, fmt.Sprintf("failed to decode page data: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		layoutData.Centered = true
+
+		contactPageData := pages.ContactPageProps{
+			LayoutContent: layoutData,
+			PageContent:   contactContent,
+			State:         *pages.NewContactFormState(),
+		}
+
+		HandleStaticPage(w, r, pages.ContactPage(contactPageData), pages.ContactPageContent(contactPageData))
 	}
 }

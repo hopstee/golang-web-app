@@ -20,6 +20,7 @@ import (
 	"mobile-backend-boilerplate/internal/view/icons"
 	"mobile-backend-boilerplate/internal/view/layouts"
 	"mobile-backend-boilerplate/internal/view/partials"
+	"mobile-backend-boilerplate/pkg/types"
 )
 
 type ProjectPageProps struct {
@@ -38,11 +39,11 @@ type ProjectsSectionData struct {
 }
 
 type ProjectItemData struct {
-	Name          string
-	Description   string
-	URL           string
-	Technologies  []string
-	InDevelopment bool
+	Name          string            `json:"name"`
+	Description   string            `json:"description"`
+	URL           string            `json:"url"`
+	Technologies  []string          `json:"technologies"`
+	InDevelopment types.BoolOrEmpty `json:"in_development"`
 }
 
 templ ProjectsPage(props ProjectPageProps) {
@@ -97,7 +98,7 @@ templ ProjectItem(project ProjectItemData) {
     </style>
 	<li>
 		<a class="link-container" href={ project.URL } target="_blank">
-			if project.InDevelopment {
+			if project.InDevelopment.Valid && project.InDevelopment.Value {
 				@partials.Tooltip(partials.Top, "Проект находится в разработке", 150) {
 					<div class="warning-container h-7">
 						@icons.BageAlert("h-4")

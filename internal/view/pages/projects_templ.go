@@ -38,6 +38,7 @@ import (
 	"mobile-backend-boilerplate/internal/view/icons"
 	"mobile-backend-boilerplate/internal/view/layouts"
 	"mobile-backend-boilerplate/internal/view/partials"
+	"mobile-backend-boilerplate/pkg/types"
 )
 
 type ProjectPageProps struct {
@@ -56,11 +57,11 @@ type ProjectsSectionData struct {
 }
 
 type ProjectItemData struct {
-	Name          string
-	Description   string
-	URL           string
-	Technologies  []string
-	InDevelopment bool
+	Name          string            `json:"name"`
+	Description   string            `json:"description"`
+	URL           string            `json:"url"`
+	Technologies  []string          `json:"technologies"`
+	InDevelopment types.BoolOrEmpty `json:"in_development"`
 }
 
 func ProjectsPage(props ProjectPageProps) templ.Component {
@@ -185,7 +186,7 @@ func ProjectsPagePartial(props ProjectPagePartialProps) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(props.Heading)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 74, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 75, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -237,7 +238,7 @@ func ProjectsSection(projectsSection ProjectsSectionData) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(projectsSection.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 82, Col: 27}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 83, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -289,7 +290,7 @@ func ProjectItem(project ProjectItemData) templ.Component {
 		var templ_7745c5c3_Var10 templ.SafeURL
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs(project.URL)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 99, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 100, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -299,7 +300,7 @@ func ProjectItem(project ProjectItemData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if project.InDevelopment {
+		if project.InDevelopment.Valid && project.InDevelopment.Value {
 			templ_7745c5c3_Var11 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -338,7 +339,7 @@ func ProjectItem(project ProjectItemData) templ.Component {
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(project.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 107, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 108, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -369,7 +370,7 @@ func ProjectItem(project ProjectItemData) templ.Component {
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(project.Description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 116, Col: 24}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/pages/projects.templ`, Line: 117, Col: 24}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {

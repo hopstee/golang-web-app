@@ -17,10 +17,17 @@ const (
 )
 
 type Field struct {
-	Name   string  `json:"name"`
-	Type   string  `json:"type"`
-	Label  string  `json:"label,omitempty"`
-	Schema *Schema `json:"schema,omitempty"`
+	Name    string      `json:"name"`
+	Type    string      `json:"type"`
+	Label   string      `json:"label,omitempty"`
+	Options []string    `json:"options,omitempty"`
+	Depends *Dependency `json:"depends,omitempty"`
+	Schema  *Schema     `json:"schema,omitempty"`
+}
+
+type Dependency struct {
+	Field  string   `json:"field"`
+	Values []string `json:"values"`
 }
 
 type Schema struct {

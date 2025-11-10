@@ -31,11 +31,9 @@ func NewRouter(opts options.Options) *chi.Mux {
 	r.Get("/", opts.StaticPageHandler.RenderStaticPage)
 	r.Get("/about", opts.StaticPageHandler.RenderStaticPage)
 	r.Get("/projects", opts.StaticPageHandler.RenderStaticPage)
+	r.Get("/contact", opts.StaticPageHandler.RenderStaticPage)
 
-	r.Route("/contact", func(r chi.Router) {
-		r.Get("/", opts.ContactHandler.Show)
-		r.Post("/", opts.ContactHandler.Submit)
-	})
+	r.Post("/contact", opts.ContactHandler.Submit)
 
 	r.Get("/blog", func(w http.ResponseWriter, r *http.Request) {
 		data := layouts.NewPublicLayoutProps(r)

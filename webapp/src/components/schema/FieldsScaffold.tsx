@@ -1,12 +1,14 @@
 import type { Field } from "@/types/entities";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
-import FileUploader from "./fields/FileUploader";
-import StringField from "./fields/StringField";
-import TextField from "./fields/TextField";
-import BoolField from "./fields/BoolField";
-import ListField from "./fields/ListField";
+import FileUploader from "@/components/schema/fields/FileUploader";
+import StringField from "@/components/schema/fields/StringField";
+import TextField from "@/components/schema/fields/TextField";
+import BoolField from "@/components/schema/fields/BoolField";
+import ListField from "@/components/schema/fields/ListField";
 import { getDefaultValue } from "@/lib/utils";
+import SelectField from "@/components/schema/fields/SelectField";
+import NumberField from "@/components/schema/fields/NumberField";
 
 interface FieldsScaffoldProps {
     fields: Field[];
@@ -52,8 +54,12 @@ export default function FieldsScaffold(props: FieldsScaffoldProps) {
         switch (field.type) {
             case "string":
                 return <StringField field={field} value={value as string} onChange={handleChange} />;
+            case "number":
+                return <NumberField field={field} value={Number(value)} onChange={handleChange} />;
             case "text":
                 return <TextField field={field} value={value as string} onChange={handleChange} />;
+            case "select":
+                return <SelectField field={field} value={value as string} onChange={handleChange} />;
             case "bool":
             case "boolean":
                 return <BoolField field={field} value={String(value)} onChange={handleChange} />;
@@ -93,14 +99,23 @@ export default function FieldsScaffold(props: FieldsScaffoldProps) {
         return <div>Нет доступных полей для редактирования</div>
     }
 
+    console.log(fields)
+    console.log(values)
+
     return (
         <div className="space-y-6">
-            {fields.map(field => (
-                <div className="space-y-3" key={field.id}>
-                    <Label key={field.id}>{field.label}</Label>
-                    {renderField(field)}
-                </div>
-            ))}
+            {fields.map(field => {
+                if (field.depends && !field.depends.values.includes(values[field.depends.field] as string)) {
+                    return;
+                }
+                
+                return (
+                    <div className="space-y-3" key={field.id}>
+                        <Label key={field.id}>{field.label}</Label>
+                        {renderField(field)}
+                    </div>
+                )
+            })}
         </div>
     )
 }

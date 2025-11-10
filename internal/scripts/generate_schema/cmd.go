@@ -17,7 +17,7 @@ import (
 
 var (
 	// fieldExp = regexp.MustCompile(`@field\s+([\w\[\]\.]+):\s*([\w\[\]]+)(?:\s*=\s*"([^"]+)")?`)
-	fieldExp = regexp.MustCompile(`@field\s+([\w\[\]\.]+):\s*([^\s=]+)(?:\s*=\s*"([^"]+)")?`)
+	fieldExp = regexp.MustCompile(`@field\s+([\w\[\]\.]+):\s*([^\s=]+)(?:\s*=\s*"([^"]+)")?(?:\s+dependsOn=([^\s]+))?`)
 	// fieldExp = regexp.MustCompile(`@field:\s*([\w\[\]\.]+):\s*([^\s=]+)(?:\s*=\s*"([^"]*)")?`)
 )
 
@@ -189,7 +189,11 @@ func parseFile(path string) kvstore.EntitySchema {
 				if len(m) > 3 {
 					label = m[3]
 				}
-				addNestedField(rootSchema, fullPath, fieldType, label)
+				depends := ""
+				if len(m) > 4 {
+					depends = m[4]
+				}
+				addNestedField(rootSchema, fullPath, fieldType, label, depends)
 			}
 		}
 	}
@@ -198,7 +202,7 @@ func parseFile(path string) kvstore.EntitySchema {
 	return entity
 }
 
-func addNestedField(schema *kvstore.Schema, fullPath, fieldType, label string) {
+func addNestedField(schema *kvstore.Schema, fullPath, fieldType, label, depends string) {
 	parts := strings.Split(fullPath, ".")
 	current := schema
 
@@ -216,11 +220,19 @@ func addNestedField(schema *kvstore.Schema, fullPath, fieldType, label string) {
 		}
 
 		if existing == nil {
+			baseType, opts := parseFieldType(fieldType)
+
 			newField := kvstore.Field{
-				Name:  part,
-				Type:  guessType(isArray, isLeaf, fieldType),
-				Label: label,
+				Name:    part,
+				Type:    guessType(isArray, isLeaf, baseType),
+				Options: opts,
+				Label:   label,
 			}
+
+			if depends != "" && isLeaf {
+				newField.Depends = parseDepends(depends)
+			}
+
 			if !isLeaf {
 				newField.Schema = &kvstore.Schema{}
 			}
@@ -261,6 +273,23 @@ func parseList(value string) []string {
 	return out
 }
 
+func parseFieldType(rawType string) (baseType string, options []string) {
+	rawType = strings.TrimSpace(rawType)
+	if strings.HasPrefix(rawType, "select[") && strings.HasSuffix(rawType, "]") {
+		baseType = "select"
+		optsRaw := strings.TrimSuffix(strings.TrimPrefix(rawType, "select["), "]")
+		opts := strings.Split(optsRaw, "|")
+		for _, opt := range opts {
+			opt = strings.TrimSpace(opt)
+			if opt != "" {
+				options = append(options, opt)
+			}
+		}
+		return baseType, options
+	}
+	return rawType, nil
+}
+
 func guessType(isArray, isLeaf bool, explicit string) string {
 	if isLeaf {
 		return explicit
@@ -269,6 +298,26 @@ func guessType(isArray, isLeaf bool, explicit string) string {
 		return "list[object]"
 	}
 	return "object"
+}
+
+func parseDepends(depends string) *kvstore.Dependency {
+	parts := strings.SplitN(depends, ":", 2)
+	if len(parts) != 2 {
+		return &kvstore.Dependency{}
+	}
+
+	fieldParts := strings.Split(parts[0], ".")
+	dependsOnField := fieldParts[len(fieldParts)-1]
+	rawValues := strings.Trim(parts[1], "[]")
+	values := strings.Split(rawValues, ",")
+	for i := range values {
+		values[i] = strings.TrimSpace(values[i])
+	}
+
+	return &kvstore.Dependency{
+		Field:  dependsOnField,
+		Values: values,
+	}
 }
 
 func saveSchemas(name, version string, schemas map[string]*kvstore.EntitySchema) error {

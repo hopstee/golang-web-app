@@ -11,6 +11,7 @@ const (
 	SharedEntity = "shared"
 
 	MainContentKey = "content"
+	FormFieldsKey  = "form_fields"
 )
 
 type SchemaEntity struct {

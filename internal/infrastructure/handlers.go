@@ -13,6 +13,6 @@ func (d *Dependencies) InitHandlers() {
 	d.FilesHandler = apiHandler.NewFilesHandler(d.FileStorage)
 
 	d.PostHandler = webHandler.NewPostHandler(d.PostService)
-	d.ContactHandler = webHandler.NewContactHandler(d.RequestService, d.TelegramNotifier)
+	d.ContactHandler = webHandler.NewContactHandler(d.RequestService, d.SchemaEntityService, d.TelegramNotifier)
 	d.StaticPageHandler = webHandler.NewStaticPageHandler(d.SchemaEntityService)
 }

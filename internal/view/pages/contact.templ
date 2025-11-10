@@ -1,28 +1,68 @@
+// @type: page
+// @id: contact
+// @title: Форма обратной связи
+// @layout: public
+
+// @field form_title: string = "Заголовок формы"
+// @field form_fields[]: list[object] = "Поля формы"
+// @field form_fields[].id: string = "ID поля"
+// @field form_fields[].label: string = "Название поля"
+// @field form_fields[].placeholder: string = "Подсказка"
+// @field form_fields[].required: bool = "Обязательное"
+// @field form_fields[].validation_message: string = "Сообщение при ошибке"
+// @field form_fields[].type: select[string|email|text|number|phone|radio|select] = "Тип поля"
+// @field form_fields[].pattern: string = "Паттерн" dependsOn=form_fields[].type:[phone]
+// @field form_fields[].min: number = "Минимум" dependsOn=form_fields[].type:[number]
+// @field form_fields[].max: number = "Максимум" dependsOn=form_fields[].type:[number]
+// @field form_fields[].min_length: number = "Мин. длина" dependsOn=form_fields[].type:[string,text,email,phone]
+// @field form_fields[].max_length: number = "Макс. длина" dependsOn=form_fields[].type:[string,text,email,phone]
+// @field form_fields[].options[]: list[object] = "Варианты" dependsOn=form_fields[].type:[select,radio]
+// @field form_fields[].options[].value: string = "Значение"
+// @field form_fields[].options[].label: string = "Подпись"
+
+// @field submit_text: string = "Текст кнопки отправки"
+// @field success_message: text = "Сообщение об успешной отправке"
+
 package pages
 
-import "mobile-backend-boilerplate/internal/view/layouts"
+import (
+	"fmt"
+	"mobile-backend-boilerplate/internal/view/icons"
+	"mobile-backend-boilerplate/internal/view/layouts"
+	"mobile-backend-boilerplate/internal/view/partials"
+	"mobile-backend-boilerplate/pkg/types"
+	"strings"
+)
 
-import "mobile-backend-boilerplate/internal/view/icons"
-import "mobile-backend-boilerplate/internal/repository"
-import "strconv"
-import "mobile-backend-boilerplate/internal/view/partials"
-import "strings"
-
-type ContactMethods struct {
-	Value       string
-	Label       string
-	Placeholder string
+type ContactPageProps struct {
+	LayoutContent layouts.PublicLayoutProps
+	PageContent   ContactPagePartialProps
+	State         ContactFormState
 }
 
-var contactMethods = []ContactMethods{
-	{Value: "telegram", Label: "Telegram", Placeholder: "@username"},
-	{
-		Value:       "whatsapp",
-		Label:       "WhatsApp",
-		Placeholder: "Номер телефона",
-	},
-	{Value: "email", Label: "Email", Placeholder: "email"},
-	{Value: "phone", Label: "Телефон", Placeholder: "Номер телефона"},
+type ContactPagePartialProps struct {
+	FormTitle  string       `json:"form_title"`
+	FormFields []FormFields `json:"form_fields"`
+}
+
+type FormFields struct {
+	ID                string            `json:"id"`
+	Label             string            `json:"label"`
+	Placeholder       string            `json:"placeholder"`
+	Required          types.BoolOrEmpty `json:"required"`
+	ValidationMessage string            `json:"validation_message"`
+	Type              string            `json:"type"`
+	Pattern           string            `json:"pattern"`
+	Min               types.IntOrEmpty  `json:"min"`
+	Max               types.IntOrEmpty  `json:"max"`
+	MinLength         types.IntOrEmpty  `json:"min_length"`
+	MaxLength         types.IntOrEmpty  `json:"max_length"`
+	Options           []Option          `json:"options"`
+}
+
+type Option struct {
+	Value string `json:"value"`
+	Label string `json:"label"`
 }
 
 type ContactFormState struct {
@@ -31,63 +71,67 @@ type ContactFormState struct {
 	Success bool
 }
 
-func NewContactFormState() ContactFormState {
-	values := make(map[string]string)
-	values["contact_type"] = contactMethods[0].Value
+type CustomType interface {
+	types.IntOrEmpty | string
+}
 
-	return ContactFormState{
-		Values:  values,
-		Errors:  make(map[string]string),
-		Success: false,
+func NewContactFormState() *ContactFormState {
+	return &ContactFormState{
+		Values:  nil,
+		Errors:  nil,
+		Success: true,
 	}
 }
 
-func NewContactFormStateFromRequest(req repository.Request) ContactFormState {
-	values := map[string]string{
-		"name":         req.Name,
-		"message":      req.Message,
-		"phone":        req.Phone,
-		"email":        req.Email,
-		"contact_type": req.ContactType,
-		"amount":       "",
-	}
-	if req.Amount != 0 {
-		values["amount"] = strconv.Itoa(req.Amount)
+func setCorrectAttribute[T CustomType](attribute string, value T) string {
+	switch v := any(value).(type) {
+	case types.IntOrEmpty:
+		if v.Valid && v.Value != 0 {
+			return fmt.Sprintf("%s={%d}", attribute, v.Value)
+		}
+	case string:
+		if v != "" {
+			return fmt.Sprintf("%s=%v", attribute, value)
+		}
 	}
 
-	return ContactFormState{
-		Values: values,
-		Errors: make(map[string]string),
-	}
+	return ""
 }
 
-func NewContactFormStateWithErrors(req repository.Request, errors map[string]string) ContactFormState {
-	fs := NewContactFormStateFromRequest(req)
-	fs.Errors = errors
-
-	return fs
+func setShowClass(class string, show bool) string {
+	if show {
+		return strings.Join([]string{class, "show"}, " ")
+	}
+	return class
 }
 
-templ ContactPage(props layouts.PublicLayoutProps, state ContactFormState) {
-	@layouts.PublicLayout(props) {
+func setErrorClass(class string, err bool) string {
+	if err {
+		return strings.Join([]string{class, "error"}, " ")
+	}
+	return class
+}
+
+templ ContactPage(props ContactPageProps) {
+	@layouts.PublicLayout(props.LayoutContent) {
 		@ContactPagePartial() {
-			@ContactPagePartialForm(state)
+			@ContactPagePartialForm(props.PageContent, props.State)
 		}
 	}
 }
 
-templ ContactPageContent(props layouts.PublicLayoutProps, state ContactFormState) {
-	@layouts.PublicLayoutPartial(props) {
+templ ContactPageContent(props ContactPageProps) {
+	@layouts.PublicLayoutPartial(props.LayoutContent) {
 		@ContactPagePartial() {
-			@ContactPagePartialForm(state)
+			@ContactPagePartialForm(props.PageContent, props.State)
 		}
 	}
 }
 
 templ ContactPagePartial() {
 	<style>
-        input:invalid,
-        textarea:invalid {
+        .input-field.error,
+        .textarea-field.error {
             border-color: var(--error);
         }
 
@@ -119,9 +163,115 @@ templ ContactPagePartial() {
 	@partials.Card(500) {
 		{ children... }
 	}
+	<script>
+		function handleSuccessTimeout(formEl) {
+			const btn = formEl.querySelector(".btn");
+			if (!btn) return;
+			const sendIcon = btn.querySelector(".send");
+			const successIcon = btn.querySelector(".success");
+
+			if (successIcon.classList.contains("show")) {
+				setTimeout(() => {
+					sendIcon.classList.add("show");
+					successIcon.classList.remove("show");
+					btn.querySelector(".btn-text").textContent = "Отправить";
+				}, 2000);
+			}
+		}
+	</script>
 }
 
-templ ContactPagePartialForm(state ContactFormState) {
+templ RenderInputField(field FormFields, value string, hasError bool) {
+	<input
+		name={ field.ID }
+		type={ field.Type }
+		placeholder={ field.Placeholder }
+		required={ field.Required.Value }
+		value={ value }
+		{ setCorrectAttribute("pattern", field.Pattern) }
+		{ setCorrectAttribute("min", field.Min) }
+		{ setCorrectAttribute("max", field.Max) }
+		{ setCorrectAttribute("minLength", field.MinLength) }
+		{ setCorrectAttribute("maxLength", field.MaxLength) }
+		title={ field.ValidationMessage }
+		class={ setErrorClass("input-field", hasError) }
+	/>
+}
+
+templ RenderTextField(field FormFields, value string, hasError bool) {
+	<textarea
+		name={ field.ID }
+		placeholder={ field.Placeholder }
+		required={ field.Required.Value }
+		{ setCorrectAttribute("pattern", field.Pattern) }
+		{ setCorrectAttribute("min", field.Min) }
+		{ setCorrectAttribute("max", field.Max) }
+		{ setCorrectAttribute("minLength", field.MinLength) }
+		{ setCorrectAttribute("maxLength", field.MaxLength) }
+		class={ setErrorClass("textarea-field", hasError) }
+	>
+		{ value }
+	</textarea>
+}
+
+templ RenderSelectField(field FormFields, value string, hasError bool) {
+	<select name={ field.ID } required={ field.Required.Value } class={ setErrorClass("input-field", hasError) }>
+		for _, opt := range field.Options {
+			<option value={ opt.Value } selected={ value == opt.Value }>
+				{ opt.Label }
+			</option>
+		}
+	</select>
+}
+
+templ RenderRadioGroup(field FormFields, value string) {
+	<div class="radio-group">
+		for _, opt := range field.Options {
+			<div>
+				<input
+					type="radio"
+					name={ field.ID }
+					id={ field.ID + "-" + opt.Value }
+					value={ opt.Value }
+					checked?={ value == opt.Value }
+					required={ field.Required.Value }
+				/>
+				<label for={ field.ID + "-" + opt.Value }>{ opt.Label }</label>
+			</div>
+		}
+	</div>
+}
+
+templ RenderFormFields(fields []FormFields, values, errors map[string]string) {
+	for _, field := range fields {
+		<div class="field-group">
+			<label for={ field.ID }>
+				{ field.Label }
+				if field.Required.Value {
+					<span class="required">*</span>
+				}
+			</label>
+			switch field.Type {
+				case "string", "email", "number", "phone":
+					@RenderInputField(field, values[field.ID], errors[field.ID] != "")
+				case "text":
+					@RenderTextField(field, values[field.ID], errors[field.ID] != "")
+				case "select":
+					@RenderSelectField(field, values[field.ID], errors[field.ID] != "")
+				case "radio":
+					@RenderRadioGroup(field, values[field.ID])
+				default:
+					<input name={ field.ID } value={ values[field.ID] }/>
+			}
+			<span class={ setShowClass("error-message", errors[field.ID] != "") }>{ errors[field.ID] }</span>
+		</div>
+	}
+}
+
+templ ContactPagePartialForm(page ContactPagePartialProps, state ContactFormState) {
+	if page.FormTitle != "" {
+		<h2>{ page.FormTitle }</h2>
+	}
 	<form
 		class="form"
 		hx-post="/contact"
@@ -129,71 +279,12 @@ templ ContactPagePartialForm(state ContactFormState) {
 		hx-target="this"
 		hx-swap="outerHTML"
 		hx-on:htmx:afterSwap="handleSuccessTimeout(this)"
+		novalidate
 	>
-		<div class="field-group">
-			<label>Как Вас зовут? *</label>
-			<input name="name" class="input-field" value={ state.Values["name"] }/>
-			if state.Errors["name"] != "" {
-				<span class="error-message show">{ state.Errors["name"] }</span>
-			}
-		</div>
-		<div class="field-group">
-			<label>Поделитесь своей идеей *</label>
-			<textarea name="message" class="textarea-field">{ state.Values["message"] }</textarea>
-			if state.Errors["message"] != "" {
-				<span class="error-message show">{ state.Errors["message"] }</span>
-			}
-		</div>
-		<div class="field-group">
-			<label>Ваш телефон *</label>
-			<input name="phone" class="input-field" type="tel" value={ state.Values["phone"] }/>
-			if state.Errors["phone"] != "" {
-				<span class="error-message show">{ state.Errors["phone"] }</span>
-			}
-		</div>
-		<div class="field-group">
-			<label>Ваша почта *</label>
-			<input name="email" class="input-field" type="email" value={ state.Values["email"] }/>
-			if state.Errors["email"] != "" {
-				<span class="error-message show">{ state.Errors["email"] }</span>
-			}
-		</div>
-		<div class="field-group">
-			<label>Ваш бюджет *</label>
-			<input name="amount" class="input-field" type="number" value={ state.Values["amount"] }/>
-			if state.Errors["amount"] != "" {
-				<span class="error-message show">{ state.Errors["amount"] }</span>
-			}
-		</div>
-		<div
-			class="field-group"
-			role="tablist"
-			aria-label="Где с Вами связаться"
-		>
-			<label>Где с Вами связаться? *</label>
-			<div class="radio-group">
-				for _, method := range contactMethods {
-					<div>
-						<input
-							id={ "contact-" + method.Value }
-							class="radio-input"
-							type="radio"
-							name="contact_type"
-							value={ method.Value }
-							if state.Values["contact_type"] == method.Value || (state.Values["contact_type"] == "" && method.Value == "telegram") {
-								checked
-							}
-						/>
-						<label
-							for={ "contact-" + method.Value }
-							class="radio-label"
-						>
-							{ method.Label }
-						</label>
-					</div>
-				}
-			</div>
-		</div>
+		if page.FormTitle != "" {
+			<h2>{ page.FormTitle }</h2>
+		}
+		@RenderFormFields(page.FormFields, state.Values, state.Errors)
 		<button type="submit" class="btn">
 			<span class="btn-text">
 				if state.Success {
@@ -210,29 +301,4 @@ templ ContactPagePartialForm(state ContactFormState) {
 			</span>
 		</button>
 	</form>
-
-	<script>
-		function handleSuccessTimeout(formEl) {
-			const btn = formEl.querySelector(".btn");
-			console.log(btn)
-			if (!btn) return;
-			const sendIcon = btn.querySelector(".send");
-			const successIcon = btn.querySelector(".success");
-
-			if (successIcon.classList.contains("show")) {
-				setTimeout(() => {
-					sendIcon.classList.add("show");
-					successIcon.classList.remove("show");
-					btn.querySelector(".btn-text").textContent = "Отправить";
-				}, 2000);
-			}
-		}
-	</script>
-}
-
-func setShowClass(class string, show bool) string {
-	if show {
-		return strings.Join([]string{class, "show"}, " ")
-	}
-	return class
 }
