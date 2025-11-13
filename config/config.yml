@@ -29,6 +29,9 @@ telegram:
 static:
   dir: ./static
 
+webapp:
+  dir: ./webapp/dist
+
 schemas:
   schema: ./schemas/schema.v1.json
   pages: ./schemas/pages.v1.json

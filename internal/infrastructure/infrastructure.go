@@ -48,4 +48,5 @@ type Dependencies struct {
 	PostHandler       *webHandler.PostHandler
 	ContactHandler    *webHandler.ContactHandler
 	StaticPageHandler *webHandler.StaticPageHandler
+	AdminHandler      *webHandler.AdminHandler
 }

@@ -9,6 +9,7 @@ import (
 
 type Options struct {
 	StaticDir string
+	WebappDir string
 
 	MobileAuthHandler   *apiHandlers.MobileAuthHandler
 	AdminAuthHandler    *apiHandlers.AdminAuthHandler
@@ -19,6 +20,7 @@ type Options struct {
 	PostHandler       *webHandlers.PostHandler
 	ContactHandler    *webHandlers.ContactHandler
 	StaticPageHandler *webHandlers.StaticPageHandler
+	AdminHandler      *webHandlers.AdminHandler
 
 	MobileAuthService   *service.MobileAuthService
 	AdminAuthService    *service.AdminAuthService

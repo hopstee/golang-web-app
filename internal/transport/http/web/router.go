@@ -42,6 +42,11 @@ func NewRouter(opts options.Options) *chi.Mux {
 		handler.HandleStaticPage(w, r, pages.BlogPage(data), pages.BlogPageContent(data))
 	})
 
+	fsAdmin := http.FileServer(http.Dir(filepath.Join(opts.WebappDir, "assets")))
+	r.Handle("/admin/assets/*", http.StripPrefix("/admin/assets/", fsAdmin))
+
+	r.Get("/admin/*", opts.AdminHandler.Handle)
+
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/api/") {
 			http.NotFound(w, r)

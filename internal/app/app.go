@@ -59,6 +59,7 @@ func Init() (*App, error) {
 	opts := options.Options{
 		// constants
 		StaticDir: cfg.Static.Dir,
+		WebappDir: cfg.Webapp.Dir,
 
 		// services
 		MobileAuthService:   deps.MobileAuthService,
@@ -77,6 +78,7 @@ func Init() (*App, error) {
 		PostHandler:       deps.PostHandler,
 		ContactHandler:    deps.ContactHandler,
 		StaticPageHandler: deps.StaticPageHandler,
+		AdminHandler:      deps.AdminHandler,
 
 		// other options
 		Logger: log,

@@ -15,4 +15,5 @@ func (d *Dependencies) InitHandlers() {
 	d.PostHandler = webHandler.NewPostHandler(d.PostService)
 	d.ContactHandler = webHandler.NewContactHandler(d.RequestService, d.SchemaEntityService, d.TelegramNotifier)
 	d.StaticPageHandler = webHandler.NewStaticPageHandler(d.SchemaEntityService)
+	d.AdminHandler = webHandler.NewAdminHandler(d.Config.Webapp.Dir)
 }

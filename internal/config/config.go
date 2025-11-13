@@ -56,6 +56,10 @@ type Static struct {
 	Dir string `mapstructure:"dir"`
 }
 
+type Webapp struct {
+	Dir string `mapstructure:"dir"`
+}
+
 type Schemas struct {
 	Schema  string `mapstructure:"schema"`
 	Pages   string `mapstructure:"pages"`
@@ -73,6 +77,7 @@ type Config struct {
 	Authentication Authentication `mapstructure:"authentication"`
 	Telegram       Telegram       `mapstructure:"telegram"`
 	Static         Static         `mapstructure:"static"`
+	Webapp         Webapp         `mapstructure:"webapp"`
 	Schemas        Schemas        `mapstructure:"schemas"`
 }
 
