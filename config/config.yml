@@ -1,38 +1,38 @@
 server:
-  addr: ":8080"
-  base_url: "http://localhost:8080"
+  addr: :8080
+  base_url: http://localhost:8080
 
 database:
-  driver: "postgres"
-  dsn: "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable"
+  driver: postgres
+  dsn: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable
 
 kvstore:
-  type: "redis"
+  type: redis
   redis:
-    addr: "${REDIS_HOST}:${REDIS_PORT}"
-    password: "${REDIS_PASSWORD}"
+    addr: ${REDIS_HOST}:${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
     db: ${REDIS_DB}
 
 filestorage:
-  type: "local"
+  type: local
   local:
-    base_path: "./static/uploads"
+    base_path: ./static/uploads
 
 authentication:
   jwt:
-    secret: "${JWT_SECRET}"
+    secret: ${JWT_SECRET}
 
 telegram:
-  token: "${TELEGRAM_TOKEN}"
-  chat_id: "${TELEGRAM_CHAT_ID}"
+  token: ${TELEGRAM_TOKEN}
+  chat_id: ${TELEGRAM_CHAT_ID}
 
 static:
-  dir: "./static"
+  dir: ./static
 
 schemas:
-  schema: "./internal/schemas/schema.v1.json"
-  pages: "./internal/schemas/pages.v1.json"
-  layouts: "./internal/schemas/layouts.v1.json"
-  blocks: "./internal/schemas/blocks.v1.json"
-  modules: "./internal/schemas/modules.v1.json"
-  shared: "./internal/schemas/shared.v1.json"
+  schema: ./schemas/schema.v1.json
+  pages: ./schemas/pages.v1.json
+  layouts: ./schemas/layouts.v1.json
+  blocks: ./schemas/blocks.v1.json
+  modules: ./schemas/modules.v1.json
+  shared: ./schemas/shared.v1.json

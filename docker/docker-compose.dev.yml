@@ -15,23 +15,10 @@ services:
     networks:
       - dev-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_PASSWORD}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
-
-  pgadmin:
-    image: dpage/pgadmin4:8
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@local.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "8081:80"
-    depends_on:
-      - postgres
-    networks:
-      - dev-net
 
   redis:
     image: redis:7

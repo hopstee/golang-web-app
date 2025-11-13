@@ -1,8 +1,13 @@
 APP_BINPATH = bin/app
 SCRIPT_BINPATH = bin/scripts
+WEBAPP_DIR = webapp
+DOCKER_IMAGE = golang_web_app:latest
+
+.PHONY: all
+all: build
 
 .PHONY: build
-build: build-templ build-app
+build: build-templ build-app build-webapp gen-schemas
 
 .PHONY: build-app
 build-app:
@@ -11,6 +16,10 @@ build-app:
 .PHONY: build-templ
 build-templ:
 	templ generate
+
+.PHONY: build-webapp
+build-webapp:
+	cd ${WEBAPP_DIR} && npm ci && npm run build
 
 .PHONY: run
 run: build
@@ -37,9 +46,7 @@ watch-templ:
 
 .PHONY: watch-webapp
 watch-webapp:
-	cd ./webapp && \
-	npm ci && \
-	npm run dev
+	cd ${WEBAPP_DIR} && npm ci && npm run dev
 
 .PHONY: build-scripts
 build-scripts:
@@ -56,3 +63,31 @@ upsert-admin: build-scripts
 .PHONY: gen-schemas
 gen-schemas: build-scripts
 	${SCRIPT_BINPATH} generate
+
+.PHONY: docker-build
+docker-build: build
+	docker build --no-cache -f docker/Dockerfile -t ${DOCKER_IMAGE} .
+
+.PHONY: docker-run
+docker-run:
+	docker run --rm -it \
+		-p 8080:8080 \
+		-v $(PWD)/uploads:/app/uploads \
+		-v $(PWD)/config/config.yml:/app/config/config.yml:ro \
+		${DOCKER_IMAGE}
+
+.PHONY: docker-up
+docker-up: docker-build
+	docker-compose -f docker/docker-compose.yml --env-file .env up -d
+
+.PHONY: docker-down
+docker-down:
+	docker-compose -f docker/docker-compose.yml --env-file .env down -v
+
+.PHONY: docker-dev-up
+docker-dev-up: docker-build
+	docker-compose -f docker/docker-compose.dev.yml --env-file .env up -d
+
+.PHONY: docker-dev-down
+docker-dev-down:
+	docker-compose -f docker/docker-compose.dev.yml --env-file .env down -v

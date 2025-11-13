@@ -58,12 +58,12 @@ static:
   dir: "./static"
 
 schemas:
-  schema: "./internal/schemas/schema.v1.json"
-  pages: "./internal/schemas/pages.v1.json"
-  layouts: "./internal/schemas/layouts.v1.json"
-  blocks: "./internal/schemas/blocks.v1.json"
-  modules: "./internal/schemas/modules.v1.json"
-  shared: "./internal/schemas/shared.v1.json"
+  schema: "./schemas/schema.v1.json"
+  pages: "./schemas/pages.v1.json"
+  layouts: "./schemas/layouts.v1.json"
+  blocks: "./schemas/blocks.v1.json"
+  modules: "./schemas/modules.v1.json"
+  shared: "./schemas/shared.v1.json"
 ```
 
 - .env

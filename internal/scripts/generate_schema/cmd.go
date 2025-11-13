@@ -321,7 +321,7 @@ func parseDepends(depends string) *kvstore.Dependency {
 }
 
 func saveSchemas(name, version string, schemas map[string]*kvstore.EntitySchema) error {
-	outDir := "internal/schemas"
+	outDir := "schemas"
 	err := os.MkdirAll(outDir, 0755)
 	if err != nil {
 		return err
@@ -347,7 +347,7 @@ func saveSchemas(name, version string, schemas map[string]*kvstore.EntitySchema)
 }
 
 func saveList(name, version string, list []*kvstore.EntitySchema) error {
-	outDir := "internal/schemas"
+	outDir := "schemas"
 	err := os.MkdirAll(outDir, 0755)
 	if err != nil {
 		return err

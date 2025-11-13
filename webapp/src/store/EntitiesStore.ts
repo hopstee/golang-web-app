@@ -1,7 +1,7 @@
 import { fetchEntitiesNames, fetchEntityData, fetchEntitySchema, updateEntityData } from "@/api/entities"
 import type { EntityData, EntitySchema, ShortEntityData } from "@/types/entities"
 import { create } from "zustand"
-import { persist } from "zustand/middleware"
+// import { persist } from "zustand/middleware"
 
 interface EntitiesState {
     pages: ShortEntityData[]
